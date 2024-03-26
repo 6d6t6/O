@@ -7,10 +7,10 @@ body, html {
 /* Style the desktop container */
 #desktop {
     position: relative;
-    width: 100vw; /* Full width of the viewport */
-    height: 100vh; /* Full height of the viewport */
-    background-color: #131313; /* Default background color */
-    overflow: hidden; /* Hide overflow to prevent scrollbars */
+    width: 100vw;
+    height: 100vh;
+    background-color: #131313;
+    overflow: hidden;
 }
 
 /* Style the desktop background */
@@ -34,13 +34,10 @@ body, html {
 }
 
 .icon {
-    position: absolute;
-    width: 80px; /* Adjust size as needed */
+    width: 80px;
     height: 96px;
-    background-color: transparent; /* Example background color */
-    border-radius: 4px; /* Make it circular */
-    top: 64px; /* Adjust vertical position */
-    left: 64px; /* Adjust horizontal position */
+    background-color: transparent;
+    border-radius: 4px;
     display: flex;
     flex-direction: column;
     align-items: center;
