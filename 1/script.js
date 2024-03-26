@@ -82,8 +82,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
     // Add icons dynamically
-    addIcon("gfx/icons/folder.svg", "Folder");
-    addIcon("gfx/icons/document.svg", "Document");
+    addIcon("gfx/icons/internet.svg", "Internet");
+    addIcon("gfx/icons/internet.svg", "Document");
     // Add more icons as needed
 });
 
