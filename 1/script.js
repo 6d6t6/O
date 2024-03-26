@@ -144,8 +144,15 @@ document.addEventListener("DOMContentLoaded", function() {
         function handleDrag(event) {
             const newX = event.clientX - offsetX;
             const newY = event.clientY - offsetY;
-            icon.style.left = newX + "px";
-            icon.style.top = newY + "px";
+        
+            // Calculate snapped position to grid
+            const iconSize = 80; // Adjust as needed
+            const margin = 8; // Adjust as needed
+            const snappedX = Math.round(newX / (iconSize + margin)) * (iconSize + margin);
+            const snappedY = Math.round(newY / (iconSize + margin)) * (iconSize + margin);
+        
+            icon.style.left = snappedX + "px";
+            icon.style.top = snappedY + "px";
         }
     
         // Function to handle mouse up (end of drag)
