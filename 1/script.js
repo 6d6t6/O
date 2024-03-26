@@ -51,6 +51,29 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Add event listener for desktop click
     desktop.addEventListener("click", handleDesktopClick);
+
+        // Function to add an icon to the desktop
+    function addIcon(iconSrc, iconName) {
+        const iconContainer = document.createElement("div");
+        iconContainer.classList.add("icon");
+
+        const iconImage = document.createElement("img");
+        iconImage.src = iconSrc;
+        iconImage.alt = iconName;
+
+        const iconText = document.createElement("span");
+        iconText.textContent = iconName;
+
+        iconContainer.appendChild(iconImage);
+        iconContainer.appendChild(iconText);
+
+        iconsContainer.appendChild(iconContainer);
+    }
+
+    // Add icons dynamically
+    addIcon("gfx/icons/folder.svg", "Folder");
+    addIcon("gfx/icons/document.svg", "Document");
+    // Add more icons as needed
 });
 
 document.addEventListener("DOMContentLoaded", function() {
