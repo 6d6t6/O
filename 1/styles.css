@@ -1,0 +1,50 @@
+/* Reset default margin and padding */
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+/* Style the desktop container */
+#desktop {
+    position: relative;
+    width: 100vw; /* Full width of the viewport */
+    height: 100vh; /* Full height of the viewport */
+    background-color: #f0f0f0; /* Default background color */
+    overflow: hidden; /* Hide overflow to prevent scrollbars */
+}
+
+/* Style the desktop background */
+#desktop-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('path/to/your/wallpaper.jpg'); /* Set your wallpaper image */
+    background-size: cover; /* Cover the entire background */
+    background-repeat: no-repeat; /* Prevent background image from repeating */
+}
+
+/* Style the desktop icons container */
+#desktop-icons {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Style individual desktop icons */
+.icon {
+    position: absolute;
+    /* Add more styling as needed */
+}
+
+/* Style the selection box */
+#selection-box {
+    position: absolute;
+    border: 2px dashed #333; /* Dashed border for the selection box */
+    background-color: rgba(0, 0, 0, 0.1); /* Transparent background */
+    pointer-events: none; /* Allow pointer events to pass through the selection box */
+    display: none; /* Initially hidden */
+}
