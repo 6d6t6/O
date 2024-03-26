@@ -35,8 +35,8 @@ body, html {
 
 .icon {
     position: absolute;
-    width: 64px; /* Adjust size as needed */
-    height: 64px;
+    width: 96px; /* Adjust size as needed */
+    height: 96px;
     background-color: #ffffff10; /* Example background color */
     border-radius: 50%; /* Make it circular */
     top: 64px; /* Adjust vertical position */
@@ -52,6 +52,8 @@ body, html {
 }
 
 .icon img {
+    width: 64px;
+    height: 64px;
     max-width: 100%;
     max-height: 100%;
     border-radius: 50%; /* Make the image circular */
