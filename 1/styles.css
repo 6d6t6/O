@@ -37,7 +37,12 @@ body, html {
 /* Style individual desktop icons */
 .icon {
     position: absolute;
-    /* Add more styling as needed */
+    width: 50px; /* Adjust size as needed */
+    height: 50px;
+    background-color: #3498db; /* Example background color */
+    border-radius: 50%; /* Make it circular */
+    top: 100px; /* Adjust vertical position */
+    left: 100px; /* Adjust horizontal position */
 }
 
 /* Style the selection box */
