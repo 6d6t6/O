@@ -70,10 +70,10 @@ document.addEventListener("DOMContentLoaded", function() {
         // Calculate the position based on the number of existing icons
         const iconSize = 80; // Adjust as needed
         const margin = 8; // Adjust as needed
-        const maxIconsPerColumn = Math.floor(iconsContainer.offsetHeight / (iconSize + margin)); // Use height instead of width
-        const maxIconsPerRow = Math.ceil(existingIcons / maxIconsPerColumn); // Use ceiling to ensure proper column count
-        const row = existingIcons % maxIconsPerColumn; // Calculate row based on modulus
-        const col = Math.floor(existingIcons / maxIconsPerColumn); // Calculate column based on division
+        const maxIconsPerRow = Math.floor(iconsContainer.offsetWidth / (iconSize + margin));
+        const existingIcons = iconsContainer.querySelectorAll(".icon").length;
+        const row = Math.floor(existingIcons / maxIconsPerRow);
+        const col = existingIcons % maxIconsPerRow;
     
         iconContainer.style.top = row * (iconSize + margin) + "px";
         iconContainer.style.left = col * (iconSize + margin) + "px";
