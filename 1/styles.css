@@ -20,7 +20,7 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('gfx/wallpaper/1.jpg'); /* Set your wallpaper image */
+    background-image: url('gfx/wallpapers/jm-moon.jpg'); /* Set your wallpaper image */
     background-size: cover; /* Cover the entire background */
     background-repeat: no-repeat; /* Prevent background image from repeating */
 }
