@@ -37,14 +37,18 @@ body, html {
     position: absolute;
     width: 64px; /* Adjust size as needed */
     height: 64px;
-    background-color: #3498db; /* Example background color */
+    background-color: #ffffff10; /* Example background color */
     border-radius: 50%; /* Make it circular */
-    top: 100px; /* Adjust vertical position */
-    left: 100px; /* Adjust horizontal position */
+    top: 64px; /* Adjust vertical position */
+    left: 64px; /* Adjust horizontal position */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.icon.selected {
+    background-color: #ffffff30;
 }
 
 .icon img {
@@ -54,6 +58,9 @@ body, html {
 }
 
 .icon span {
+    font-family: system-ui;
+    font-size: 8pt;
+    color: #fff;
     margin-top: 5px; /* Adjust spacing between image and text */
     text-align: center;
     white-space: nowrap;
