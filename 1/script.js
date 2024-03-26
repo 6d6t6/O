@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Add event listener for desktop click
     desktop.addEventListener("click", handleDesktopClick);
 
-        // Function to add an icon to the desktop
+    // Function to add an icon to the desktop
     function addIcon(iconSrc, iconName) {
         const iconContainer = document.createElement("div");
         iconContainer.classList.add("icon");
