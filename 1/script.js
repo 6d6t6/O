@@ -102,6 +102,48 @@ document.addEventListener("DOMContentLoaded", function() {
     // Boolean variable to track whether the user is currently dragging to select icons
     let isDragging = false;
 
+    // Function to handle mouse down event on an icon (start of drag)
+    function handleIconMouseDown(event) {
+        draggedIcon = event.target.closest(".icon");
+        if (draggedIcon) {
+            initialX = event.clientX;
+            initialY = event.clientY;
+            const iconRect = draggedIcon.getBoundingClientRect();
+            offsetX = initialX - iconRect.left;
+            offsetY = initialY - iconRect.top;
+            isDragging = true;
+            event.preventDefault(); // Prevent default behavior (e.g., text selection) when dragging
+        }
+    }
+    
+    // Add event listener for mouse down on an icon
+    iconsContainer.addEventListener("mousedown", handleIconMouseDown);
+    
+    // Function to handle mouse move event on the desktop (during drag)
+    function handleDesktopMouseMove(event) {
+        if (isDragging && draggedIcon) {
+            const newX = event.clientX - offsetX;
+            const newY = event.clientY - offsetY;
+            draggedIcon.style.left = newX + "px";
+            draggedIcon.style.top = newY + "px";
+        }
+    }
+    
+    // Add event listener for mouse move on the desktop
+    desktop.addEventListener("mousemove", handleDesktopMouseMove);
+    
+    // Function to handle mouse up event on the desktop (end of drag)
+    function handleDesktopMouseUp() {
+        if (isDragging) {
+            isDragging = false;
+            draggedIcon = null;
+        }
+    }
+    
+    // Add event listener for mouse up on the desktop
+    desktop.addEventListener("mouseup", handleDesktopMouseUp);
+
+
     // Function to handle mouse down event on the desktop (start of drag)
     function handleDesktopMouseDown(event) {
         // Update initial mouse position
