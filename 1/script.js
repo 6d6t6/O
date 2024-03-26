@@ -105,17 +105,29 @@ document.addEventListener("DOMContentLoaded", function() {
     // Boolean variable to track whether the user is currently dragging to select icons
     let isDragging = false;
 
-    // Function to handle mouse down event on an icon (start of drag)
-    function handleIconMouseDown(event) {
-        draggedIcon = event.target.closest(".icon");
-        if (draggedIcon) {
+    // Function to handle mouse down event on the desktop (start of drag)
+    function handleDesktopMouseDown(event) {
+        // Check if the clicked element is an icon
+        const clickedIcon = event.target.closest(".icon");
+        if (!clickedIcon) {
+            // Update initial mouse position
             initialX = event.clientX;
             initialY = event.clientY;
-            const iconRect = draggedIcon.getBoundingClientRect();
-            offsetX = initialX - iconRect.left;
-            offsetY = initialY - iconRect.top;
+    
+            // Update selection box position and size
+            selectionBox.style.left = initialX + "px";
+            selectionBox.style.top = initialY + "px";
+            selectionBox.style.width = "0";
+            selectionBox.style.height = "0";
+    
+            // Show the selection box
+            selectionBox.style.display = "block";
+    
+            // Set isDragging to true
             isDragging = true;
-            event.preventDefault(); // Prevent default behavior (e.g., text selection) when dragging
+    
+            // Prevent default behavior (e.g., text selection) when dragging
+            event.preventDefault();
         }
     }
     
