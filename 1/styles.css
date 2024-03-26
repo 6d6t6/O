@@ -37,7 +37,7 @@ body, html {
     position: absolute;
     width: 80px; /* Adjust size as needed */
     height: 96px;
-    background-color: #ffffff10; /* Example background color */
+    background-color: transparent; /* Example background color */
     border-radius: 4px; /* Make it circular */
     top: 64px; /* Adjust vertical position */
     left: 64px; /* Adjust horizontal position */
@@ -75,8 +75,9 @@ body, html {
 
 #selection-box {
     position: absolute;
-    border: 1px dashed #333; /* Dashed border for the selection box */
-    background-color: rgba(32, 32, 32, 0.1); /* Transparent background */
+    border: 1px dashed #32323280;
+    background-color: #20202070;
+    border-radius: 2px;
     pointer-events: none; /* Allow pointer events to pass through the selection box */
     display: none; /* Initially hidden */
 }
