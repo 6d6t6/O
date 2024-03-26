@@ -67,8 +67,19 @@ document.addEventListener("DOMContentLoaded", function() {
         iconContainer.appendChild(iconImage);
         iconContainer.appendChild(iconText);
 
+        // Calculate the position based on the number of existing icons
+        const existingIcons = iconsContainer.querySelectorAll(".icon").length;
+        const iconSize = 80; // Adjust as needed
+        const margin = 8; // Adjust as needed
+        const maxIconsPerRow = Math.floor(iconsContainer.offsetWidth / (iconSize + margin));
+        const row = Math.floor(existingIcons / maxIconsPerRow);
+        const col = existingIcons % maxIconsPerRow;
+    
+        iconContainer.style.top = row * (iconSize + margin) + "px";
+        iconContainer.style.left = col * (iconSize + margin) + "px";
+    
         iconsContainer.appendChild(iconContainer);
-    }
+        }
 
     // Add icons dynamically
     addIcon("gfx/icons/folder.svg", "Folder");
