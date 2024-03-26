@@ -9,7 +9,7 @@ body, html {
     position: relative;
     width: 100vw; /* Full width of the viewport */
     height: 100vh; /* Full height of the viewport */
-    background-color: #f0f0f0; /* Default background color */
+    background-color: #131313; /* Default background color */
     overflow: hidden; /* Hide overflow to prevent scrollbars */
 }
 
@@ -20,12 +20,11 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('path/to/your/wallpaper.jpg'); /* Set your wallpaper image */
+    background-image: url('gfx/wallpaper/1.jpg'); /* Set your wallpaper image */
     background-size: cover; /* Cover the entire background */
     background-repeat: no-repeat; /* Prevent background image from repeating */
 }
 
-/* Style the desktop icons container */
 #desktop-icons {
     position: absolute;
     top: 0;
@@ -34,22 +33,38 @@ body, html {
     height: 100%;
 }
 
-/* Style individual desktop icons */
 .icon {
     position: absolute;
-    width: 50px; /* Adjust size as needed */
-    height: 50px;
+    width: 64px; /* Adjust size as needed */
+    height: 64px;
     background-color: #3498db; /* Example background color */
     border-radius: 50%; /* Make it circular */
     top: 100px; /* Adjust vertical position */
     left: 100px; /* Adjust horizontal position */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Style the selection box */
+.icon img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 50%; /* Make the image circular */
+}
+
+.icon span {
+    margin-top: 5px; /* Adjust spacing between image and text */
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Truncate text if too long */
+}
+
 #selection-box {
     position: absolute;
-    border: 2px dashed #333; /* Dashed border for the selection box */
-    background-color: rgba(0, 0, 0, 0.1); /* Transparent background */
+    border: 1px dashed #333; /* Dashed border for the selection box */
+    background-color: rgba(32, 32, 32, 0.1); /* Transparent background */
     pointer-events: none; /* Allow pointer events to pass through the selection box */
     display: none; /* Initially hidden */
 }
