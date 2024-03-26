@@ -56,22 +56,22 @@ document.addEventListener("DOMContentLoaded", function() {
     function addIcon(iconSrc, iconName) {
         const iconContainer = document.createElement("div");
         iconContainer.classList.add("icon");
-
+    
         const iconImage = document.createElement("img");
         iconImage.src = iconSrc;
         iconImage.alt = iconName;
-
+    
         const iconText = document.createElement("span");
         iconText.textContent = iconName;
-
+    
         iconContainer.appendChild(iconImage);
         iconContainer.appendChild(iconText);
-
+    
         // Calculate the position based on the number of existing icons
-        const existingIcons = iconsContainer.querySelectorAll(".icon").length;
         const iconSize = 80; // Adjust as needed
         const margin = 8; // Adjust as needed
         const maxIconsPerRow = Math.floor(iconsContainer.offsetWidth / (iconSize + margin));
+        const existingIcons = iconsContainer.querySelectorAll(".icon").length;
         const row = Math.floor(existingIcons / maxIconsPerRow);
         const col = existingIcons % maxIconsPerRow;
     
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function() {
         iconContainer.style.left = col * (iconSize + margin) + "px";
     
         iconsContainer.appendChild(iconContainer);
-        }
+    }
 
     // Add icons dynamically
     addIcon("gfx/icons/internet.svg", "Internet");
@@ -116,8 +116,48 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
     
-    // Add event listener for mouse down on an icon
-    iconsContainer.addEventListener("mousedown", handleIconMouseDown);
+    // Add event listener for mouse down on the document (event delegation)
+    document.addEventListener("mousedown", function(event) {
+        // Check if the clicked element is an icon
+        const icon = event.target.closest(".icon");
+        if (icon) {
+            // Start the drag operation
+            startDrag(icon, event.clientX, event.clientY);
+        }
+    });
+    
+    // Function to start the drag operation
+    function startDrag(icon, clientX, clientY) {
+        const iconRect = icon.getBoundingClientRect();
+        const offsetX = clientX - iconRect.left;
+        const offsetY = clientY - iconRect.top;
+    
+        // Update the z-index to bring the dragged icon to the front
+        icon.style.zIndex = "999";
+    
+        // Add event listeners for mouse move and mouse up on the document level
+        document.addEventListener("mousemove", handleDrag);
+        document.addEventListener("mouseup", endDrag);
+    
+        // Function to handle mouse move during drag
+        function handleDrag(event) {
+            const newX = event.clientX - offsetX;
+            const newY = event.clientY - offsetY;
+            icon.style.left = newX + "px";
+            icon.style.top = newY + "px";
+        }
+    
+        // Function to handle mouse up (end of drag)
+        function endDrag() {
+            // Remove event listeners for mouse move and mouse up
+            document.removeEventListener("mousemove", handleDrag);
+            document.removeEventListener("mouseup", endDrag);
+    
+            // Reset the z-index
+            icon.style.zIndex = "auto";
+        }
+    }
+
     
     // Function to handle mouse move event on the desktop (during drag)
     function handleDesktopMouseMove(event) {
