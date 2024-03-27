@@ -10,16 +10,43 @@ document.addEventListener("DOMContentLoaded", function() {
     // Variable to store the currently selected icon
     let selectedIcon = null;
 
+    // Variable to store whether the Shift key is pressed
+    let shiftKeyPressed = false;
+
     // Function to handle icon click event
-    function handleIconClick(icon) {
-        // Deselect the previously selected icon
-        if (selectedIcon) {
+    function handleIconClick(icon, shiftKey, ctrlKey) {
+        // Deselect the previously selected icon if Shift key is not pressed
+        if (!shiftKey && !ctrlKey && selectedIcon && !selectedIcon.classList.contains("selected")) {
             selectedIcon.classList.remove("selected");
+            selectedIcon = null;
         }
 
-        // Select the clicked icon
-        selectedIcon = icon;
-        selectedIcon.classList.add("selected");
+        // Toggle the selection state of the clicked icon if Ctrl or Command key is pressed
+        if (ctrlKey || (navigator.platform.match("Mac") ? event.metaKey : event.ctrlKey)) {
+            icon.classList.toggle("selected");
+        } else {
+            // Deselect all icons if Shift key is not pressed
+            if (!shiftKey) {
+                iconsContainer.querySelectorAll(".icon.selected").forEach(function(selected) {
+                    selected.classList.remove("selected");
+                });
+            }
+
+            // Select icons between the previously selected icon and the clicked icon if Shift key is pressed
+            if (shiftKey && selectedIcon) {
+                const icons = Array.from(iconsContainer.querySelectorAll(".icon"));
+                const startIndex = icons.indexOf(selectedIcon);
+                const endIndex = icons.indexOf(icon);
+                const [start, end] = startIndex < endIndex ? [startIndex, endIndex] : [endIndex, startIndex];
+                icons.slice(start, end + 1).forEach(function(icon) {
+                    icon.classList.add("selected");
+                });
+            }
+
+            // Select the clicked icon
+            selectedIcon = icon;
+            selectedIcon.classList.add("selected");
+        }
 
         // Add your logic here for handling icon click event
     }
@@ -28,9 +55,14 @@ document.addEventListener("DOMContentLoaded", function() {
     iconsContainer.addEventListener("click", function(event) {
         const icon = event.target.closest(".icon");
         if (icon) {
-            handleIconClick(icon);
+            // Determine whether Shift or Ctrl (or Command) key is pressed
+            const shiftKey = event.shiftKey;
+            const ctrlKey = navigator.platform.match("Mac") ? event.metaKey : event.ctrlKey;
+
+            handleIconClick(icon, shiftKey, ctrlKey);
         }
     });
+});
 
     // Function to handle double click event on icons
     function handleIconDoubleClick(icon) {
