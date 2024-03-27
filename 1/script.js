@@ -1,3 +1,7 @@
+// Declare offsetX and offsetY as global variables
+let offsetX = 0;
+let offsetY = 0;
+
 document.addEventListener("DOMContentLoaded", function() {
     // Select the desktop and icons container
     const desktop = document.getElementById("desktop");
@@ -144,40 +148,49 @@ document.addEventListener("DOMContentLoaded", function() {
     // Function to start the drag operation
     function startDrag(icon, clientX, clientY) {
         const iconRect = icon.getBoundingClientRect();
-        const offsetX = clientX - iconRect.left;
-        const offsetY = clientY - iconRect.top;
-    
+        offsetX = clientX - iconRect.left;
+        offsetY = clientY - iconRect.top;
+
+        // Store the dragged icon and its initial position
+        draggedIcon = icon;
+        initialIconX = parseInt(draggedIcon.style.left) || 0;
+        initialIconY = parseInt(draggedIcon.style.top) || 0;
+
         // Update the z-index to bring the dragged icon to the front
-        icon.style.zIndex = "999";
-    
+        draggedIcon.style.zIndex = "999";
+
         // Add event listeners for mouse move and mouse up on the document level
         document.addEventListener("mousemove", handleDrag);
         document.addEventListener("mouseup", endDrag);
-    
-        // Function to handle mouse move during drag
-        function handleDrag(event) {
-            const newX = event.clientX - offsetX;
-            const newY = event.clientY - offsetY;
-        
-            // Calculate snapped position to grid
-            const iconSize = 80; // Adjust as needed
-            const margin = 32; // Adjust as needed
-            const snappedX = Math.round(newX / (iconSize + margin)) * (iconSize + margin);
-            const snappedY = Math.round(newY / (iconSize + margin)) * (iconSize + margin);
-        
-            icon.style.left = snappedX + "px";
-            icon.style.top = snappedY + "px";
-        }
-    
-        // Function to handle mouse up (end of drag)
-        function endDrag() {
-            // Remove event listeners for mouse move and mouse up
-            document.removeEventListener("mousemove", handleDrag);
-            document.removeEventListener("mouseup", endDrag);
-    
-            // Reset the z-index
-            icon.style.zIndex = "auto";
-        }
+    }
+
+    // Function to handle mouse move during drag
+    function handleDrag(event) {
+        const newX = event.clientX - offsetX;
+        const newY = event.clientY - offsetY;
+
+        // Update the position of the dragged icon
+        draggedIcon.style.left = newX + "px";
+        draggedIcon.style.top = newY + "px";
+    }
+
+    // Function to handle mouse up (end of drag)
+    function endDrag() {
+        // Remove event listeners for mouse move and mouse up
+        document.removeEventListener("mousemove", handleDrag);
+        document.removeEventListener("mouseup", endDrag);
+
+        // Snap the icon to the nearest grid spot
+        const iconSize = 80; // Adjust as needed
+        const margin = 32; // Adjust as needed
+        const snappedX = Math.round(parseInt(draggedIcon.style.left) / (iconSize + margin)) * (iconSize + margin);
+        const snappedY = Math.round(parseInt(draggedIcon.style.top) / (iconSize + margin)) * (iconSize + margin);
+
+        draggedIcon.style.left = snappedX + "px";
+        draggedIcon.style.top = snappedY + "px";
+
+        // Reset the z-index
+        draggedIcon.style.zIndex = "auto";
     }
 
     
