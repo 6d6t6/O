@@ -136,6 +136,22 @@ document.addEventListener("DOMContentLoaded", function() {
     // Boolean variable to track whether the user is currently dragging to select icons
     let isDragging = false;
 
+    // Function to add event listeners for mouse move and mouse up on the desktop
+    function addDesktopEventListeners() {
+        if (!desktop.dataset.desktopEventsAdded) {
+            desktop.addEventListener("mousemove", handleDesktopMouseMove);
+            desktop.addEventListener("mouseup", handleDesktopMouseUp);
+            desktop.dataset.desktopEventsAdded = true;
+        }
+    }
+    
+    // Function to remove event listeners for mouse move and mouse up on the desktop
+    function removeDesktopEventListeners() {
+        desktop.removeEventListener("mousemove", handleDesktopMouseMove);
+        desktop.removeEventListener("mouseup", handleDesktopMouseUp);
+        delete desktop.dataset.desktopEventsAdded;
+    }
+    
     // Function to handle mouse down event on the desktop (start of drag)
     function handleDesktopMouseDown(event) {
         // Check if the clicked element is an icon
@@ -156,6 +172,9 @@ document.addEventListener("DOMContentLoaded", function() {
     
             // Set isDragging to true
             isDragging = true;
+    
+            // Add event listeners for mouse move and mouse up on the desktop
+            addDesktopEventListeners();
     
             // Prevent default behavior (e.g., text selection) when dragging
             event.preventDefault();
