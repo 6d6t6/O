@@ -163,6 +163,11 @@ document.addEventListener("DOMContentLoaded", function() {
         // Move the icon to the exact position where the cursor is
         moveIconToCursor(clientX, clientY);
     
+        // Disable text selection for the icon
+        icon.style.userSelect = "none";
+        icon.style.msUserSelect = "none";
+        icon.style.webkitUserSelect = "none";
+    
         // Add event listeners for mouse move and mouse up on the document level
         document.addEventListener("mousemove", handleDrag);
         document.addEventListener("mouseup", endDrag);
@@ -170,8 +175,13 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Function to move the icon to the cursor position
     function moveIconToCursor(clientX, clientY) {
-        draggedIcon.style.left = clientX - offsetX + "px";
-        draggedIcon.style.top = clientY - offsetY + "px";
+        // Constrain the movement within the desktop area
+        const desktopRect = desktop.getBoundingClientRect();
+        const newX = Math.min(Math.max(clientX - offsetX, desktopRect.left), desktopRect.right - draggedIcon.offsetWidth);
+        const newY = Math.min(Math.max(clientY - offsetY, desktopRect.top), desktopRect.bottom - draggedIcon.offsetHeight);
+        
+        draggedIcon.style.left = newX + "px";
+        draggedIcon.style.top = newY + "px";
     }
 
     // Function to handle mouse move during drag
