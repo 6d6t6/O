@@ -244,9 +244,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Add event listener for mouse move on the desktop
-    desktop.addEventListener("mousemove", handleDesktopMouseMove);
-
     // Function to handle mouse up event on the desktop (end of drag)
     function handleDesktopMouseUp() {
         if (isDragging) {
@@ -254,12 +251,6 @@ document.addEventListener("DOMContentLoaded", function() {
             draggedIcon = null;
         }
     }
-
-    // Add event listener for mouse up on the desktop
-    desktop.addEventListener("mouseup", handleDesktopMouseUp);
-
-    // Add event listener for mouse down on the desktop
-    desktop.addEventListener("mousedown", handleDesktopMouseDown);
 
     // Function to handle mouse move event on the desktop (during drag)
     function handleDesktopMouseMove(event) {
