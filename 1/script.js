@@ -147,21 +147,31 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Function to start the drag operation
     function startDrag(icon, clientX, clientY) {
+        // Calculate the offset between the mouse cursor and the top-left corner of the icon
         const iconRect = icon.getBoundingClientRect();
-        offsetX = clientX - iconRect.left;
-        offsetY = clientY - iconRect.top;
-
+        const offsetX = clientX - iconRect.left;
+        const offsetY = clientY - iconRect.top;
+    
         // Store the dragged icon and its initial position
         draggedIcon = icon;
-        initialIconX = parseInt(draggedIcon.style.left) || 0;
-        initialIconY = parseInt(draggedIcon.style.top) || 0;
-
+        initialIconX = iconRect.left;
+        initialIconY = iconRect.top;
+    
         // Update the z-index to bring the dragged icon to the front
         draggedIcon.style.zIndex = "999";
-
+    
+        // Move the icon to the exact position where the cursor is
+        moveIconToCursor(clientX, clientY);
+    
         // Add event listeners for mouse move and mouse up on the document level
         document.addEventListener("mousemove", handleDrag);
         document.addEventListener("mouseup", endDrag);
+    }
+    
+    // Function to move the icon to the cursor position
+    function moveIconToCursor(clientX, clientY) {
+        draggedIcon.style.left = clientX - offsetX + "px";
+        draggedIcon.style.top = clientY - offsetY + "px";
     }
 
     // Function to handle mouse move during drag
