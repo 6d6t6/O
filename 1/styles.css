@@ -73,9 +73,9 @@ body, html {
 
 #selection-box {
     position: absolute;
-    border: 1px dashed #32323280;
+    border: 1px dashed #ffffff80;
     background-color: #20202070;
-    border-radius: 2px;
+    border-radius: 1px;
     pointer-events: none; /* Allow pointer events to pass through the selection box */
     display: none; /* Initially hidden */
 }
