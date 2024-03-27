@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function() {
         
             // Calculate snapped position to grid
             const iconSize = 80; // Adjust as needed
-            const margin = 8; // Adjust as needed
+            const margin = 32; // Adjust as needed
             const snappedX = Math.round(newX / (iconSize + margin)) * (iconSize + margin);
             const snappedY = Math.round(newY / (iconSize + margin)) * (iconSize + margin);
         
