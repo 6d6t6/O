@@ -44,7 +44,7 @@ body, html {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: 32px;
+    margin: 8px;
 }
 
 .icon.selected {
@@ -74,7 +74,7 @@ body, html {
 #selection-box {
     position: absolute;
     border: 1px dashed #ffffff80;
-    background-color: #20202070;
+    background-color: #fe7fefe20;
     border-radius: 1px;
     pointer-events: none; /* Allow pointer events to pass through the selection box */
     display: none; /* Initially hidden */
