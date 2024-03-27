@@ -78,6 +78,27 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    // Function to handle single click selection
+    function handleSingleClickSelection(icon) {
+        // Deselect all icons
+        iconsContainer.querySelectorAll(".icon.selected").forEach(function(selected) {
+            selected.classList.remove("selected");
+        });
+    
+        // Select the clicked icon
+        selectedIcon = icon;
+        selectedIcon.classList.add("selected");
+    }
+    
+    // Add event listener for single clicks on icons
+    iconsContainer.addEventListener("click", function(event) {
+        const icon = event.target.closest(".icon");
+        if (icon) {
+            // Handle single click selection
+            handleSingleClickSelection(icon);
+        }
+    });
+
     // Function to handle desktop click event (deselect icons)
     function handleDesktopClick() {
         if (selectedIcon) {
