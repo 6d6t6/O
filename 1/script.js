@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Select the desktop and icons container
     const desktop = document.getElementById("desktop");
     const iconsContainer = document.getElementById("desktop-icons");
+    const selectionBox = document.getElementById("selection-box");
 
     // Variable to store the currently selected icon
     let selectedIcon = null;
@@ -62,7 +63,6 @@ document.addEventListener("DOMContentLoaded", function() {
             handleIconClick(icon, shiftKey, ctrlKey);
         }
     });
-});
 
     // Function to handle double click event on icons
     function handleIconDoubleClick(icon) {
@@ -125,13 +125,6 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("gfx/icons/internet.svg", "Document");
     addIcon("gfx/icons/internet.svg", "Document");
     // Add more icons as needed
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-    // Select the desktop, icons container, and selection box
-    const desktop = document.getElementById("desktop");
-    const iconsContainer = document.getElementById("desktop-icons");
-    const selectionBox = document.getElementById("selection-box");
 
     // Variables to store the initial mouse position and the current mouse position during drag
     let initialX = 0;
@@ -240,7 +233,6 @@ document.addEventListener("DOMContentLoaded", function() {
         draggedIcon.style.zIndex = "auto";
     }
 
-    
     // Function to handle mouse move event on the desktop (during drag)
     function handleDesktopMouseMove(event) {
         if (isDragging && draggedIcon) {
@@ -250,10 +242,10 @@ document.addEventListener("DOMContentLoaded", function() {
             draggedIcon.style.top = newY + "px";
         }
     }
-    
+
     // Add event listener for mouse move on the desktop
     desktop.addEventListener("mousemove", handleDesktopMouseMove);
-    
+
     // Function to handle mouse up event on the desktop (end of drag)
     function handleDesktopMouseUp() {
         if (isDragging) {
@@ -261,11 +253,9 @@ document.addEventListener("DOMContentLoaded", function() {
             draggedIcon = null;
         }
     }
-    
+
     // Add event listener for mouse up on the desktop
     desktop.addEventListener("mouseup", handleDesktopMouseUp);
-
-
 
     // Add event listener for mouse down on the desktop
     desktop.addEventListener("mousedown", handleDesktopMouseDown);
