@@ -67,8 +67,9 @@ document.addEventListener("DOMContentLoaded", function() {
     // Function to handle double click event on icons
     function handleIconDoubleClick(icon) {
         // Add your logic here for handling icon double click event
+        console.log("Icon double-clicked:", icon.textContent); // Example: Log the icon's text content
     }
-
+    
     // Add event listeners for double clicks on icons
     iconsContainer.addEventListener("dblclick", function(event) {
         const icon = event.target.closest(".icon");
