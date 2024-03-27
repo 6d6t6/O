@@ -206,27 +206,6 @@ document.addEventListener("DOMContentLoaded", function() {
     desktop.addEventListener("mouseup", handleDesktopMouseUp);
 
 
-    // Function to handle mouse down event on the desktop (start of drag)
-    function handleDesktopMouseDown(event) {
-        // Update initial mouse position
-        initialX = event.clientX;
-        initialY = event.clientY;
-
-        // Update selection box position and size
-        selectionBox.style.left = initialX + "px";
-        selectionBox.style.top = initialY + "px";
-        selectionBox.style.width = "0";
-        selectionBox.style.height = "0";
-
-        // Show the selection box
-        selectionBox.style.display = "block";
-
-        // Set isDragging to true
-        isDragging = true;
-
-        // Prevent default behavior (e.g., text selection) when dragging
-        event.preventDefault();
-    }
 
     // Add event listener for mouse down on the desktop
     desktop.addEventListener("mousedown", handleDesktopMouseDown);
