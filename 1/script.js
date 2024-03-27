@@ -151,6 +151,9 @@ document.addEventListener("DOMContentLoaded", function() {
         desktop.removeEventListener("mouseup", handleDesktopMouseUp);
         delete desktop.dataset.desktopEventsAdded;
     }
+
+    // Add event listener for mouse down on the desktop
+    desktop.addEventListener("mousedown", handleDesktopMouseDown);
     
     // Function to handle mouse down event on the desktop (start of drag)
     function handleDesktopMouseDown(event) {
