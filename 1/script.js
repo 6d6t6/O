@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
         // Calculate the position based on the number of existing icons
         const iconSize = 80; // Adjust as needed
-        const margin = 8; // Adjust as needed
+        const margin = 32; // Adjust as needed
         const maxIconsPerColumn = Math.floor(iconsContainer.offsetHeight / (iconSize + margin));
         const existingIcons = iconsContainer.querySelectorAll(".icon").length;
         const col = Math.floor(existingIcons / maxIconsPerColumn);
