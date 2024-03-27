@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const iconImage = document.createElement("img");
         iconImage.src = iconSrc;
         iconImage.alt = iconName;
+        iconImage.draggable = false; // Disable image dragging
     
         const iconText = document.createElement("span");
         iconText.textContent = iconName;
