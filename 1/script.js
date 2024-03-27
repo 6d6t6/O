@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
         // Calculate the position based on the number of existing icons
         const iconSize = 80; // Adjust as needed
-        const margin = 32; // Adjust as needed
+        const margin = 16; // Adjust as needed
         const maxIconsPerColumn = Math.floor(iconsContainer.offsetHeight / (iconSize + margin));
         const existingIcons = iconsContainer.querySelectorAll(".icon").length;
         const col = Math.floor(existingIcons / maxIconsPerColumn);
@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Snap the icon to the nearest grid spot
         const iconSize = 80; // Adjust as needed
-        const margin = 32; // Adjust as needed
+        const margin = 16; // Adjust as needed
         const snappedX = Math.round(parseInt(draggedIcon.style.left) / (iconSize + margin)) * (iconSize + margin);
         const snappedY = Math.round(parseInt(draggedIcon.style.top) / (iconSize + margin)) * (iconSize + margin);
 
