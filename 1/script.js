@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
         
                 // If Shift or Ctrl key is not pressed, handle single-click selection
                 if (!shiftKey && !ctrlKey) {
-                    handleSingleClickSelection(icon);
+                    handleIconClick(icon, shiftKey, ctrlKey); // Corrected function call
                 } else {
                     // If Shift or Ctrl key is pressed, handle multiple selection
                     handleIconClick(icon, shiftKey, ctrlKey);
