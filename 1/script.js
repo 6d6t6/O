@@ -13,6 +13,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to handle icon click event
     function handleIconClick(icon, event) {
+        console.log("Icon clicked");
+        console.log("Event:", event);
+        
         // Determine whether Ctrl (or Command) key is pressed
         const ctrlKey = event.ctrlKey || event.metaKey;
     
