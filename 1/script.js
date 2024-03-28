@@ -15,10 +15,10 @@ document.addEventListener("DOMContentLoaded", function() {
     function handleIconClick(icon, event) {
         // Determine whether Ctrl (or Command) key is pressed
         const ctrlKey = event.ctrlKey || event.metaKey;
-    
+
         // Check if the clicked icon is already selected
         const isSelected = icon.classList.contains("selected");
-    
+
         // If Ctrl or Command key is pressed, toggle the selection state of the clicked icon
         if (ctrlKey) {
             icon.classList.toggle("selected");
@@ -34,42 +34,34 @@ document.addEventListener("DOMContentLoaded", function() {
                 // do nothing (to maintain the single-selection mode)
             }
         }
-    
+
         // Store the selected icon
         selectedIcon = icon;
     }
-    
-    // Add event listener for single clicks on icons
+
+    // Add event listener for clicks on icons
     iconsContainer.addEventListener("click", function(event) {
         const icon = event.target.closest(".icon");
         if (icon) {
-            // Handle single-click selection
+            // Handle icon click
             handleIconClick(icon, event);
         }
     });
-    
+
     // Function to handle double click event on icons
     function handleIconDoubleClick(icon) {
         // Add the "active" class to the double-clicked icon
         icon.classList.add("active");
-    
+
         // Add your logic here for handling icon double click event
         console.log("Icon double-clicked:", icon.textContent); // Example: Log the icon's text content
     }
 
-    // Add event listeners for single clicks on icons
-    iconsContainer.addEventListener("click", function(event) {
-        const icon = event.target.closest(".icon");
-        if (icon) {
-            // Handle single-click selection
-            handleIconClick(icon, event);
-        }
-    });
-
-    // Add event listeners for double clicks on icons
+    // Add event listener for double clicks on icons
     iconsContainer.addEventListener("dblclick", function(event) {
         const icon = event.target.closest(".icon");
         if (icon) {
+            // Handle icon double click
             handleIconDoubleClick(icon);
         }
     });
