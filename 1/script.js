@@ -12,21 +12,24 @@ document.addEventListener("DOMContentLoaded", function() {
     let selectedIcon = null;
 
     // Function to handle icon click event
-    function handleIconClick(icon, ctrlKey) {
+    function handleIconClick(icon, event) {
+        // Determine whether Ctrl (or Command) key is pressed
+        const ctrlKey = event.ctrlKey || event.metaKey;
+    
         // Toggle the selection state of the clicked icon if Ctrl or Command key is pressed
-        if (ctrlKey || (navigator.platform.match("Mac") ? event.metaKey : event.ctrlKey)) {
+        if (ctrlKey) {
             icon.classList.toggle("selected");
         } else {
             // Deselect all icons
             iconsContainer.querySelectorAll(".icon.selected").forEach(function(selected) {
                 selected.classList.remove("selected");
             });
-
+    
             // Select the clicked icon
             selectedIcon = icon;
             selectedIcon.classList.add("selected");
         }
-
+    
         // Add your logic here for handling icon click event
     }
 
