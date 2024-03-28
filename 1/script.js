@@ -16,13 +16,15 @@ document.addEventListener("DOMContentLoaded", function() {
         // Determine whether Ctrl (or Command) key is pressed
         const ctrlKey = event.ctrlKey || event.metaKey;
     
+        // Toggle the selection state of the clicked icon if Ctrl or Command key is pressed
         if (ctrlKey) {
-            // Toggle the selection state of the clicked icon if Ctrl or Command key is pressed
             icon.classList.toggle("selected");
         } else {
             // Deselect all icons if Ctrl or Command key is not pressed
             iconsContainer.querySelectorAll(".icon.selected").forEach(function(selected) {
-                selected.classList.remove("selected");
+                if (selected !== icon) { // Deselect only if it's not the clicked icon
+                    selected.classList.remove("selected");
+                }
             });
     
             // Select the clicked icon
