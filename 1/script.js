@@ -14,93 +14,68 @@ document.addEventListener("DOMContentLoaded", function() {
     // Variable to store whether the Shift key is pressed
     let shiftKeyPressed = false;
 
-    // Function to handle icon click event
-    function handleIconClick(icon, shiftKey, ctrlKey) {
-        // Toggle the selection state of the clicked icon if Ctrl or Command key is pressed
-        if (ctrlKey || (navigator.platform.match("Mac") ? event.metaKey : event.ctrlKey)) {
-            icon.classList.toggle("selected");
-        } else {
-            // Deselect all icons if Shift key is not pressed
-            if (!shiftKey) {
-                iconsContainer.querySelectorAll(".icon.selected").forEach(function(selected) {
-                    selected.classList.remove("selected");
-                });
-            }
-    
-            // Handle shift-click selection
-            if (shiftKey && selectedIcon) {
-                const icons = Array.from(iconsContainer.querySelectorAll(".icon"));
-                const startIndex = icons.indexOf(selectedIcon);
-                const endIndex = icons.indexOf(icon);
-                const [start, end] = startIndex < endIndex ? [startIndex, endIndex] : [endIndex, startIndex];
-                icons.slice(start, end + 1).forEach(function(icon) {
-                    icon.classList.add("selected");
-                });
-            }
-    
-            // Select the clicked icon
-            selectedIcon = icon;
-            selectedIcon.classList.add("selected");
-        }
-    
-        // Add your logic here for handling icon click event
-    }
-    
-    // Function to handle double click event on icons
-    function handleIconDoubleClick(icon) {
-        // Add the "active" class to the double-clicked icon
-        icon.classList.add("active");
-    
-        // Add your logic here for handling icon double click event
-        console.log("Icon double-clicked:", icon.textContent); // Example: Log the icon's text content
-    }
-    
-    // Add event listeners for single clicks on icons
-    iconsContainer.addEventListener("click", function(event) {
-        const icon = event.target.closest(".icon");
-        if (icon) {
-            // Determine whether Shift or Ctrl (or Command) key is pressed
-            const shiftKey = event.shiftKey;
-            const ctrlKey = navigator.platform.match("Mac") ? event.metaKey : event.ctrlKey;
-    
-            // Handle single-click selection
-            if (!shiftKey && !ctrlKey) {
-                handleSingleClickSelection(icon);
-            } else {
-                // If Shift or Ctrl key is pressed, handle multiple selection
-                handleIconClick(icon, shiftKey, ctrlKey);
-            }
-        }
+// Function to handle icon click event
+function handleIconClick(icon, ctrlKey) {
+    // Remove the "active" class from all icons
+    iconsContainer.querySelectorAll(".icon.active").forEach(function(activeIcon) {
+        activeIcon.classList.remove("active");
     });
-    
-    // Add event listeners for double clicks on icons
-    iconsContainer.addEventListener("dblclick", function(event) {
-        const icon = event.target.closest(".icon");
-        if (icon) {
-            handleIconDoubleClick(icon);
-        }
-    });
-    
-    // Function to handle single click selection
-    function handleSingleClickSelection(icon) {
+
+    // Toggle the selection state of the clicked icon if Ctrl or Command key is pressed
+    if (ctrlKey || (navigator.platform.match("Mac") ? event.metaKey : event.ctrlKey)) {
+        icon.classList.toggle("selected");
+    } else {
         // Deselect all icons
         iconsContainer.querySelectorAll(".icon.selected").forEach(function(selected) {
             selected.classList.remove("selected");
         });
+
         // Select the clicked icon
         icon.classList.add("selected");
     }
 
-    // Function to handle desktop click event (deselect icons)
-    function handleDesktopClick() {
-        if (selectedIcon) {
-            selectedIcon.classList.remove("selected");
-            selectedIcon = null;
-        }
-    }
+    // Add your logic here for handling icon click event
+}
 
-    // Add event listener for desktop click
-    desktop.addEventListener("click", handleDesktopClick);
+// Function to handle double click event on icons
+function handleIconDoubleClick(icon) {
+    // Remove the "active" class from all icons
+    iconsContainer.querySelectorAll(".icon.active").forEach(function(activeIcon) {
+        activeIcon.classList.remove("active");
+    });
+
+    // Add the "active" class to the double-clicked icon
+    icon.classList.add("active");
+
+    // Add your logic here for handling icon double click event
+    console.log("Icon double-clicked:", icon.textContent); // Example: Log the icon's text content
+}
+
+// Function to handle desktop click event (deselect icons)
+function handleDesktopClick() {
+    // Remove the "selected" class from all icons
+    iconsContainer.querySelectorAll(".icon.selected").forEach(function(selectedIcon) {
+        selectedIcon.classList.remove("selected");
+    });
+
+    // Remove the "active" class from all icons
+    iconsContainer.querySelectorAll(".icon.active").forEach(function(activeIcon) {
+        activeIcon.classList.remove("active");
+    });
+}
+
+// Add event listener for desktop click
+desktop.addEventListener("click", handleDesktopClick);
+
+// Function to handle mouse down event on the document (event delegation)
+document.addEventListener("mousedown", function(event) {
+    // Check if the clicked element is an icon
+    const icon = event.target.closest(".icon");
+    if (icon) {
+        // Start the drag operation
+        startDrag(icon, event.clientX, event.clientY);
+    }
+});
 
     // Function to add an icon to the desktop
     function addIcon(iconSrc, iconName) {
