@@ -44,8 +44,8 @@ document.addEventListener("DOMContentLoaded", function() {
         const icon = event.target.closest(".icon");
         if (icon) {
             // Determine whether Ctrl (or Command) key is pressed
-            const ctrlKey = navigator.platform.match("Mac") ? event.metaKey : event.ctrlKey;
-
+            const ctrlKey = event.ctrlKey || event.metaKey;
+    
             // Handle single-click selection
             handleIconClick(icon, ctrlKey);
         }
