@@ -39,6 +39,7 @@ body, html {
     width: 80px;
     height: 96px;
     background-color: transparent;
+    border: 1px solid transparent;
     border-radius: 4px;
     display: flex;
     flex-direction: column;
@@ -49,14 +50,16 @@ body, html {
 
 .icon.selected {
     background-color: #ffffff10;
+    border: 1px solid transparent;
 }
 
 .icon.active {
-    background-color: #ffffff80;
+    background-color: #ffffff10;
+    border: 1px dashed #ffffff80;
 }
 
 .icon:hover {
-    background-color: #ffffff02;
+    border: 1px solid #ffffff10;
 }
 
 .icon img {
