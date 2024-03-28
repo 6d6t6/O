@@ -16,19 +16,23 @@ document.addEventListener("DOMContentLoaded", function() {
         // Determine whether Ctrl (or Command) key is pressed
         const ctrlKey = event.ctrlKey || event.metaKey;
     
-        // Toggle the selection state of the clicked icon if Ctrl or Command key is pressed
+        // Check if the clicked icon is already selected
+        const isSelected = icon.classList.contains("selected");
+    
+        // If Ctrl or Command key is pressed, toggle the selection state of the clicked icon
         if (ctrlKey) {
             icon.classList.toggle("selected");
         } else {
-            // Deselect all icons if Ctrl or Command key is not pressed
-            iconsContainer.querySelectorAll(".icon.selected").forEach(function(selected) {
-                if (selected !== icon) { // Deselect only if it's not the clicked icon
+            // If the clicked icon is not already selected, deselect all icons and then select the clicked icon
+            if (!isSelected) {
+                iconsContainer.querySelectorAll(".icon.selected").forEach(function(selected) {
                     selected.classList.remove("selected");
-                }
-            });
-    
-            // Select the clicked icon
-            icon.classList.add("selected");
+                });
+                icon.classList.add("selected");
+            } else {
+                // If the clicked icon is already selected and Ctrl or Command key is not pressed,
+                // do nothing (to maintain the single-selection mode)
+            }
         }
     
         // Store the selected icon
