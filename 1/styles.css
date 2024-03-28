@@ -55,11 +55,11 @@ body, html {
 
 .icon.active {
     background-color: #ffffff10;
-    border: 1px dashed #ffffff80;
+    border: 1px dashed #ffffff30!important;
 }
 
 .icon:hover {
-    border: 1px solid #ffffff10;
+    border: 1px solid #ffffff20;
 }
 
 .icon img {
