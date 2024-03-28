@@ -13,14 +13,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to handle icon click event
     function handleIconClick(icon, event) {
-        console.log("Icon clicked");
-        console.log("Event:", event);
-        
         // Determine whether Ctrl (or Command) key is pressed
         const ctrlKey = event.ctrlKey || event.metaKey;
     
-        // Toggle the selection state of the clicked icon if Ctrl or Command key is pressed
         if (ctrlKey) {
+            // Toggle the selection state of the clicked icon if Ctrl or Command key is pressed
             icon.classList.toggle("selected");
         } else {
             // Deselect all icons if Ctrl or Command key is not pressed
