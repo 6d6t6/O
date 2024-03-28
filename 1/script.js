@@ -32,7 +32,15 @@ document.addEventListener("DOMContentLoaded", function() {
         // Store the selected icon
         selectedIcon = icon;
     }
-    // Add your logic here for handling icon click event
+    
+    // Add event listener for single clicks on icons
+    iconsContainer.addEventListener("click", function(event) {
+        const icon = event.target.closest(".icon");
+        if (icon) {
+            // Handle single-click selection
+            handleIconClick(icon, event);
+        }
+    });
     
     // Function to handle double click event on icons
     function handleIconDoubleClick(icon) {
