@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let selectedIcon = null;
 
     // Function to handle icon click event
-    function handleIconClick(icon, shiftKey, ctrlKey) {
+    function handleIconClick(icon, ctrlKey) {
         // Toggle the selection state of the clicked icon if Ctrl or Command key is pressed
         if (ctrlKey || (navigator.platform.match("Mac") ? event.metaKey : event.ctrlKey)) {
             icon.classList.toggle("selected");
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const ctrlKey = navigator.platform.match("Mac") ? event.metaKey : event.ctrlKey;
 
             // Handle single-click selection
-            handleIconClick(icon, false, ctrlKey);
+            handleIconClick(icon, ctrlKey);
         }
     });
 
