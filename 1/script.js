@@ -60,15 +60,25 @@ document.addEventListener("DOMContentLoaded", function() {
                 const shiftKey = event.shiftKey;
                 const ctrlKey = navigator.platform.match("Mac") ? event.metaKey : event.ctrlKey;
         
-                // If Shift or Ctrl key is not pressed, handle single-click selection
+                // Handle single-click selection
                 if (!shiftKey && !ctrlKey) {
-                    handleIconClick(icon, shiftKey, ctrlKey); // Corrected function call
+                    handleSingleClickSelection(icon);
                 } else {
                     // If Shift or Ctrl key is pressed, handle multiple selection
                     handleIconClick(icon, shiftKey, ctrlKey);
                 }
             }
         });
+        
+        // Function to handle single click selection
+        function handleSingleClickSelection(icon) {
+            // Deselect all icons
+            iconsContainer.querySelectorAll(".icon.selected").forEach(function(selected) {
+                selected.classList.remove("selected");
+            });
+            // Select the clicked icon
+            icon.classList.add("selected");
+        }
 
     // Function to handle double click event on icons
     function handleIconDoubleClick(icon) {
