@@ -20,15 +20,18 @@ document.addEventListener("DOMContentLoaded", function() {
         if (ctrlKey) {
             icon.classList.toggle("selected");
         } else {
-            // Deselect all icons
+            // Deselect all icons if Ctrl or Command key is not pressed
             iconsContainer.querySelectorAll(".icon.selected").forEach(function(selected) {
                 selected.classList.remove("selected");
             });
     
             // Select the clicked icon
-            selectedIcon = icon;
-            selectedIcon.classList.add("selected");
+            icon.classList.add("selected");
         }
+    
+        // Store the selected icon
+        selectedIcon = icon;
+    }
     
         // Add your logic here for handling icon click event
     }
@@ -46,11 +49,8 @@ document.addEventListener("DOMContentLoaded", function() {
     iconsContainer.addEventListener("click", function(event) {
         const icon = event.target.closest(".icon");
         if (icon) {
-            // Determine whether Ctrl (or Command) key is pressed
-            const ctrlKey = event.ctrlKey || event.metaKey;
-    
             // Handle single-click selection
-            handleIconClick(icon, ctrlKey);
+            handleIconClick(icon, event);
         }
     });
 
