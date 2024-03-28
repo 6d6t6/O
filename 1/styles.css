@@ -51,6 +51,14 @@ body, html {
     background-color: #ffffff10;
 }
 
+.icon.active {
+    background-color: #ffffff80;
+}
+
+.icon:hover {
+    background-color: #ffffff02;
+}
+
 .icon img {
     width: 64px;
     height: 64px;
