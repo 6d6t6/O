@@ -32,15 +32,13 @@ document.addEventListener("DOMContentLoaded", function() {
         // Store the selected icon
         selectedIcon = icon;
     }
+    // Add your logic here for handling icon click event
     
-        // Add your logic here for handling icon click event
-    }
-
     // Function to handle double click event on icons
     function handleIconDoubleClick(icon) {
         // Add the "active" class to the double-clicked icon
         icon.classList.add("active");
-
+    
         // Add your logic here for handling icon double click event
         console.log("Icon double-clicked:", icon.textContent); // Example: Log the icon's text content
     }
