@@ -142,8 +142,10 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/geography.png", "Internet");
     addIcon("https://img.icons8.com/color/1500/secured-letter.png", "Mail");
     addIcon("https://img.icons8.com/color/1500/chat.png", "Chat");
+    addIcon("https://img.icons8.com/color/1500/phone.png", "Phone");
     addIcon("https://img.icons8.com/color/1500/contacts.png", "Contacts");
     addIcon("https://img.icons8.com/color/1500/news.png", "News");
+    addIcon("https://img.icons8.com/color/1500/partly-cloudy-rain.png", "Weather");
     addIcon("https://img.icons8.com/color/1500/world-map.png", "Maps");
     addIcon("https://img.icons8.com/color/1500/calendar.png", "Calendar");
     addIcon("https://img.icons8.com/color/1500/calculator.png", "Calculator");
@@ -153,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/new-document.png", "Write");
     addIcon("https://img.icons8.com/color/1500/new-spreadsheet.png", "Table");
     addIcon("https://img.icons8.com/color/1500/new-presentation.png", "Present");
-    addIcon("https://img.icons8.com/color/1500/plus-2-math.png", "Create");
+    addIcon("https://img.icons8.com/color/1500/design.png", "Create");
     addIcon("https://img.icons8.com/color/1500/paint-palette-with-brush.png", "Paint");
     addIcon("https://img.icons8.com/color/1500/inscription.png", "Text Editor");
     addIcon("https://img.icons8.com/fluency/1500/bing.png", "Bing");
