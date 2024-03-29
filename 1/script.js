@@ -146,12 +146,14 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/news.png", "News");
     addIcon("https://img.icons8.com/color/1500/calendar.png", "Calendar");
     addIcon("https://img.icons8.com/color/1500/loudspeaker.png", "Media Player");
-    addIcon("https://img.icons8.com/color/1500/document.png", "Text Editor");
     addIcon("https://img.icons8.com/color/1500/new-document.png", "Write");
     addIcon("https://img.icons8.com/color/1500/new-spreadsheet.png", "Table");
     addIcon("https://img.icons8.com/color/1500/new-presentation.png", "Present");
     addIcon("https://img.icons8.com/color/1500/paint-palette-with-brush.png", "Paint");
+    addIcon("https://img.icons8.com/color/1500/inscription.png", "Text Editor");
     addIcon("https://img.icons8.com/fluency/1500/bing--v1.png", "Bing");
+    addIcon("https://img.icons8.com/color/1500/photopea.png", "Photopea");
+    addIcon("https://img.icons8.com/color/1500/telegram.png", "Telegram");
     addIcon("https://img.icons8.com/color/1500/keyhole-shield.png", "Security");
     addIcon("https://img.icons8.com/color/1500/wifi-router.png", "Network");
     addIcon("https://img.icons8.com/color/1500/console.png", "Terminal");
