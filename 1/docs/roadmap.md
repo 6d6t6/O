@@ -1,11 +1,15 @@
 # What's to come...
 
+---
 ## File System
 Simple, integrated, locally sandboxed using File System Access API.
 
 ---
 ## Web Browser
 Simple integrated web browser, similar to Chrome and Firefox.
+Additionally:
+* An extension for chromium based browsers (the external, "native" web browser), to allow a less restrictive experience.
+* Failsafes including a "blurred screenshot" error page.
 
 ---
 ## IRC Client / IM Client
@@ -22,25 +26,42 @@ Simple integrated text editor.
 ---
 ## Creative Suite
 Creative suite of tools:
+
 ### Word Processor
 Similar to Microsoft Word, Apple Pages, and Google Docs.
+
 ### Spreadsheet Software
 Similar to Microsoft Excel, Apple Numbers, and Google Sheets.
+
 ### Presentation/Slideshows Software
 Similar to Microsoft PowerPoint, Apple Keynote, and Google Slides.
-### Creator Software
+
+### Creator Software [ ~ ? ~ ]
 Similar to Microsoft Publisher.
+
 Maybe something like Microsoft Publisher meets Google Drawings.
+
 ### PDF Software
 Simple PDF viewer (and editor, maybe).
+
 ### Photo Editor
+... *
+
 ### Video Editor
+... *
+
 ### Audio Editor
+... *
+
+---
+## Paint / Draw
+Simple paint / drawing application.
 
 ---
 ## Notes
 Simple integrated notes app.
-Possibly a sticky-note-widget / app hybrid, with pinnable notes.
+
+Possibly a sticky-note widget / application (hybrid), with pinnable notes.
 
 ---
 ## Media Player
@@ -48,11 +69,11 @@ Simple integrated media player for playing local and web media.
 
 ---
 ## Calendar
-Simple integrated calendar/agenda.
+Simple integrated calendar / agenda app.
 
 ---
 ## Calculator
-Simple calculator.
+Simple calculator app.
 
 ---
 ## Task Manager
@@ -79,32 +100,47 @@ Simple and secure integrated video calling similar to FaceTime, Zoom, and Skype.
 Environment for developing applications for O, and more.
 
 ---
-## Customization
-...*
+## App Center
+Simple marketplace for installable apps built for the O system.
 
 ---
-## Accessibility
-...*
+## Customization Features
+... *
 
 ---
-## Security
-...*
+## Native Device Statuses
+... *
+
+---
+## Accessibility Features
+... *
+
+---
+## Security Features
+... *
 
 ---
 ## Backup & Restore
-...*
+... *
 
 ---
-## External Services
-Optional integration with external services.
+## Localization
+... *
+
+---
+## External Service Integration
+Optional integration with external services / third parties.
 
 ---
 ## Cloud Storage
 Simple and secure integrated cloud storage service.
+
 (Hopefully by 2025 or 2026)
 
 ---
 ### and this is just the beginning...
 
 ---
-*Some items on this list are yet to be updated or described in full. This is not an extensive list.
+*Some items on this list are yet to be updated or described in full.
+
+*This is not an extensive list.
