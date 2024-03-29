@@ -19,4 +19,4 @@ If you're a developer and would like to help with this project, feel free to [**
 * My friends <3
 
 ## 💛 Support
-[If you would like to support the development, any donations are gratefully appreciated.](https://ko-fi.com/dotdotgoose)
+[**If you would like to support the development, any donations are gratefully appreciated.**](https://ko-fi.com/dotdotgoose)
