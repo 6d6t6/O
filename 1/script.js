@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Add icons dynamically
-    addIcon("https://img.icons8.com/color/1500/monitor.png", "Computer");
+    addIcon("https://img.icons8.com/color/1500/monitor.png", "My Device");
     addIcon("https://img.icons8.com/color/1500/folder-invoices.png", "Documents");
     addIcon("https://img.icons8.com/color/1500/pictures-folder.png", "Photos");
     addIcon("https://img.icons8.com/color/1500/movies-folder.png", "Videos");
@@ -144,22 +144,25 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/chat.png", "Chat");
     addIcon("https://img.icons8.com/color/1500/contacts.png", "Contacts");
     addIcon("https://img.icons8.com/color/1500/news.png", "News");
+    addIcon("https://img.icons8.com/color/1500/world-map.png", "Maps");
     addIcon("https://img.icons8.com/color/1500/calendar.png", "Calendar");
+    addIcon("https://img.icons8.com/color/1500/calculator.png", "Calculator");
     addIcon("https://img.icons8.com/color/1500/loudspeaker.png", "Media Player");
     addIcon("https://img.icons8.com/color/1500/shopping-bag.png", "App Center");
     addIcon("https://img.icons8.com/color/1500/arcade-cabinet.png", "Game Center");
     addIcon("https://img.icons8.com/color/1500/new-document.png", "Write");
     addIcon("https://img.icons8.com/color/1500/new-spreadsheet.png", "Table");
     addIcon("https://img.icons8.com/color/1500/new-presentation.png", "Present");
-    addIcon("https://img.icons8.com/color/1500/folded-booklet.png", "Create");
+    addIcon("https://img.icons8.com/color/1500/plus-2-math.png", "Create");
     addIcon("https://img.icons8.com/color/1500/paint-palette-with-brush.png", "Paint");
     addIcon("https://img.icons8.com/color/1500/inscription.png", "Text Editor");
     addIcon("https://img.icons8.com/fluency/1500/bing.png", "Bing");
     addIcon("https://img.icons8.com/color/1500/photopea.png", "Photopea");
-    addIcon("https://img.icons8.com/color/1500/telegram.png", "Telegram");
+    addIcon("https://img.icons8.com/color/1500/telegram-app.png", "Telegram");
     addIcon("https://img.icons8.com/color/1500/wikipedia-logo.png", "Wikipedia");
     addIcon("https://img.icons8.com/color/1500/keyhole-shield.png", "Security");
-    addIcon("https://img.icons8.com/color/1500/wifi-router.png", "Network");
+    addIcon("https://img.icons8.com/color/1500/ping.png", "Network");
+    addIcon("https://img.icons8.com/color/1500/chromatography.png", "Task Manager");
     addIcon("https://img.icons8.com/color/1500/console.png", "Terminal");
     addIcon("https://img.icons8.com/color/1500/trash.png", "Trash");
     // Add more icons as needed
