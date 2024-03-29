@@ -67,6 +67,7 @@ body, html {
     max-width: 100%;
     max-height: 100%;
     border-radius: 4px;
+    filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.6));
     /*background-color: #ffffff10;*/
 }
 
