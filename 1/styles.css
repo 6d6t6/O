@@ -35,7 +35,7 @@ body, html {
 
 .icon {
     position: absolute;
-    width: 80px;
+    width: 96px; /* previously 80px */
     height: 96px;
     background-color: transparent;
     border: 1px solid transparent;
@@ -80,12 +80,13 @@ body, html {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; /* Truncate text if too long [?] */
+    filter: drop-shadow(0 0 2px black);
 }
 
 #selection-box {
     position: absolute;
     border: 1px dashed #ffffff80;
-    background-color: #fe7fefe50;
+    background-color: #fe7fefe80;
     border-radius: 1px;
     pointer-events: none; /* Allows pointer events to pass through the selection box */
     display: none;
