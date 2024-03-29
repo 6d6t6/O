@@ -133,11 +133,15 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Add icons dynamically
+    addIcon("gfx/icons/documents.svg", "Documents");
+    addIcon("gfx/icons/photos.svg", "Photos");
+    addIcon("gfx/icons/videos.svg", "Videos");
+    addIcon("gfx/icons/downloads.svg", "Downloads");
     addIcon("gfx/icons/internet.svg", "Internet");
-    addIcon("gfx/icons/internet.svg", "Document");
-    addIcon("gfx/icons/internet.svg", "Document");
-    addIcon("gfx/icons/internet.svg", "Document");
-    addIcon("gfx/icons/internet.svg", "Document");
+    addIcon("gfx/icons/chat.svg", "Chat");
+    addIcon("gfx/icons/texteditor.svg", "Text Editor");
+    addIcon("gfx/icons/network.svg", "Networks & Devices");
+    addIcon("gfx/icons/internet.svg", "Trash");
     // Add more icons as needed
 
     // Variables to store the initial mouse position and the current mouse position during drag
