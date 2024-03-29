@@ -133,15 +133,18 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Add icons dynamically
-    addIcon("gfx/icons/documents.svg", "Documents");
-    addIcon("gfx/icons/photos.svg", "Photos");
-    addIcon("gfx/icons/videos.svg", "Videos");
-    addIcon("gfx/icons/downloads.svg", "Downloads");
-    addIcon("gfx/icons/internet.svg", "Internet");
-    addIcon("gfx/icons/chat.svg", "Chat");
-    addIcon("gfx/icons/texteditor.svg", "Text Editor");
-    addIcon("gfx/icons/network.svg", "Networks & Devices");
-    addIcon("gfx/icons/internet.svg", "Trash");
+    addIcon("https://img.icons8.com/color/1500/monitor.png", "Computer");
+    addIcon("https://img.icons8.com/color/1500/folder-invoices.png", "Documents");
+    addIcon("https://img.icons8.com/color/1500/pictures-folder.png", "Photos");
+    addIcon("https://img.icons8.com/color/1500/movies-folder.png", "Videos");
+    addIcon("https://img.icons8.com/color/1500/photos-folder.png", "Music");
+    addIcon("https://img.icons8.com/color/1500/downloads-folder.png", "Downloads");
+    addIcon("https://img.icons8.com/color/1500/geography.png", "Internet");
+    addIcon("https://img.icons8.com/color/1500/chat.png", "Chat");
+    addIcon("https://img.icons8.com/color/1500/document.png", "Text Editor");
+    addIcon("https://img.icons8.com/color/1500/wifi-router.png", "Networks & Devices");
+    addIcon("https://img.icons8.com/color/1500/console.png", "Terminal");
+    addIcon("https://img.icons8.com/color/1500/trash.png", "Trash");
     // Add more icons as needed
 
     // Variables to store the initial mouse position and the current mouse position during drag
