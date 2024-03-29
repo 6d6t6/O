@@ -140,7 +140,9 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/photos-folder.png", "Music");
     addIcon("https://img.icons8.com/color/1500/downloads-folder.png", "Downloads");
     addIcon("https://img.icons8.com/color/1500/geography.png", "Internet");
+    addIcon("https://img.icons8.com/color/1500/secured-letter.png", "Mail");
     addIcon("https://img.icons8.com/color/1500/chat.png", "Chat");
+    addIcon("https://img.icons8.com/color/1500/contacts.png", "Contacts");
     addIcon("https://img.icons8.com/color/1500/news.png", "News");
     addIcon("https://img.icons8.com/color/1500/calendar.png", "Calendar");
     addIcon("https://img.icons8.com/color/1500/loudspeaker.png", "Media Player");
@@ -149,6 +151,7 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/new-spreadsheet.png", "Table");
     addIcon("https://img.icons8.com/color/1500/new-presentation.png", "Present");
     addIcon("https://img.icons8.com/color/1500/paint-palette-with-brush.png", "Paint");
+    addIcon("https://img.icons8.com/fluency/1500/bing--v1.png", "Bing");
     addIcon("https://img.icons8.com/color/1500/keyhole-shield.png", "Security");
     addIcon("https://img.icons8.com/color/1500/wifi-router.png", "Network");
     addIcon("https://img.icons8.com/color/1500/console.png", "Terminal");
