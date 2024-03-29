@@ -8,21 +8,21 @@
 
 This is a project that I have been dreaming of and working on for years, being rebuilt from the ground up with the help of our good friend, ChatGPT.
 
+## 💻 Development
+
+_O_ is written primarily in JavaScript, and currently being developed by myself and AI.
+
+If you're a developer and would like to help with this project, feel free to [contact](https://github.com/6d6t6/O/blob/main/1/docs/README.md#-contact) me.
+
 ## 📍 Roadmap
 
 [**Check out the roadmap**](roadmap.md) to learn more about what's to come.
 
-## 💻 Development
-
-This project is currently being developed by myself, with the help of AI.
-
-If you're a developer and would like to help with this project, feel free to contact me.
-
 ## 🙏 Thank you
 
 * ChatGPT 3.5
-* Developers everywhere, whose code probably helped train these LLMs like ChatGPT
-* Friends <3
+* Friends ♡
+* Developers everywhere, whose code possibly helped train these LLMs like ChatGPT
 
 ## 💛 Support
 [**If you would like to support the development, any donations are gratefully appreciated.**](https://ko-fi.com/dotdotgoose)
