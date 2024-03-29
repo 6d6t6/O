@@ -141,8 +141,16 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/downloads-folder.png", "Downloads");
     addIcon("https://img.icons8.com/color/1500/geography.png", "Internet");
     addIcon("https://img.icons8.com/color/1500/chat.png", "Chat");
+    addIcon("https://img.icons8.com/color/1500/news.png", "News");
+    addIcon("https://img.icons8.com/color/1500/calendar.png", "Calendar");
+    addIcon("https://img.icons8.com/color/1500/loudspeaker.png", "Media Player");
     addIcon("https://img.icons8.com/color/1500/document.png", "Text Editor");
-    addIcon("https://img.icons8.com/color/1500/wifi-router.png", "Networks & Devices");
+    addIcon("https://img.icons8.com/color/1500/new-document.png", "Write");
+    addIcon("https://img.icons8.com/color/1500/new-spreadsheet.png", "Table");
+    addIcon("https://img.icons8.com/color/1500/new-presentation.png", "Present");
+    addIcon("https://img.icons8.com/color/1500/paint-palette-with-brush.png", "Paint");
+    addIcon("https://img.icons8.com/color/1500/keyhole-shield.png", "Security");
+    addIcon("https://img.icons8.com/color/1500/wifi-router.png", "Network");
     addIcon("https://img.icons8.com/color/1500/console.png", "Terminal");
     addIcon("https://img.icons8.com/color/1500/trash.png", "Trash");
     // Add more icons as needed
