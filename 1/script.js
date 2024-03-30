@@ -142,6 +142,7 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/geography.png", "Internet");
     addIcon("https://img.icons8.com/color/1500/secured-letter.png", "Mail");
     addIcon("https://img.icons8.com/color/1500/chat.png", "Chat");
+    addIcon("https://img.icons8.com/color/1500/video-call.png", "Video Chat");
     addIcon("https://img.icons8.com/color/1500/phone.png", "Phone");
     addIcon("https://img.icons8.com/color/1500/contacts.png", "Contacts");
     addIcon("https://img.icons8.com/color/1500/news.png", "News");
@@ -156,11 +157,10 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/new-spreadsheet.png", "Table");
     addIcon("https://img.icons8.com/color/1500/new-presentation.png", "Present");
     addIcon("https://img.icons8.com/color/1500/design.png", "Create");
+    addIcon("https://img.icons8.com/color/1500/clapperboard.png", "MIX Video Studio");
+    addIcon("https://img.icons8.com/color/1500/electronic-music.png", "MIX Audio Studio");
     addIcon("https://img.icons8.com/color/1500/paint-palette-with-brush.png", "Paint");
     addIcon("https://img.icons8.com/color/1500/inscription.png", "Text Editor");
-    addIcon("https://img.icons8.com/fluency/1500/bing.png", "Bing");
-    addIcon("https://img.icons8.com/color/1500/photopea.png", "Photopea");
-    addIcon("https://img.icons8.com/color/1500/telegram-app.png", "Telegram");
     addIcon("https://img.icons8.com/color/1500/wikipedia-logo.png", "Wikipedia");
     addIcon("https://img.icons8.com/color/1500/keyhole-shield.png", "Security");
     addIcon("https://img.icons8.com/color/1500/ping.png", "Network");
