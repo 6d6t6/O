@@ -88,8 +88,8 @@ Simple integrated panel with Notification History and quick access to settings a
 Simple integrated universal search.
 
 ---
-## AI Partner＊
-Friendly AI powered "Partner＊"
+## Evo
+Simple, friendly, integrated operator.
 
 ---
 ## Video Calling
