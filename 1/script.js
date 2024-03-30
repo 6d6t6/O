@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/news.png", "News");
     addIcon("https://img.icons8.com/color/1500/partly-cloudy-rain.png", "Weather");
     addIcon("https://img.icons8.com/color/1500/world-map.png", "Maps");
-    addIcon("https://img.icons8.com/color/1500/calendar.png", "Calendar");
+    addIcon("https://img.icons8.com/color/1500/calendar--v1.png", "Calendar");
     addIcon("https://img.icons8.com/color/1500/calculator.png", "Calculator");
     addIcon("https://img.icons8.com/color/1500/loudspeaker.png", "Media Player");
     addIcon("https://img.icons8.com/color/1500/shopping-bag.png", "App Center");
@@ -156,11 +156,11 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/new-document.png", "Write");
     addIcon("https://img.icons8.com/color/1500/new-spreadsheet.png", "Table");
     addIcon("https://img.icons8.com/color/1500/new-presentation.png", "Present");
-    addIcon("https://img.icons8.com/color/1500/design.png", "Create");
-    addIcon("https://img.icons8.com/color/1500/clapperboard.png", "MIX Video Studio");
-    addIcon("https://img.icons8.com/color/1500/electronic-music.png", "MIX Audio Studio");
+    addIcon("https://img.icons8.com/color/1500/design.png", "Creator Studio");
+    addIcon("https://img.icons8.com/color/1500/clapperboard.png", "Video Studio");
+    addIcon("https://img.icons8.com/color/1500/electronic-music.png", "Audio Studio");
     addIcon("https://img.icons8.com/color/1500/paint-palette-with-brush.png", "Paint");
-    addIcon("https://img.icons8.com/color/1500/inscription.png", "Text Editor");
+    addIcon("https://img.icons8.com/color/1500/notepad.png", "Notebook");
     addIcon("https://img.icons8.com/color/1500/wikipedia-logo.png", "Wikipedia");
     addIcon("https://img.icons8.com/color/1500/keyhole-shield.png", "Security");
     addIcon("https://img.icons8.com/color/1500/ping.png", "Network");
