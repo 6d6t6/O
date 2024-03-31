@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/new-document.png", "Write");
     addIcon("https://img.icons8.com/color/1500/new-spreadsheet.png", "Table");
     addIcon("https://img.icons8.com/color/1500/new-presentation.png", "Present");
-    addIcon("https://img.icons8.com/color/1500/design.png", "Creator Studio");
+    addIcon("https://img.icons8.com/color/1500/design.png", "Create Studio");
     addIcon("https://img.icons8.com/color/1500/clapperboard.png", "Video Studio");
     addIcon("https://img.icons8.com/color/1500/electronic-music.png", "Audio Studio");
     addIcon("https://img.icons8.com/color/1500/paint-palette-with-brush.png", "Paint");
@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/wikipedia-logo.png", "Wikipedia");
     addIcon("https://img.icons8.com/color/1500/keyhole-shield.png", "Security");
     addIcon("https://img.icons8.com/color/1500/ping.png", "Network");
-    addIcon("https://img.icons8.com/color/1500/chromatography.png", "Task Manager");
+    addIcon("https://img.icons8.com/color/1500/heart-monitor.png", "Task Manager");
     addIcon("https://img.icons8.com/color/1500/console.png", "Terminal");
     addIcon("https://img.icons8.com/color/1500/trash.png", "Trash");
     // Add more icons as needed
