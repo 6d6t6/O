@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/downloads-folder.png", "Downloads");
     addIcon("https://img.icons8.com/color/1500/geography.png", "Internet");
     addIcon("https://img.icons8.com/color/1500/secured-letter.png", "Mail");
-    addIcon("https://img.icons8.com/color/1500/chat.png", "Chat");
+    addIcon("https://img.icons8.com/color/1500/chat.png", "Messages");
     addIcon("https://img.icons8.com/color/1500/video-call.png", "Video Chat");
     addIcon("https://img.icons8.com/color/1500/phone.png", "Phone");
     addIcon("https://img.icons8.com/color/1500/contacts.png", "Contacts");
