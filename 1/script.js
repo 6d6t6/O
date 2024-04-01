@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/new-spreadsheet.png", "Table");
     addIcon("https://img.icons8.com/color/1500/new-presentation.png", "Present");
     addIcon("https://img.icons8.com/color/1500/design.png", "Creator Studio");
-    addIcon("https://img.icons8.com/color/1500/clapperboard.png", "Video Studio");
+    addIcon("https://img.icons8.com/color/1500/clapperboard.png", "Movie Studio");
     addIcon("https://img.icons8.com/color/1500/electronic-music.png", "Audio Studio");
     addIcon("https://img.icons8.com/color/1500/paint-palette-with-brush.png", "Paint");
     addIcon("https://img.icons8.com/color/1500/notepad.png", "Notebook");
