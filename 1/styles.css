@@ -18,7 +18,7 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('gfx/wallpapers/jm-moon.jpg'); /* Wallpaper Image */
+    background-image: url('gfx/wallpapers/jm-moon.jpg'); /* wallpaper image */
     background-size: cover;
     background-repeat: no-repeat;
     background-position-x: center;
@@ -31,7 +31,7 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    /*margin: 32px;*/
+    /* margin: 32px; */
 }
 
 .icon {
@@ -69,18 +69,20 @@ body, html {
     max-height: 100%;
     border-radius: 4px;
     filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.6));
-    /*background-color: #ffffff10;*/
+    /* background-color: #ffffff10; */
 }
 
 .icon span {
     font-family: "Inter", sans-serif;
+    font-weight: 300;
+    font-optical-sizing: none; /* none for now */
     font-size: 8pt;
     color: #fff;
     margin-top: 5px;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Truncate text if too long [?] */
+    text-overflow: ellipsis; /* truncate text if too long */
     filter: drop-shadow(0 0 2px black);
     cursor: default;
     max-width: 72px;
@@ -91,7 +93,7 @@ body, html {
     border: 1px solid #ffffff80;
     background-color: #b5b5b520;
     border-radius: 3px;
-    pointer-events: none; /* Allows pointer events to pass through the selection box */
+    pointer-events: none; /* allows pointer events to pass through the selection box */
     display: none;
     box-shadow: inset 0 0 6px #00000060;
     filter: drop-shadow(0 0 6px #00000060);
