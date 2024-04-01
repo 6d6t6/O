@@ -85,7 +85,7 @@ body, html {
     text-overflow: ellipsis; /* truncate text if too long */
     filter: drop-shadow(0 0 2px black);
     cursor: default;
-    max-width: 72px;
+    max-width: 76px;
 }
 
 #selection-box {
