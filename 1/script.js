@@ -151,12 +151,13 @@ document.addEventListener("DOMContentLoaded", function() {
     addIcon("https://img.icons8.com/color/1500/calendar--v1.png", "Calendar");
     addIcon("https://img.icons8.com/color/1500/calculator.png", "Calculator");
     addIcon("https://img.icons8.com/color/1500/loudspeaker.png", "Media Player");
+    addIcon("https://img.icons8.com/color/1500/book-shelf.png", "Bookshelf");
     addIcon("https://img.icons8.com/color/1500/shopping-bag.png", "App Center");
     addIcon("https://img.icons8.com/color/1500/arcade-cabinet.png", "Game Center");
     addIcon("https://img.icons8.com/color/1500/new-document.png", "Write");
     addIcon("https://img.icons8.com/color/1500/new-spreadsheet.png", "Table");
     addIcon("https://img.icons8.com/color/1500/new-presentation.png", "Present");
-    addIcon("https://img.icons8.com/color/1500/design.png", "Create Studio");
+    addIcon("https://img.icons8.com/color/1500/design.png", "Create");
     addIcon("https://img.icons8.com/color/1500/clapperboard.png", "Video Studio");
     addIcon("https://img.icons8.com/color/1500/electronic-music.png", "Audio Studio");
     addIcon("https://img.icons8.com/color/1500/paint-palette-with-brush.png", "Paint");
