@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", function() {
             });
 
             // Select the clicked icon
+            icon.classList.add("selected");
             selectedIcon = icon;
-            selectedIcon.classList.add("selected");
         }
 
         // Add your logic here for handling icon click event
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Determine whether Ctrl (or Command) key is pressed
             const ctrlKey = navigator.platform.match("Mac") ? event.metaKey : event.ctrlKey;
 
-            // Handle single-click selection
+            // Handle icon click
             handleIconClick(icon, ctrlKey);
         }
     });
