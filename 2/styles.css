@@ -1,0 +1,173 @@
+@font-face {
+    font-family: 'Material Symbols Outlined';
+    font-style: normal;
+    src: url(gfx/fonts/material-symbols-rounded.woff2) format('woff2');
+  }
+
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+}
+
+body, html {
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+#desktop {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #131313;
+    overflow: hidden;
+}
+
+#desktop-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('gfx/wallpapers/jm-moon.jpg'); /* wallpaper image */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+}
+
+#desktop-icons {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* margin: 32px; */
+}
+
+.icon {
+    position: absolute;
+    width: 96px; /* previously 80px */
+    height: 96px;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 8px;
+}
+
+.icon.selected {
+    background-color: #60606020;
+    border: 1px solid #60606030;
+}
+
+.icon.active {
+    background-color: #ffffff10;
+    border: 1px dashed #ffffff30!important;
+}
+
+.icon:hover {
+    border: 1px solid #60606020;
+}
+
+.icon img {
+    width: 64px;
+    height: 64px;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 4px;
+    filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.6));
+    /* background-color: #ffffff10; */
+}
+
+.icon span {
+    font-family: "Inter", sans-serif;
+    font-weight: 300;
+    font-optical-sizing: none; /* none for now */
+    font-size: 8pt;
+    color: #fff;
+    margin-top: 5px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* truncate text if too long */
+    filter: drop-shadow(0 0 2px black);
+    cursor: default;
+    max-width: 76px;
+}
+
+#selection-box {
+    position: absolute;
+    border: 1px solid #ffffff80;
+    background-color: #b5b5b520;
+    border-radius: 3px;
+    pointer-events: none; /* allows pointer events to pass through the selection box */
+    display: none;
+    box-shadow: inset 0 0 6px #00000060;
+    filter: drop-shadow(0 0 6px #00000060);
+}
+
+.program-window {
+    position: absolute;
+    top: 50px; /* Adjust as needed */
+    left: 50px; /* Adjust as needed */
+    width: 200px; /* Adjust as needed */
+    height: 150px; /* Adjust as needed */
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 100; /* Ensure windows appear above other elements */
+    cursor: move;
+    user-select: none;
+}
+
+.close-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+
+#taskbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background-color: #33333395;
+    color: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#o-button {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    cursor: default;
+}
+
+#o-button:hover {
+    /* to be added */
+}
+
+.o-menu {
+    position: absolute;
+}
+
+#taskbar-items {
+    display: flex;
+}
