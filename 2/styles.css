@@ -154,15 +154,26 @@ body, html {
 }
 
 #o-button {
-    position: absolute;
-    left: 16px;
-    bottom: 16px;
+    position: unset;
+    vertical-align: middle;
     cursor: default;
 }
 
 #o-button:hover {
-    /* to be added */
+    animation: pulse 3s infinite;
 }
+
+    @keyframes pulse {
+        0% {
+            font-variation-settings: 'wght' 100;
+        }
+        50% {
+            font-variation-settings: 'wght' 700;
+        }
+        100% {
+            font-variation-settings: 'wght' 100;
+        }
+    }
 
 .o-menu {
     position: absolute;
