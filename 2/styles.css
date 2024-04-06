@@ -126,9 +126,9 @@ body, html {
     width: 320px; /* Adjust as needed */
     height: 200px; /* Adjust as needed */
     background-color: #232323;
-    border: 1px solid #ccc;
+    border: 1px solid #333;
     border-radius: 6px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 12px 1px rgba(0, 0, 0, 0.3);
     z-index: 100; /* Ensure windows appear above other elements */
     cursor: move;
     user-select: none;
