@@ -1,18 +1,14 @@
-# o: web-based operating system
+# ⊙ web-based operating system
 
 [![GitHub repo size](https://img.shields.io/github/repo-size/6d6t6/O?logo=github&color=purple)](https://github.com/6d6t6/O)
 [![GitHub last commit](https://img.shields.io/github/last-commit/6d6t6/O?logo=github)](https://github.com/6d6t6/O)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/t/6d6t6/O?logo=github)](https://github.com/6d6t6/O)
 [![Discord](https://img.shields.io/discord/1207017475041009724?logo=discord&logoColor=white&color=5865F2&label=discord%20server)](https://discord.gg/UJsJbXxb2v)
-[![Built in collaboration with ChatGPT 3.5](https://img.shields.io/badge/built%20in%20collaboration%20with%20chatgpt%203.5-412991?logo=openai)](https://chat.openai.com)
-
-This is a project that I have been dreaming of and working on for years, being rebuilt from the ground up with the help of our good friend, ChatGPT.
+[![Built in collaboration with GPT](https://img.shields.io/badge/built%20in%20collaboration%20with%20gpt-412991?logo=openai)](https://chat.openai.com)
 
 ## 💻 Development
 
-_O_ is written primarily in JavaScript, and currently being developed by myself and AI.
-
-If you're a developer and would like to help with this project, feel free to [contact](https://github.com/6d6t6/O/blob/main/1/docs/README.md#-contact) me.
+⊙ is an operating system built entirely out of web technologies.
 
 ## 📍 Roadmap
 
@@ -20,12 +16,12 @@ If you're a developer and would like to help with this project, feel free to [co
 
 ## 🙏 Thank you
 
-* ChatGPT 3.5
+* (ChatGPT) GPT 3.5, GPT 4, Cursor
 * Friends ♡
 * Developers everywhere, whose code possibly helped train these LLMs like ChatGPT
 
 ## 💛 Support
-[**If you would like to support the development, any donations are gratefully appreciated.**](https://ko-fi.com/dotdotgoose)
+Thank you for your support!
 
 ## 💌 Contact
 
