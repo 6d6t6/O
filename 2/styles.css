@@ -123,10 +123,11 @@ body, html {
     position: absolute;
     top: 50px; /* Adjust as needed */
     left: 50px; /* Adjust as needed */
-    width: 200px; /* Adjust as needed */
-    height: 150px; /* Adjust as needed */
-    background-color: #fff;
+    width: 320px; /* Adjust as needed */
+    height: 200px; /* Adjust as needed */
+    background-color: #232323;
     border: 1px solid #ccc;
+    border-radius: 6px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 100; /* Ensure windows appear above other elements */
     cursor: move;
@@ -157,23 +158,12 @@ body, html {
     position: unset;
     vertical-align: middle;
     cursor: default;
+    transition: 0.3s ease-out;
 }
 
 #o-button:hover {
-    animation: pulse 3s infinite;
+    font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 20;
 }
-
-    @keyframes pulse {
-        0% {
-            font-variation-settings: 'wght' 100;
-        }
-        50% {
-            font-variation-settings: 'wght' 700;
-        }
-        100% {
-            font-variation-settings: 'wght' 100;
-        }
-    }
 
 .o-menu {
     position: absolute;
