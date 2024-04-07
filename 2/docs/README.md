@@ -18,20 +18,20 @@
 
 [**Check out the roadmap**](roadmap.md) to learn more about what's to come.
 
-## 📲 Compatibility
+## 📲 Theoretical Compatibility
 
-![Chrome (v24)](https://img.shields.io/badge/24-Chrome-black?logo=googlechrome&logoColor=white&labelColor=darkgreen)
-![Edge (v12)](https://img.shields.io/badge/12-Edge-black?logo=microsoftedge&logoColor=white&labelColor=darkgreen)
-![Firefox (v16~37)](https://img.shields.io/badge/16~37-Firefox-black?logo=firefox&logoColor=white&labelColor=darkgreen)
-![Opera (v15)](https://img.shields.io/badge/15-Opera-black?logo=opera&logoColor=white&labelColor=darkgreen)
-![Safari (v8~10)](https://img.shields.io/badge/8~10-Safari-black?logo=safari&logoColor=white&labelColor=darkgreen)
+![Chrome (v24+)](https://img.shields.io/badge/24+-Chrome-black?logo=googlechrome&logoColor=white&labelColor=darkgreen)
+![Edge (v12+)](https://img.shields.io/badge/12+-Edge-black?logo=microsoftedge&logoColor=white&labelColor=darkgreen)
+![Firefox (v16~37+)](https://img.shields.io/badge/16~37+-Firefox-black?logo=firefox&logoColor=white&labelColor=darkgreen)
+![Opera (v15+)](https://img.shields.io/badge/15+-Opera-black?logo=opera&logoColor=white&labelColor=darkgreen)
+![Safari (v8~10+)](https://img.shields.io/badge/8~10+-Safari-black?logo=safari&logoColor=white&labelColor=darkgreen)
 <br>
-![Chrome Android (v25)](https://img.shields.io/badge/25-Chrome_Android-black?logo=googlechrome&logoColor=white&labelColor=darkgreen)
-![Firefox for Android (v22~37)](https://img.shields.io/badge/22~37-Firefox_for_Android-black?logo=firefox&logoColor=white&labelColor=darkgreen)
-![Opera Android (v14)](https://img.shields.io/badge/14-Opera_Android-black?logo=opera&logoColor=white&labelColor=darkgreen)
-![Safari on iOS (v8~10)](https://img.shields.io/badge/8~10-Safari_on_iOS-black?logo=safari&logoColor=white&labelColor=darkgreen)
-![Samsung Internet (v1.5)](https://img.shields.io/badge/1.5-Samsung_Internet-black?logo=samsung&logoColor=white&labelColor=darkgreen)
-![WebView Android (v37)](https://img.shields.io/badge/37-WebView_Android-black?logo=android&logoColor=white&labelColor=darkgreen)
+![Chrome Android (v25+)](https://img.shields.io/badge/25+-Chrome_Android-black?logo=googlechrome&logoColor=white&labelColor=darkgreen)
+![Firefox for Android (v22~37+)](https://img.shields.io/badge/22~37+-Firefox_for_Android-black?logo=firefox&logoColor=white&labelColor=darkgreen)
+![Opera Android (v14+)](https://img.shields.io/badge/14+-Opera_Android-black?logo=opera&logoColor=white&labelColor=darkgreen)
+![Safari on iOS (v8~10+)](https://img.shields.io/badge/8~10+-Safari_on_iOS-black?logo=safari&logoColor=white&labelColor=darkgreen)
+![Samsung Internet (v1.5+)](https://img.shields.io/badge/1.5+-Samsung_Internet-black?logo=samsung&logoColor=white&labelColor=darkgreen)
+![WebView Android (v37+)](https://img.shields.io/badge/37+-WebView_Android-black?logo=android&logoColor=white&labelColor=darkgreen)
 
 ## 🙏 Thank you
 
