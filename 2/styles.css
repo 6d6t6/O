@@ -172,3 +172,44 @@ body, html {
 #taskbar-items {
     display: flex;
 }
+
+.close-button, .minimize-button, .maximize-button {
+    position: absolute;
+    top: 5px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    color: transparent;
+    border-radius: 20px;
+    outline: none;
+    border: 5px solid #232323;
+    font-size: 10px;
+    line-height: 1;
+    vertical-align: middle;
+    font-weight: 600;
+}
+
+.close-button:hover, .minimize-button:hover, .maximize-button:hover {
+    color: #00000080;
+}
+
+.close-button {
+    background: #eb5b53;
+    left: 5px;
+}
+
+.minimize-button {
+    background: #f5bb47;
+    left: 20px;
+}
+
+.maximize-button {
+    background: #63c943;
+    left: 35px;
+}
+
+.program-window>div {
+    padding: 30px 8px; /* this might be temporary */
+    color: lightgrey;
+}
