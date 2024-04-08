@@ -188,6 +188,8 @@ body, html {
     line-height: 1;
     vertical-align: middle;
     font-weight: 600;
+    font-family: 'Material Symbols Outlined';
+    background: #323232;
 }
 
 .close-button:hover, .minimize-button:hover, .maximize-button:hover {
