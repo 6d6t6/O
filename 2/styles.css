@@ -148,24 +148,27 @@ body, html {
     transform: translateX(-50%);
     width: auto;
     height: 50px;
-    background-color: #33333395;
+    background-color: #232323bf;
+    border: 1px solid #323232;
     color: white;
     display: flex;
     justify-content: space-around;
     align-items: center;
     border-radius: 10px;
+    box-shadow: 0 0 12px 1px rgba(0, 0, 0, 0.3);
 }
 
 .dock-icon {
     padding: 0;
-    margin: 2px;
+    margin: 5px;
     border-radius: 4px;
     background: #ffffff10;
     vertical-align: middle;
+    border: 1px solid #ffffff0d;
 }
 
 #dockIcons {
-    margin: 0 10px;
+    margin: 0 5px;
 }
 
 #o-button {
