@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Add more programs as needed
     ];
 
-    const taskbarHeight = 50; // Adjust based on actual taskbar height
+    const dockHeight = 50; // Adjust based on actual dock height
 
     // Function to handle icon click event
     function handleIconClick(icon, shiftKey, ctrlKey) {
@@ -59,31 +59,36 @@ document.addEventListener("DOMContentLoaded", function() {
         // Add your logic here for handling icon click event
     }
     
-    // Function to handle double click event on icons
-    function handleIconDoubleClick(icon) {
-        icon.classList.add("active");
+// Function to handle double click event on icons
+function handleIconDoubleClick(icon) {
+    icon.classList.add("active");
 
-        const programName = icon.getAttribute("data-program-name");
-        const programData = JSON.parse(localStorage.getItem(programName));
-        if (programData) {
-            openProgramWindow(programData);
+    const programName = icon.getAttribute("data-program-name");
+    const programData = JSON.parse(localStorage.getItem(programName));
+    if (programData) {
+        openProgramWindow(programData);
 
-            // Add icon to the taskbar with the same image as on the desktop
-            const taskbar = document.getElementById("taskbar");
-            const taskbarIcon = document.createElement("div");
-            taskbarIcon.textContent = programData.name;
-            taskbarIcon.classList.add("taskbar-icon");
-            taskbarIcon.style.backgroundImage = `url(${programData.icon})`; // Set the icon image
-            taskbar.appendChild(taskbarIcon);
+        // Add icon to the dock with the same image as on the desktop
+        const dock = document.getElementById("dock");
+        const dockIcon = document.createElement("div");
+        dockIcon.classList.add("dock-icon");
+        dockIcon.style.backgroundImage = `url(${programData.icon})`; // Set the icon image
+        dockIcon.addEventListener("click", function() {
+            programWindow.style.display = "block";
+            programWindow.classList.add("active");
+            programWindow.classList.remove("minimized");
+        });
 
-            // Remove taskbar icon when program window is closed
-            programData.window.addEventListener("close", function() {
-                taskbar.removeChild(taskbarIcon);
-            });
-        } else {
-            console.error("Program data not found for:", programName);
-        }
+        // Remove dock icon when program window is closed
+        programWindow.addEventListener("close", function() {
+            dock.removeChild(dockIcon);
+        });
+
+        dock.appendChild(dockIcon); // Add the dock icon
+    } else {
+        console.error("Program data not found for:", programName);
     }
+}
     
     // Function to execute program logic based on program name
     function executeProgram(programName) {
@@ -170,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const margin = 24; // Adjust as needed
         const desktopRect = desktop.getBoundingClientRect();
         const columns = Math.floor((desktopRect.width - margin) / (iconSize + margin));
-        const rows = Math.floor((desktopRect.height - taskbarHeight - margin) / (iconSize + margin));
+        const rows = Math.floor((desktopRect.height - dockHeight - margin) / (iconSize + margin));
         const existingIcons = iconsContainer.querySelectorAll(".icon").length;
         const col = Math.floor(existingIcons / rows);
         const row = existingIcons % rows;
@@ -280,7 +285,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Constrain the movement within the desktop area
         const desktopRect = desktop.getBoundingClientRect();
         const newX = Math.min(Math.max(clientX - offsetX, desktopRect.left), desktopRect.right - draggedIcon.offsetWidth);
-        const newY = Math.min(Math.max(clientY - offsetY, desktopRect.top), desktopRect.bottom - draggedIcon.offsetHeight - taskbarHeight);
+        const newY = Math.min(Math.max(clientY - offsetY, desktopRect.top), desktopRect.bottom - draggedIcon.offsetHeight - dockHeight);
         
         draggedIcon.style.left = newX + "px";
         draggedIcon.style.top = newY + "px";
@@ -307,7 +312,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const margin = 24; // Adjust as needed
         const desktopRect = desktop.getBoundingClientRect();
         const columns = Math.floor((desktopRect.width - margin) / (iconSize + margin));
-        const rows = Math.floor((desktopRect.height - taskbarHeight - margin) / (iconSize + margin));
+        const rows = Math.floor((desktopRect.height - dockHeight - margin) / (iconSize + margin));
         const maxValidX = (columns - 1) * (iconSize + margin) + desktopRect.left;
         const maxValidY = (rows - 1) * (iconSize + margin) + desktopRect.top;
         const snappedX = Math.round((parseInt(draggedIcon.style.left) - desktopRect.left) / (iconSize + margin)) * (iconSize + margin) + desktopRect.left;
@@ -380,9 +385,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Add event listener for mouse up on the desktop
-    desktop.addEventListener("mouseup", handleDesktopMouseUp);
-
     // Function to highlight icons within the selection box
     function highlightIconsWithinSelectionBox() {
         const selectionRect = selectionBox.getBoundingClientRect();
@@ -410,80 +412,111 @@ document.addEventListener("DOMContentLoaded", function() {
     function openProgramWindow(programData) {
         const programWindow = document.createElement("div");
         programWindow.classList.add("program-window");
-        
+
         let isDragging = false;
         let offsetX = 0;
         let offsetY = 0;
 
-        programWindow.addEventListener("mousedown", function(event) {
+        // Function to handle mouse down to enable window dragging
+        function handleMouseDown(event) {
             isDragging = true;
             offsetX = event.clientX - programWindow.getBoundingClientRect().left;
             offsetY = event.clientY - programWindow.getBoundingClientRect().top;
             event.preventDefault(); // Prevent default to avoid any text selection
-        });
+        }
 
-        document.addEventListener("mousemove", function(event) {
+        // Function to handle mouse move to handle window dragging
+        function handleMouseMove(event) {
             if (isDragging) {
                 programWindow.style.left = event.clientX - offsetX + "px";
                 programWindow.style.top = event.clientY - offsetY + "px";
             }
-        });
+        }
 
-        document.addEventListener("mouseup", function() {
+        // Function to handle mouse up to stop window dragging
+        function handleMouseUp() {
             isDragging = false;
+        }
+
+        // Add event listeners for mouse down, move, and up
+        programWindow.addEventListener("mousedown", handleMouseDown);
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", handleMouseUp);
+
+        // create close, minimize, and maximize buttons
+        const closeButton = createButton("Close", "close-button", function() {
+            closeProgramWindow(programWindow, programData);
+        });
+        const minimizeButton = createButton("remove", "minimize-button", function() {
+            programWindow.classList.add("minimized");
+            programWindow.classList.remove("maximized");
+        });
+        const maximizeButton = createButton("expand_content", "maximize-button", function() {
+            programWindow.classList.add("maximized");
+            programWindow.classList.remove("minimized");
+            const unmaximizeButton = createButton("collapse_content", "unmaximize-button", function() {
+                programWindow.classList.remove("maximized");
+                unmaximizeButton.parentNode.removeChild(unmaximizeButton);
+            });
+            programWindow.appendChild(unmaximizeButton);
         });
 
-        const closeButton = document.createElement("button");
-        closeButton.textContent = "Close";
-        closeButton.classList.add("close-button");
-        closeButton.addEventListener("click", function() {
-            closeProgramWindow(programWindow);
-        });
-
+        // Append buttons to program window
         programWindow.appendChild(closeButton);
+        programWindow.appendChild(minimizeButton);
+        programWindow.appendChild(maximizeButton);
 
+        // Create program content
         const programContent = document.createElement("div");
         programContent.textContent = "Program Content Here";
         programWindow.appendChild(programContent);
         
+        // Append program window to desktop
         desktop.appendChild(programWindow);
 
-        const taskbarIcon = document.createElement("img");
-        taskbarIcon.src = programData.icon;
-        taskbarIcon.alt = programData.name;
-        taskbarIcon.classList.add("taskbar-icon");
-        taskbarIcon.addEventListener("click", function() {
-            programWindow.classList.toggle("minimized");
-        });
+        // Create dock icon
+        const dockIcon = document.createElement("img");
+        dockIcon.src = programData.icon;
+        dockIcon.alt = programData.name;
+        dockIcon.classList.add("dock-icon");
+        dockIcon.style.width = "30px"; // Set the width
+        dockIcon.style.height = "30px"; // Set the height
 
-        document.querySelector(".taskbar").appendChild(taskbarIcon);
+    // Add event listener to toggle window visibility and the "minimized" class
+    dockIcon.addEventListener("click", function() {
+        if (programWindow.classList.contains("minimized")) {
+            programWindow.classList.remove("minimized");
+        } else {
+            programWindow.classList.add("minimized");
+        }
 
-        // Add start menu logic
-        taskbarIcon.addEventListener("contextmenu", function(event) {
-            event.preventDefault();
-            // Implement start menu functionality here
-        });
+    });
 
-        const taskbarIcon2 = document.createElement("img");
-        taskbarIcon2.src = programData.icon;
-        taskbarIcon2.alt = programData.name;
-        taskbarIcon2.classList.add("taskbar-icon");
-        taskbarIcon2.addEventListener("click", function() {
-            // Toggle window visibility
-            programWindow.classList.toggle("minimized");
-        });
+        // Append dock icon to dock
+        dock.appendChild(dockIcon);
+        // Store reference to dock icon in program data
+        programData.dockIcon = dockIcon;
 
-        document.querySelector(".taskbar").appendChild(taskbarIcon2);
+        return programWindow;
     }
 
-    // Keep track of open windows
-    const openWindows = [];
+    // Function to create a button element
+    function createButton(text, className, clickHandler) {
+        const button = document.createElement("button");
+        button.textContent = text;
+        button.classList.add(className);
+        button.addEventListener("click", clickHandler);
+        return button;
+    }
 
-    function closeProgramWindow(programWindow) {
-        programWindow.remove();
-        const index = openWindows.indexOf(programWindow);
-        if (index > -1) {
-            openWindows.splice(index, 1);
+
+    // Function to close program windows
+    function closeProgramWindow(programWindow, programData) {
+        programWindow.parentNode.removeChild(programWindow);
+        // Remove dock icon
+        if (programData.dockIcon) {
+            programData.dockIcon.parentNode.removeChild(programData.dockIcon);
         }
     }
+
 });
