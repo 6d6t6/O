@@ -143,15 +143,29 @@ body, html {
 
 #dock {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
     height: 50px;
     background-color: #33333395;
     color: white;
     display: flex;
     justify-content: space-around;
     align-items: center;
+    border-radius: 10px;
+}
+
+.dock-icon {
+    padding: 0;
+    margin: 2px;
+    border-radius: 4px;
+    background: #ffffff10;
+    vertical-align: middle;
+}
+
+#dockIcons {
+    margin: 0 10px;
 }
 
 #o-button {
