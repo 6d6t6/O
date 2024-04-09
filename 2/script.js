@@ -70,6 +70,7 @@ function handleIconDoubleClick(icon) {
 
         // Add icon to the dock with the same image as on the desktop
         const dock = document.getElementById("dock");
+        const dockIcons = document.getElementById("dockIcons");
         const dockIcon = document.createElement("div");
         dockIcon.classList.add("dock-icon");
         dockIcon.style.backgroundImage = `url(${programData.icon})`; // Set the icon image
@@ -493,7 +494,7 @@ function handleIconDoubleClick(icon) {
     });
 
         // Append dock icon to dock
-        dock.appendChild(dockIcon);
+        dockIcons.appendChild(dockIcon);
         // Store reference to dock icon in program data
         programData.dockIcon = dockIcon;
 
@@ -508,7 +509,6 @@ function handleIconDoubleClick(icon) {
         button.addEventListener("click", clickHandler);
         return button;
     }
-
 
     // Function to close program windows
     function closeProgramWindow(programWindow, programData) {
