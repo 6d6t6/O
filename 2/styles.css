@@ -124,7 +124,7 @@ body, html {
     top: 50px; /* Adjust as needed */
     left: 50px; /* Adjust as needed */
     width: 320px; /* Adjust as needed */
-    height: 200px; /* Adjust as needed */
+    min-height: 30px; /* Adjust as needed */
     background-color: #232323;
     border: 1px solid #333;
     border-radius: 6px;
@@ -141,7 +141,7 @@ body, html {
     cursor: pointer;
 }
 
-#taskbar {
+#dock {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -169,11 +169,11 @@ body, html {
     position: absolute;
 }
 
-#taskbar-items {
+#dock-items {
     display: flex;
 }
 
-.close-button, .minimize-button, .maximize-button {
+.close-button, .minimize-button, .maximize-button, .unmaximize-button {
     position: absolute;
     top: 5px;
     cursor: pointer;
@@ -192,7 +192,7 @@ body, html {
     background: #323232;
 }
 
-.close-button:hover, .minimize-button:hover, .maximize-button:hover {
+.close-button:hover, .minimize-button:hover, .maximize-button:hover, .unmaximize-button:hover {
     color: #00000080;
 }
 
@@ -201,14 +201,34 @@ body, html {
     left: 5px;
 }
 
-.minimize-button {
+.minimize-button, .unminimize-button {
     background: #f5bb47;
     left: 20px;
 }
 
-.maximize-button {
+.maximize-button, .unmaximize-button {
     background: #63c943;
     left: 35px;
+}
+
+.maximized {
+    position: absolute;
+    top: 0!important;
+    left: 0!important;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 0!important;
+}
+
+.minimized>div {
+    display: none;
+}
+
+.minimized {
+    width: 60px !important;
+    border-radius: 20px;
+    display: none;
 }
 
 .program-window>div {
