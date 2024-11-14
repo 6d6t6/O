@@ -286,7 +286,7 @@ function openProgramWindow(programData) {
 
     // Load the specific program script
     const script = document.createElement("script");
-    script.src = `programs/${programData.name.replace(" ", "").toLowerCase()}.js`;
+    script.src = `programs/${programData.name.replace(" ", "")}.js`;
     script.onload = function() {
         const content = window[`open${programData.name.replace(" ", "")}`]();
         programContent.innerHTML = ""; // Clear loading text
