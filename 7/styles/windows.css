@@ -1,0 +1,307 @@
+.window {
+    position: absolute;
+    background: var(--window-bg);
+    border-radius: var(--window-border-radius);
+    box-shadow: 0 0 0 0.5px #404040, 0 0 0 1px black, 0 5px 30px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    transform-origin: center;
+    border-radius: 12px;
+}
+
+.window.active {
+    box-shadow: 0 0 0 0.5px #404040, 0 0 0 1px black, 0 5px 30px rgba(0, 0, 0, 0.5);
+}
+
+.window-header {
+    height: 32px;
+    background: var(--window-header);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    -webkit-app-region: drag;
+    user-select: none;
+}
+
+.window-controls {
+    display: flex;
+    gap: 8px;
+    margin-right: 8px;
+    -webkit-app-region: no-drag;
+}
+
+.window-control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+}
+
+.window-control.close {
+    background: #ff5f57;
+}
+
+.window-control.minimize {
+    background: #febc2e;
+}
+
+.window-control.maximize {
+    background: #28c840;
+}
+
+.window-control:hover::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.window-control.close:hover::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><path d="M1 1l6 6M1 7l6-6" stroke="rgba(0,0,0,0.4)" stroke-width="1"/></svg>');
+}
+
+.window-control.minimize:hover::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><path d="M1 4h6" stroke="rgba(0,0,0,0.4)" stroke-width="1"/></svg>');
+}
+
+.window-control.maximize:hover::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><rect x="1" y="1" width="6" height="6" stroke="rgba(0,0,0,0.4)" stroke-width="1" fill="none"/></svg>');
+}
+
+.window-title {
+    flex: 1;
+    text-align: center;
+    color: var(--text-color, #4a4a4a);
+    font-size: 13px;
+    font-weight: 500;
+    margin: 0 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.window.active .window-title {
+    color: var(--text-color-active, #000);
+}
+
+.window-content {
+    flex: 1;
+    overflow: auto;
+    background: #fff;
+    position: relative;
+}
+
+.window-resize-handle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    cursor: se-resize;
+}
+
+.window-resize-handle::before {
+    content: '';
+    position: absolute;
+    right: 3px;
+    bottom: 3px;
+    width: 6px;
+    height: 6px;
+    border-right: 0.5px solid #808080;
+    border-bottom: 0.5px solid #808080;
+    border-radius: 0 0 100% 0;
+}
+
+/* Window Animations */
+.window {
+    animation: windowOpen 0.3s ease-out;
+}
+
+.window.minimized {
+    display: none;
+}
+
+@keyframes windowOpen {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Window Content Scrollbar */
+.window-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.window-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.window-content::-webkit-scrollbar-thumb {
+    background: #d1d1d1;
+    border-radius: 4px;
+}
+
+.window-content::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Window States */
+.window.maximized {
+    border-radius: 0;
+    transform: none !important;
+    width: 100vw !important;
+    height: calc(100vh - var(--menubar-height) - var(--dock-height)) !important;
+    top: var(--menubar-height) !important;
+    left: 0 !important;
+}
+
+/* Dock Minimized Windows */
+.dock-container {
+    display: flex;
+    align-items: center;
+}
+
+.dock-apps {
+    display: flex;
+    gap: 8px;
+}
+
+.dock-separator {
+    width: 1px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 0 8px;
+}
+
+.dock-minimized-windows {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 4px;
+    padding: 0;
+}
+
+.dock-minimized-windows .dock-item {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0;
+    width: auto;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dock-minimized-windows .dock-item:hover {
+    transform: scale(1.1) translateY(-5px);
+}
+
+.minimized-window-preview {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: transparent;
+    width: 100%;
+    height: 100%;
+}
+
+.minimized-window-preview .preview-window {
+    position: absolute;
+    transform-origin: top left;
+    pointer-events: none;
+    border-radius: var(--window-border-radius);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    width: auto;
+    height: auto;
+}
+
+/* Update window transitions */
+.window {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Remove the old minimized class styles */
+.window.minimized {
+    display: none;
+}
+
+/* Menu Dropdown Styles */
+.menu-dropdown {
+    position: absolute;
+    background: var(--window-bg);
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+    z-index: 10000;
+    padding: 4px 0;
+}
+
+.menu-dropdown .menu-item {
+    padding: 4px 12px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    cursor: default;
+    position: relative;
+    color: var(--text-color);
+}
+
+.menu-dropdown .menu-item:not(.disabled):hover {
+    background: var(--accent-color);
+}
+
+.menu-dropdown .menu-item.disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.menu-dropdown .menu-item.disabled:hover {
+    background: none;
+}
+
+.menu-dropdown .menu-separator {
+    height: 1px;
+    background: var(--separator-color);
+    margin: 4px 0;
+    opacity: 0.3;
+}
+
+.menu-dropdown .menu-shortcut {
+    margin-left: auto;
+    color: var(--text-secondary);
+    font-size: 12px;
+    padding-left: 24px;
+}
+
+.menu-dropdown .menu-item-label {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.menu-dropdown .submenu-arrow {
+    margin-left: 8px;
+    color: var(--text-secondary);
+}
