@@ -3,7 +3,7 @@ class WindowManager {
         this.system = system;
         this.windows = new Map();
         this.activeWindow = null;
-        this.zIndex = 1000;
+        this.windowStack = []; // Track window stacking order
         
         // Window template
         this.windowTemplate = `
@@ -26,45 +26,23 @@ class WindowManager {
         document.getElementById('desktop').addEventListener('click', (e) => {
             if (e.target.id === 'desktop') {
                 this.deactivateAllWindows();
+                // Set Finder as active app in menu bar
+                const finder = this.system.appSystem?.getRunningApp('finder');
+                if (finder) {
+                    this.system.menuBar?.setActiveApp(finder);
+                }
             }
         });
     }
 
-    createWindow(app, options = {}) {
+    createWindow(app) {
         const windowId = `window-${Date.now()}`;
         const windowEl = document.createElement('div');
         windowEl.className = 'window';
         windowEl.id = windowId;
-        windowEl.innerHTML = this.windowTemplate;
-
-        // Set initial window title as app name
-        const titleEl = windowEl.querySelector('.window-title');
-        titleEl.textContent = app.name;
-        titleEl.dataset.defaultTitle = app.name;  // Store default title for reference
-
-        // Set initial position and size
-        const defaultOptions = {
-            width: 800,
-            height: 600,
-            x: 100 + (this.windows.size * 20),
-            y: 100 + (this.windows.size * 20)
-        };
-        
-        const windowOptions = { ...defaultOptions, ...options };
-        
-        Object.assign(windowEl.style, {
-            width: windowOptions.width + 'px',
-            height: windowOptions.height + 'px',
-            left: windowOptions.x + 'px',
-            top: windowOptions.y + 'px',
-            zIndex: ++this.zIndex
-        });
-
-        // Add window to desktop
-        document.getElementById('desktop').appendChild(windowEl);
 
         // Create window instance
-        const windowInstance = {
+        const window = {
             id: windowId,
             element: windowEl,
             app: app,
@@ -94,42 +72,83 @@ class WindowManager {
             }
         };
 
-        this.windows.set(windowId, windowInstance);
-        this.setupWindowControls(windowInstance);
-        this.makeWindowDraggable(windowInstance);
-        this.makeWindowResizable(windowInstance);
+        // Add to windows collection
+        this.windows.set(windowId, window);
+
+        // Register with process manager
+        if (this.system.processManager) {
+            this.system.processManager.registerWindow(window);
+        }
+
+        // Set up window UI and controls
+        this.setupWindow(window);
         
-        this.activateWindow(windowId);
-        
-        return windowInstance;
+        return window;
     }
 
-    setupWindowControls(windowInstance) {
-        const controls = windowInstance.element.querySelector('.window-controls');
+    setupWindow(window) {
+        const windowEl = window.element;
+        windowEl.innerHTML = this.windowTemplate;
+
+        // Set initial window title as app name
+        const titleEl = windowEl.querySelector('.window-title');
+        titleEl.textContent = window.app.name;
+        titleEl.dataset.defaultTitle = window.app.name;  // Store default title for reference
+
+        // Set initial position and size
+        const defaultOptions = {
+            width: 800,
+            height: 600,
+            x: 100 + (this.windows.size * 20),
+            y: 100 + (this.windows.size * 20)
+        };
+        
+        Object.assign(windowEl.style, {
+            width: defaultOptions.width + 'px',
+            height: defaultOptions.height + 'px',
+            left: defaultOptions.x + 'px',
+            top: defaultOptions.y + 'px'
+        });
+
+        // Add window to desktop and stack
+        document.getElementById('desktop').appendChild(windowEl);
+        this.updateWindowStack(window);
+
+        this.setupWindowControls(window);
+        this.makeWindowDraggable(window);
+        this.makeWindowResizable(window);
+        
+        this.activateWindow(window.id);
+    }
+
+    setupWindowControls(window) {
+        const controls = window.element.querySelector('.window-controls');
         
         // Close button
-        controls.querySelector('.close').addEventListener('click', () => {
-            this.closeWindow(windowInstance.id);
+        controls.querySelector('.close').addEventListener('click', (e) => {
+            e.stopPropagation();  // Prevent window activation
+            this.closeWindow(window.id);
         });
 
         // Minimize button
-        controls.querySelector('.minimize').addEventListener('click', () => {
-            this.minimizeWindow(windowInstance.id);
+        controls.querySelector('.minimize').addEventListener('click', (e) => {
+            e.stopPropagation();  // Prevent window activation
+            this.minimizeWindow(window.id);
         });
 
         // Maximize button
         controls.querySelector('.maximize').addEventListener('click', () => {
-            this.toggleMaximizeWindow(windowInstance.id);
+            this.toggleMaximizeWindow(window.id);
         });
 
         // Activate window on click
-        windowInstance.element.addEventListener('mousedown', () => {
-            this.activateWindow(windowInstance.id);
+        window.element.addEventListener('mousedown', () => {
+            this.activateWindow(window.id);
         });
     }
 
-    makeWindowDraggable(windowInstance) {
-        const header = windowInstance.element.querySelector('.window-header');
+    makeWindowDraggable(window) {
+        const header = window.element.querySelector('.window-header');
         let isDragging = false;
         let currentX;
         let currentY;
@@ -140,10 +159,10 @@ class WindowManager {
             if (e.target.closest('.window-controls')) return;
             
             isDragging = true;
-            windowInstance.element.style.transition = 'none';
+            window.element.style.transition = 'none';
             
-            initialX = e.clientX - windowInstance.element.offsetLeft;
-            initialY = e.clientY - windowInstance.element.offsetTop;
+            initialX = e.clientX - window.element.offsetLeft;
+            initialY = e.clientY - window.element.offsetTop;
         });
 
         document.addEventListener('mousemove', (e) => {
@@ -154,18 +173,18 @@ class WindowManager {
             currentX = e.clientX - initialX;
             currentY = e.clientY - initialY;
 
-            windowInstance.element.style.left = currentX + 'px';
-            windowInstance.element.style.top = currentY + 'px';
+            window.element.style.left = currentX + 'px';
+            window.element.style.top = currentY + 'px';
         });
 
         document.addEventListener('mouseup', () => {
             isDragging = false;
-            windowInstance.element.style.transition = '';
+            window.element.style.transition = '';
         });
     }
 
-    makeWindowResizable(windowInstance) {
-        const resizeHandle = windowInstance.element.querySelector('.window-resize-handle');
+    makeWindowResizable(window) {
+        const resizeHandle = window.element.querySelector('.window-resize-handle');
         let isResizing = false;
         let startWidth;
         let startHeight;
@@ -174,8 +193,8 @@ class WindowManager {
 
         resizeHandle.addEventListener('mousedown', (e) => {
             isResizing = true;
-            startWidth = windowInstance.element.offsetWidth;
-            startHeight = windowInstance.element.offsetHeight;
+            startWidth = window.element.offsetWidth;
+            startHeight = window.element.offsetHeight;
             startX = e.clientX;
             startY = e.clientY;
         });
@@ -186,8 +205,8 @@ class WindowManager {
             const newWidth = startWidth + (e.clientX - startX);
             const newHeight = startHeight + (e.clientY - startY);
 
-            windowInstance.element.style.width = Math.max(300, newWidth) + 'px';
-            windowInstance.element.style.height = Math.max(200, newHeight) + 'px';
+            window.element.style.width = Math.max(300, newWidth) + 'px';
+            window.element.style.height = Math.max(200, newHeight) + 'px';
         });
 
         document.addEventListener('mouseup', () => {
@@ -196,20 +215,26 @@ class WindowManager {
     }
 
     activateWindow(windowId) {
-        const windowInstance = this.windows.get(windowId);
-        if (!windowInstance) return;
+        const window = this.windows.get(windowId);
+        if (!window) return;
 
         // Deactivate all windows
         this.deactivateAllWindows();
 
         // Activate the selected window
-        windowInstance.element.classList.add('active');
-        windowInstance.element.style.zIndex = ++this.zIndex;
-        this.activeWindow = windowInstance;
+        window.element.classList.add('active');
+        this.updateWindowStack(window);
+        this.activeWindow = window;
 
-        // Update system state and menu bar
-        this.system.state.activeApp = windowInstance.app.id;
-        this.system.menuBar.setActiveApp(windowInstance.app);
+        // Update system state
+        if (this.system.state) {
+            this.system.state.activeApp = window.app.id;
+        }
+
+        // Update menu bar if available
+        if (this.system.menuBar) {
+            this.system.menuBar.setActiveApp(window.app);
+        }
     }
 
     deactivateAllWindows() {
@@ -217,16 +242,13 @@ class WindowManager {
             window.element.classList.remove('active');
         });
         this.activeWindow = null;
-        
-        // Reset menu bar to system menus
-        this.system.menuBar.setActiveApp(null);
     }
 
     minimizeWindow(windowId) {
-        const windowInstance = this.windows.get(windowId);
-        if (!windowInstance) return;
+        const window = this.windows.get(windowId);
+        if (!window) return;
 
-        windowInstance.isMinimized = true;
+        window.isMinimized = true;
         
         // Create minimized preview in dock
         const minimizedPreview = document.createElement('div');
@@ -236,8 +258,8 @@ class WindowManager {
         // Create tooltip exactly like dock items do
         const tooltip = document.createElement('div');
         tooltip.className = 'dock-item-tooltip';
-        const windowTitle = windowInstance.element.querySelector('.window-title').textContent;
-        tooltip.textContent = windowTitle || windowInstance.app.name;
+        const windowTitle = window.element.querySelector('.window-title').textContent;
+        tooltip.textContent = windowTitle || window.app.name;
         minimizedPreview.appendChild(tooltip);
         
         // Create a container for the window preview
@@ -246,8 +268,8 @@ class WindowManager {
         
         // Get dimensions
         const dockIconSize = 48; // Standard dock icon size
-        const windowHeight = windowInstance.element.offsetHeight;
-        const windowWidth = windowInstance.element.offsetWidth;
+        const windowHeight = window.element.offsetHeight;
+        const windowWidth = window.element.offsetWidth;
         
         // Calculate scales for both dimensions
         const scaleByHeight = (dockIconSize - 8) / windowHeight; // 4px margin top and bottom
@@ -288,7 +310,7 @@ class WindowManager {
         previewContainer.style.height = '100%';
         
         // Clone the entire window for preview
-        const windowClone = windowInstance.element.cloneNode(true);
+        const windowClone = window.element.cloneNode(true);
         windowClone.classList.add('preview-window');
         windowClone.style.pointerEvents = 'none';
         
@@ -319,26 +341,26 @@ class WindowManager {
 
         // Get the final position for animation
         const previewBounds = minimizedPreview.getBoundingClientRect();
-        const windowBounds = windowInstance.element.getBoundingClientRect();
+        const windowBounds = window.element.getBoundingClientRect();
 
         // Set initial position and scale
         minimizedPreview.style.opacity = '0';
         
         // Animate the window to the preview position
-        windowInstance.element.style.transition = 'all 0.3s ease';
-        windowInstance.element.style.transform = `translate(${previewBounds.left - windowBounds.left}px, ${previewBounds.top - windowBounds.top}px) scale(${targetScale})`;
-        windowInstance.element.style.opacity = '0';
+        window.element.style.transition = 'all 0.3s ease';
+        window.element.style.transform = `translate(${previewBounds.left - windowBounds.left}px, ${previewBounds.top - windowBounds.top}px) scale(${targetScale})`;
+        window.element.style.opacity = '0';
 
         // After animation completes
         setTimeout(() => {
             minimizedPreview.style.opacity = '1';
-            windowInstance.element.style.display = 'none';
+            window.element.style.display = 'none';
         }, 300);
     }
 
     restoreWindow(windowId) {
-        const windowInstance = this.windows.get(windowId);
-        if (!windowInstance || !windowInstance.isMinimized) return;
+        const window = this.windows.get(windowId);
+        if (!window || !window.isMinimized) return;
 
         const minimizedPreview = document.getElementById(`minimized-${windowId}`);
         if (!minimizedPreview) return;
@@ -347,16 +369,16 @@ class WindowManager {
         const previewBounds = minimizedPreview.getBoundingClientRect();
         
         // Show window and set it to preview position
-        windowInstance.element.style.display = '';
-        windowInstance.element.style.transform = `translate(${previewBounds.left}px, ${previewBounds.top}px) scale(0.2)`;
-        windowInstance.element.style.opacity = '0';
+        window.element.style.display = '';
+        window.element.style.transform = `translate(${previewBounds.left}px, ${previewBounds.top}px) scale(0.2)`;
+        window.element.style.opacity = '0';
 
         // Force a reflow
-        windowInstance.element.offsetHeight;
+        window.element.offsetHeight;
 
         // Animate back to original position and clear transform
-        windowInstance.element.style.transform = '';
-        windowInstance.element.style.opacity = '1';
+        window.element.style.transform = '';
+        window.element.style.opacity = '1';
 
         // Remove preview and update separator visibility
         minimizedPreview.remove();
@@ -368,36 +390,36 @@ class WindowManager {
             separator.style.display = minimizedSection.children.length === 0 ? 'none' : '';
         }
 
-        windowInstance.isMinimized = false;
+        window.isMinimized = false;
         this.activateWindow(windowId);
     }
 
     toggleMaximizeWindow(windowId) {
-        const windowInstance = this.windows.get(windowId);
-        if (!windowInstance) return;
+        const window = this.windows.get(windowId);
+        if (!window) return;
 
-        if (windowInstance.isMaximized) {
+        if (window.isMaximized) {
             // Restore window
-            Object.assign(windowInstance.element.style, windowInstance.previousState);
-            windowInstance.isMaximized = false;
+            Object.assign(window.element.style, window.previousState);
+            window.isMaximized = false;
         } else {
             // Save current state
-            windowInstance.previousState = {
-                width: windowInstance.element.style.width,
-                height: windowInstance.element.style.height,
-                left: windowInstance.element.style.left,
-                top: windowInstance.element.style.top
+            window.previousState = {
+                width: window.element.style.width,
+                height: window.element.style.height,
+                left: window.element.style.left,
+                top: window.element.style.top
             };
 
             // Maximize window
-            Object.assign(windowInstance.element.style, {
+            Object.assign(window.element.style, {
                 width: '100vw',
                 height: `calc(100vh - var(--menubar-height) - var(--dock-height))`,
                 left: '0',
                 top: 'var(--menubar-height)',
                 bottom: 'var(--dock-height)',
             });
-            windowInstance.isMaximized = true;
+            window.isMaximized = true;
         }
     }
 
@@ -408,32 +430,53 @@ class WindowManager {
     }
 
     closeWindow(windowId) {
-        const windowInstance = this.windows.get(windowId);
-        if (!windowInstance) return;
+        const window = this.windows.get(windowId);
+        if (!window) return;
 
-        const app = windowInstance.app;
-        if (!app) {
-            windowInstance.element.remove();
-            this.windows.delete(windowId);
-            return;
+        // Remove from stack
+        this.windowStack = this.windowStack.filter(w => w !== window);
+        
+        // If this was the active window, try to activate next unminimized window of same app
+        if (this.activeWindow === window) {
+            const sameAppWindow = this.windowStack
+                .filter(w => w.app === window.app && !w.isMinimized)
+                .pop();
+            
+            if (sameAppWindow) {
+                this.activateWindow(sameAppWindow.id);
+            } else {
+                this.activeWindow = null;
+            }
         }
 
-        // For Finder, prevent closing if it's the last window
-        if (app.id === 'finder' && !this.hasFinderWindows()) {
-            return;
-        }
-
-        // Close the window
-        windowInstance.element.remove();
+        // Remove window element and clean up
+        window.element.remove();
         this.windows.delete(windowId);
 
-        if (this.activeWindow === windowInstance) {
-            this.activeWindow = null;
+        // Notify process manager
+        if (this.system.processManager) {
+            this.system.processManager.unregisterWindow(window);
         }
 
-        // Update menu bar if needed
-        if (!this.hasFinderWindows() && app.id === 'finder') {
-            this.system.menuBar.updateMenus();
-        }
+        // Update z-indices of remaining windows
+        this.windowStack.forEach((w, index) => {
+            w.element.style.zIndex = index + 1;
+        });
+    }
+
+    hasOtherFinderWindows(currentWindowId) {
+        return Array.from(this.windows.values())
+            .some(w => w.app.id === 'finder' && w.id !== currentWindowId);
+    }
+
+    updateWindowStack(window) {
+        // Remove window from current position in stack
+        this.windowStack = this.windowStack.filter(w => w !== window);
+        // Add window to top of stack
+        this.windowStack.push(window);
+        // Update z-indices based on stack position
+        this.windowStack.forEach((w, index) => {
+            w.element.style.zIndex = index + 1;
+        });
     }
 } 

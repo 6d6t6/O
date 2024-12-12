@@ -11,10 +11,10 @@ class TerminalApp extends OmegaApp {
 
         window.setContent(`
             <div class="terminal">
-                <div id="output" class="terminal-output"></div>
+                <div id="output" class="terminal-output" style="font-family: 'Menlo', 'Monaco', 'Courier New', monospace;"></div>
                 <div class="terminal-input-line">
-                    <span class="prompt">$</span>
-                    <input type="text" id="input" class="terminal-input" autofocus>
+                    <span class="prompt" style="font-family: 'Menlo', 'Monaco', 'Courier New', monospace;">$</span>
+                    <input type="text" id="input" class="terminal-input" autofocus style="font-family: 'Menlo', 'Monaco', 'Courier New', monospace;">
                 </div>
             </div>
         `);
@@ -35,6 +35,10 @@ class TerminalApp extends OmegaApp {
                 overflow-y: auto;
                 white-space: pre-wrap;
                 margin-bottom: 16px;
+            }
+
+            .terminal-output>span {
+                font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
             }
 
             .terminal-input-line {

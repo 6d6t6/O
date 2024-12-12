@@ -15,7 +15,7 @@
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(20px);
     border-radius: 16px;
-    padding: 4px;
+    padding: 6px;
     display: flex;
     box-shadow: 0 0 0 0.5px #808080, 0 0 0 1px #00000080;
 }
@@ -29,7 +29,12 @@
     cursor: pointer;
 }
 
-.dock-item:hover,
+/* Only apply hover effect when no context menu is open */
+.dock-container:not(.has-open-menu) .dock-item:hover {
+    transform: scale(1.1) translateY(-5px);
+}
+
+/* Keep the transform for the item with open context menu */
 .dock-item.context-menu-open {
     transform: scale(1.1) translateY(-5px);
 }
@@ -49,7 +54,7 @@
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background: var(--accent-color);
+    background: #ffffff80;
     opacity: 0;
     transition: opacity 0.2s;
 }
@@ -63,7 +68,8 @@
     top: -30px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
+    background: rgb(60 60 60 / 80%);
+    box-shadow: 0 0 0 0.5px #808080, 0 0 0 1px #00000080;
     color: white;
     padding: 4px 8px;
     border-radius: 4px;
@@ -74,7 +80,8 @@
     pointer-events: none;
 }
 
-.dock-item:hover .dock-item-tooltip {
+/* Only show tooltip when no context menu is open */
+.dock-container:not(.has-open-menu) .dock-item:hover .dock-item-tooltip {
     opacity: 1;
 }
 
@@ -94,7 +101,12 @@
     cursor: pointer;
 }
 
-.dock-trash-icon:hover,
+/* Update trash icon hover behavior too */
+.dock-container:not(.has-open-menu) .dock-trash-icon:hover {
+    transform: scale(1.1) translateY(-5px);
+}
+
+/* Keep the transform for trash when its context menu is open */
 .dock-trash-icon.context-menu-open {
     transform: scale(1.1) translateY(-5px);
 }
@@ -106,35 +118,20 @@
     object-fit: cover;
 }
 
-.dock-trash-icon .dock-item-tooltip {
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.2s;
-    pointer-events: none;
-}
-
-.dock-trash-icon:hover .dock-item-tooltip {
+/* Only show trash tooltip when no context menu is open */
+.dock-container:not(.has-open-menu) .dock-trash-icon:hover .dock-item-tooltip {
     opacity: 1;
 }
 
 /* Dock Context Menu */
 .dock-context-menu {
     position: fixed;
-    background: rgba(30, 30, 30, 0.85);
-    backdrop-filter: blur(20px);
+    background: rgb(60 60 60 / 65%);
+    backdrop-filter: blur(64px) saturate(2);
     border-radius: 8px;
-    min-width: 220px;
-    padding: 5px 0;
-    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+    min-width: 96px;
+    padding: 4px 4px;
+    box-shadow: 0 0 0 0.5px #808080, 0 0 0 1px #000, 0 5px 30px rgba(0, 0, 0, 0.3);
     z-index: 1100;
     opacity: 0;
     transform: translateY(10px);
@@ -148,7 +145,7 @@
 }
 
 .dock-context-menu .context-menu-item {
-    padding: 4px 15px;
+    padding: 4px 10px;
     color: white;
     font-size: 13px;
     cursor: default;
@@ -156,6 +153,7 @@
     align-items: center;
     gap: 8px;
     height: 25px;
+    border-radius: 4px;
 }
 
 .dock-context-menu .context-menu-item:hover {

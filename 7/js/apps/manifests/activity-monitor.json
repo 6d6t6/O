@@ -1,0 +1,9 @@
+{
+    "id": "activity-monitor",
+    "name": "Activity Monitor",
+    "icon": "assets/icons/activity-monitor-icon.svg",
+    "description": "Monitor and manage system processes",
+    "version": "1.0.0",
+    "author": "OMEGA OS",
+    "type": "system"
+} 

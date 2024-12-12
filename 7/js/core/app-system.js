@@ -13,28 +13,16 @@ class AppSystem {
         // Load the app's class if not already loaded
         if (!this.appClasses.has(manifest.id)) {
             try {
-                // Try to get existing class first
-                const className = manifest.id.charAt(0).toUpperCase() + manifest.id.slice(1) + 'App';
-                let AppClass = window[className];
-
+                // Generate the class name from the app ID
+                const className = manifest.id.split('-')
+                    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+                    .join('') + 'App';
+                
+                // Get the class from the global scope
+                const AppClass = window[className];
+                
                 if (!AppClass) {
-                    // If not found, try to load it from the apps directory
-                    const script = document.createElement('script');
-                    script.src = `js/apps/${manifest.id}.js`;
-                    script.async = false;
-                    
-                    await new Promise((resolve, reject) => {
-                        script.onload = () => {
-                            AppClass = window[className];
-                            if (AppClass) {
-                                resolve();
-                            } else {
-                                reject(new Error(`App class ${className} not found after loading`));
-                            }
-                        };
-                        script.onerror = () => reject(new Error(`Failed to load app script for ${manifest.id}`));
-                        document.body.appendChild(script);
-                    });
+                    throw new Error(`App class ${className} not found. Make sure the app script is loaded.`);
                 }
 
                 this.appClasses.set(manifest.id, AppClass);
@@ -51,19 +39,6 @@ class AppSystem {
             throw new Error(`App '${appId}' not found`);
         }
 
-        // Check if app is already running
-        let app = this.runningApps.get(appId);
-        
-        // If app is running and forceNew is not true, focus existing window
-        if (app && !options.forceNew) {
-            const windows = Array.from(this.system.windowManager.windows.values());
-            const window = windows.find(w => w.app === app);
-            if (window) {
-                this.system.windowManager.activateWindow(window.id);
-                return app;
-            }
-        }
-
         try {
             // Get app class from our loaded classes
             const AppClass = this.appClasses.get(appId);
@@ -71,21 +46,32 @@ class AppSystem {
                 throw new Error(`App class for '${appId}' not found`);
             }
 
-            // Create new app instance if:
-            // 1. No app is running, or
-            // 2. forceNew is true (we want a new instance)
-            if (!app || options.forceNew) {
+            // Check if app is already running
+            let app = this.runningApps.get(appId);
+            if (!app) {
+                // Create new app instance
                 app = new AppClass(this.system, manifest);
                 
-                // Only set as running app if it's the first instance
-                if (!this.runningApps.has(appId)) {
-                    this.runningApps.set(appId, app);
+                // Register with process manager
+                if (this.system.processManager) {
+                    this.system.processManager.createProcess(app);
+                }
+                
+                // Add to running apps
+                this.runningApps.set(appId, app);
+                
+                // Update dock indicator
+                if (this.system.dock) {
+                    this.system.dock.setRunningIndicator(appId, true);
                 }
             }
 
-            // Create window for app
-            const window = this.system.windowManager.createWindow(app);
-            await app.onInitialize(window);
+            // Create window for app unless noWindow option is set
+            // For Finder, only create window if explicitly requested
+            if (!options.noWindow && (appId !== 'finder' || options.createWindow)) {
+                const window = this.system.windowManager.createWindow(app);
+                await app.onInitialize(window);
+            }
 
             return app;
         } catch (error) {
@@ -99,24 +85,17 @@ class AppSystem {
         if (!app || appId === 'finder') return; // Never terminate Finder
 
         try {
-            // Call cleanup
-            await app.onCleanup();
+            if (this.system.processManager) {
+                await this.system.processManager.terminateProcess(app.pid);
+            } else {
+                // Fallback if process manager is not available
+                await app.onCleanup();
+                this.runningApps.delete(appId);
+            }
 
-            // Close all windows
-            const windows = Array.from(this.system.windowManager.windows.values());
-            windows.forEach(window => {
-                if (window.app === app) {
-                    this.system.windowManager.closeWindow(window.id);
-                }
-            });
-
-            // Remove from running apps
-            this.runningApps.delete(appId);
-
-            // Switch back to Finder in menu bar
-            const finder = this.getRunningApp('finder');
-            if (finder) {
-                this.system.menuBar.setActiveApp(finder);
+            // Update dock indicator
+            if (this.system.dock) {
+                this.system.dock.setRunningIndicator(appId, false);
             }
         } catch (error) {
             console.error(`Failed to terminate app '${appId}':`, error);

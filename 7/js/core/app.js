@@ -6,38 +6,46 @@ class OmegaApp {
         this.name = manifest.name;
         this.icon = manifest.icon;
         this.window = null;
+        this.pid = null; // Process ID will be assigned by ProcessManager
+        this.status = 'initialized'; // initialized, running, terminating, terminated
     }
 
     async onInitialize(window) {
-        // Override in subclass
+        this.status = 'running';
+        // Override in subclass for additional initialization
     }
 
     async onCleanup() {
-        // Override in subclass
+        this.status = 'terminating';
+        // Override in subclass for additional cleanup
     }
 
     getMenus() {
-        // Default app menus - override in subclass to customize
-        return {
+        const appMenu = {
+            title: this.name,
+            items: [
+                { label: `About ${this.name}`, action: () => this.handleMenuAction('about') },
+                { type: 'separator' },
+                { label: 'Quit', shortcut: '⌘+Q', action: () => this.quitApp() }
+            ]
+        };
+
+        const defaultMenus = {
             file: {
                 title: 'File',
                 items: [
                     { label: 'New', shortcut: '⌘+N', action: () => this.handleMenuAction('new') },
                     { label: 'Open...', shortcut: '⌘+O', action: () => this.handleMenuAction('open') },
                     { type: 'separator' },
-                    { label: 'Close Window', shortcut: '⌘+W', action: () => this.handleMenuAction('close'), enabled: () => {
-                        // Only enable if there is an active window
-                        const activeWindow = this.system.windowManager.activeWindow;
-                        if (!activeWindow) return false;
-                        
-                        // For Finder, enable if there's an active Finder window
-                        if (this.id === 'finder') {
-                            return activeWindow.app.id === 'finder';
+                    { 
+                        label: 'Close Window', 
+                        shortcut: '⌘+W', 
+                        action: () => this.handleMenuAction('close'),
+                        enabled: () => {
+                            const activeWindow = this.system.windowManager.activeWindow;
+                            return activeWindow && activeWindow.app === this;
                         }
-                        
-                        // For other apps, enable if the active window belongs to this app
-                        return activeWindow.app === this;
-                    } }
+                    }
                 ]
             },
             edit: {
@@ -62,8 +70,23 @@ class OmegaApp {
             window: {
                 title: 'Window',
                 items: [
-                    { label: 'Minimize', shortcut: '⌘+M', action: () => this.handleMenuAction('minimize') },
-                    { label: 'Zoom', action: () => this.handleMenuAction('zoom') }
+                    { 
+                        label: 'Minimize', 
+                        shortcut: '⌘+M', 
+                        action: () => this.handleMenuAction('minimize'),
+                        enabled: () => {
+                            const activeWindow = this.system.windowManager.activeWindow;
+                            return activeWindow && activeWindow.app === this;
+                        }
+                    },
+                    { 
+                        label: 'Zoom', 
+                        action: () => this.handleMenuAction('zoom'),
+                        enabled: () => {
+                            const activeWindow = this.system.windowManager.activeWindow;
+                            return activeWindow && activeWindow.app === this;
+                        }
+                    }
                 ]
             },
             help: {
@@ -73,23 +96,46 @@ class OmegaApp {
                 ]
             }
         };
+
+        return { [this.name.toLowerCase()]: appMenu, ...defaultMenus };
     }
 
     handleMenuAction(action) {
+        const activeWindow = this.system.windowManager.activeWindow;
+        
         switch (action) {
             case 'close':
-                const activeWindow = this.system.windowManager.activeWindow;
                 if (activeWindow && activeWindow.app === this) {
-                    // Close the active window
                     this.system.windowManager.closeWindow(activeWindow.id);
                 }
                 break;
+            case 'minimize':
+                if (activeWindow && activeWindow.app === this) {
+                    this.system.windowManager.minimizeWindow(activeWindow.id);
+                }
+                break;
+            case 'zoom':
+                if (activeWindow && activeWindow.app === this) {
+                    this.system.windowManager.toggleMaximizeWindow(activeWindow.id);
+                }
+                break;
             case 'quit':
-                this.system.appSystem.terminateApp(this.id);
+                this.quitApp();
                 break;
             default:
                 console.log(`Menu action '${action}' not implemented in ${this.name}`);
         }
+    }
+
+    quitApp() {
+        if (this.status === 'terminating' || this.status === 'terminated') {
+            return;
+        }
+
+        this.status = 'terminating';
+        
+        // Let the process manager handle the termination
+        this.system.processManager.terminateProcess(this.pid);
     }
 
     async requestFileSystem() {

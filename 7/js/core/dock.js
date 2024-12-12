@@ -3,6 +3,11 @@ class Dock {
         this.system = system;
         this.element = document.querySelector('#dock');
         this.runningIndicators = new Map();
+        this.longPressTimer = null;
+        this.longPressDelay = 1000; // 1 second for long press
+        this.longPressStartPos = null;
+        this.isDragging = false;
+        this.longPressTriggered = false;
     }
 
     async initialize() {
@@ -26,6 +31,7 @@ class Dock {
         const defaultApps = [
             { id: 'finder', name: 'Finder', icon: 'assets/icons/finder-icon.svg' },
             { id: 'terminal', name: 'Terminal', icon: 'assets/icons/terminal-icon.svg' },
+            { id: 'activity-monitor', name: 'Activity Monitor', icon: 'assets/icons/activity-monitor-icon.svg' },
             { id: 'settings', name: 'Settings', icon: 'assets/icons/settings-icon.svg' }
         ];
 
@@ -47,7 +53,66 @@ class Dock {
 
     // Rest of the code stays the same, but update event listener to use appContainer
     initializeEventListeners() {
+        // Handle mousedown for long-press detection
+        const handleMouseDown = (e, element, contextMenuHandler) => {
+            // Only handle left clicks
+            if (e.button !== 0) return;
+
+            const startX = e.clientX;
+            const startY = e.clientY;
+            this.longPressStartPos = { x: startX, y: startY };
+            this.longPressTriggered = false;
+            
+            this.longPressTimer = setTimeout(() => {
+                // Only trigger if we haven't moved much (5px threshold)
+                const dx = Math.abs(e.clientX - startX);
+                const dy = Math.abs(e.clientY - startY);
+                if (dx < 5 && dy < 5 && !this.isDragging) {
+                    this.longPressTriggered = true;
+                    contextMenuHandler(e);
+                }
+            }, this.longPressDelay);
+
+            // Add temporary mousemove and mouseup listeners
+            const handleMouseMove = (e) => {
+                const dx = Math.abs(e.clientX - startX);
+                const dy = Math.abs(e.clientY - startY);
+                // If moved more than 5px, cancel long press
+                if (dx > 5 || dy > 5) {
+                    clearTimeout(this.longPressTimer);
+                    this.isDragging = true;
+                }
+            };
+
+            const handleMouseUp = () => {
+                clearTimeout(this.longPressTimer);
+                this.isDragging = false;
+                document.removeEventListener('mousemove', handleMouseMove);
+                document.removeEventListener('mouseup', handleMouseUp);
+            };
+
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+        };
+
+        // App icons click and long-press
+        this.appContainer.addEventListener('mousedown', (e) => {
+            const dockItem = e.target.closest('.dock-item');
+            if (dockItem) {
+                handleMouseDown(e, dockItem, (event) => {
+                    event.preventDefault();
+                    const appId = dockItem.dataset.appId;
+                    this.showDockItemContextMenu(event, appId);
+                });
+            }
+        });
+
         this.appContainer.addEventListener('click', async (e) => {
+            if (this.isDragging || this.longPressTriggered) {
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+            }
             const dockItem = e.target.closest('.dock-item');
             if (dockItem) {
                 const appId = dockItem.dataset.appId;
@@ -55,7 +120,27 @@ class Dock {
             }
         });
 
-        // Add context menu event listeners
+        // Trash icon click and long-press
+        this.trashContainer.addEventListener('mousedown', (e) => {
+            const trashIcon = e.target.closest('.dock-trash-icon');
+            if (trashIcon) {
+                handleMouseDown(e, trashIcon, (event) => {
+                    event.preventDefault();
+                    this.showTrashContextMenu(event);
+                });
+            }
+        });
+
+        this.trashContainer.addEventListener('click', (e) => {
+            if (this.isDragging || this.longPressTriggered) {
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+            }
+            this.openTrash();
+        });
+
+        // Keep existing context menu event listeners as fallback for right-click
         this.appContainer.addEventListener('contextmenu', (e) => {
             const dockItem = e.target.closest('.dock-item');
             if (dockItem) {
@@ -65,11 +150,6 @@ class Dock {
             }
         });
 
-        this.trashContainer.addEventListener('click', () => {
-            this.openTrash();
-        });
-
-        // Add context menu for trash
         this.trashContainer.addEventListener('contextmenu', (e) => {
             e.preventDefault();
             this.showTrashContextMenu(e);
@@ -101,6 +181,11 @@ class Dock {
         
         this.appContainer.appendChild(item);
         this.runningIndicators.set(app.id, item.querySelector('.dock-item-indicator'));
+
+        // Set initial state if app is already running
+        if (this.system.appSystem.isAppRunning(app.id)) {
+            this.setRunningIndicator(app.id, true);
+        }
     }
 
     addTrashIcon() {
@@ -121,16 +206,37 @@ class Dock {
     }
 
     async handleDockItemClick(appId) {
-        // Check if there's a minimized window for this app
-        const minimizedWindow = Array.from(this.system.windowManager.windows.values())
-            .find(win => win.app.id === appId && win.isMinimized);
+        // Get all windows for this app
+        const appWindows = Array.from(this.system.windowManager.windows.values())
+            .filter(win => win.app.id === appId);
 
-        if (minimizedWindow) {
-            // Restore the minimized window
-            this.system.windowManager.restoreWindow(minimizedWindow.id);
+        if (appWindows.length > 0) {
+            // If there are any minimized windows, restore them
+            const minimizedWindows = appWindows.filter(win => win.isMinimized);
+            if (minimizedWindows.length > 0) {
+                minimizedWindows.forEach(win => {
+                    this.system.windowManager.restoreWindow(win.id);
+                });
+            } else {
+                // Find the topmost window by highest z-index
+                const topmostWindow = appWindows.reduce((highest, current) => {
+                    const currentZ = parseInt(current.element.style.zIndex) || 0;
+                    const highestZ = parseInt(highest.element.style.zIndex) || 0;
+                    return currentZ > highestZ ? current : highest;
+                }, appWindows[0]);
+                
+                // Activate only the topmost window
+                this.system.windowManager.activateWindow(topmostWindow.id);
+            }
         } else {
             try {
-                await this.system.appSystem.launchApp(appId);
+                // For Finder, create a new window when clicked if no windows exist
+                // For other apps, just launch them normally
+                if (appId === 'finder') {
+                    await this.system.appSystem.launchApp(appId, { createWindow: true });
+                } else {
+                    await this.system.appSystem.launchApp(appId);
+                }
             } catch (error) {
                 console.error('Failed to launch app:', error);
             }
@@ -140,6 +246,14 @@ class Dock {
     setRunningIndicator(appId, isRunning) {
         const indicator = this.runningIndicators.get(appId);
         if (indicator) {
+            indicator.classList.toggle('active', isRunning);
+        }
+    }
+
+    // Add this method to update all indicators
+    updateAllIndicators() {
+        for (const [appId, indicator] of this.runningIndicators) {
+            const isRunning = this.system.appSystem.isAppRunning(appId);
             indicator.classList.toggle('active', isRunning);
         }
     }
@@ -182,7 +296,7 @@ class Dock {
             menuItems.push({ 
                 label: 'New Finder Window', 
                 action: async () => {
-                    await this.system.appSystem.launchApp('finder', { forceNew: true });
+                    await this.system.appSystem.launchApp('finder', { createWindow: true });
                 }
             });
         } else {
@@ -220,11 +334,28 @@ class Dock {
     }
 
     showDockContextMenu(dockItem, items) {
-        // Remove any existing context menu
-        this.closeContextMenu();
+        // If there's an existing menu, close it and wait for transitions
+        const existingMenu = document.querySelector('.context-menu');
+        if (existingMenu) {
+            // First remove the active class to trigger fade out
+            existingMenu.classList.remove('active');
+            
+            // Wait for menu fade out
+            setTimeout(() => {
+                this.closeContextMenu();
+                // Wait for icon transform transitions (200ms is the transform transition time in CSS)
+                setTimeout(() => this.createAndShowContextMenu(dockItem, items), 200);
+            }, 150); // Wait for menu fade out (matches the 0.15s in CSS)
+            return;
+        }
 
+        this.createAndShowContextMenu(dockItem, items);
+    }
+
+    createAndShowContextMenu(dockItem, items) {
         // Add class to indicate context menu is open
         dockItem.classList.add('context-menu-open');
+        this.element.querySelector('.dock-container').classList.add('has-open-menu');
 
         // Create context menu
         const menu = document.createElement('div');
@@ -249,7 +380,6 @@ class Dock {
 
         // Position menu above the dock item
         const dockItemRect = dockItem.getBoundingClientRect();
-        const menuHeight = items.length * 25 + (items.filter(i => i.type === 'separator').length * 10); // Approximate height
         
         menu.style.left = `${dockItemRect.left}px`;
         menu.style.bottom = `${window.innerHeight - dockItemRect.top + 10}px`; // 10px gap from dock item
@@ -277,6 +407,8 @@ class Dock {
             document.querySelectorAll('.context-menu-open').forEach(item => {
                 item.classList.remove('context-menu-open');
             });
+            // Remove the has-open-menu class from dock container
+            this.element.querySelector('.dock-container').classList.remove('has-open-menu');
             existingMenu.remove();
         }
     }

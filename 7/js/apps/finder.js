@@ -2,9 +2,80 @@ class FinderApp extends OmegaApp {
     constructor(system, manifest) {
         super(system, manifest);
         this.windowStates = new Map();
+        this.windows = new Set();
+    }
+
+    getMenus() {
+        return {
+            file: {
+                title: 'File',
+                items: [
+                    { label: 'New Window', shortcut: '⌘+N', action: () => this.createNewWindow() },
+                    { 
+                        label: 'Close Window', 
+                        shortcut: '⌘+W', 
+                        enabled: () => {
+                            const activeWindow = this.system.windowManager.activeWindow;
+                            return activeWindow && activeWindow.app === this;
+                        },
+                        action: () => this.handleMenuAction('close', this.system.windowManager.activeWindow) 
+                    }
+                ]
+            },
+            edit: {
+                title: 'Edit',
+                items: [
+                    { label: 'Cut', shortcut: '⌘+X', action: () => this.handleMenuAction('cut') },
+                    { label: 'Copy', shortcut: '⌘+C', action: () => this.handleMenuAction('copy') },
+                    { label: 'Paste', shortcut: '⌘+V', action: () => this.handleMenuAction('paste') },
+                    { type: 'separator' },
+                    { label: 'Select All', shortcut: '⌘+A', action: () => this.handleMenuAction('selectAll') }
+                ]
+            },
+            view: {
+                title: 'View',
+                items: [
+                    { label: 'as Icons', action: () => this.handleMenuAction('viewAsIcons') },
+                    { label: 'as List', action: () => this.handleMenuAction('viewAsList') }
+                ]
+            },
+            go: {
+                title: 'Go',
+                items: [
+                    { label: 'Home', action: () => this.handleMenuAction('goHome') },
+                    { label: 'Desktop', action: () => this.handleMenuAction('goDesktop') },
+                    { label: 'Documents', action: () => this.handleMenuAction('goDocuments') }
+                ]
+            }
+        };
+    }
+
+    async handleMenuAction(action, window) {
+        switch (action) {
+            case 'close':
+                if (window) {
+                    // Remove window from our set
+                    this.windows.delete(window);
+                    // Clean up window state
+                    this.windowStates.delete(window.id);
+                    // Close the window
+                    await this.system.windowManager.closeWindow(window.id);
+                }
+                break;
+            // ... handle other actions ...
+        }
+    }
+
+    async createNewWindow() {
+        // Launch a new window for this app instance
+        await this.system.appSystem.launchApp('finder', { createWindow: true });
     }
 
     async onInitialize(window) {
+        // Add window to our set
+        this.windows.add(window);
+        this.activeWindow = window;  // Track the active window
+        
         // Create window-specific state
         this.windowStates.set(window.id, {
             currentPath: '/',
@@ -161,6 +232,11 @@ class FinderApp extends OmegaApp {
 
         // Load initial directory
         await this.loadDirectory(window, '/');
+
+        // Add window-specific close handler
+        window.element.querySelector('.window-control.close').addEventListener('click', () => {
+            this.handleMenuAction('close', window);
+        });
     }
 
     getWindowState(window) {

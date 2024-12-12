@@ -40,7 +40,9 @@ class MenuBarManager {
                 name: 'Finder',
                 icon: 'assets/icons/finder-icon.svg'
             });
-            await this.system.appSystem?.launchApp('finder');
+            await this.system.appSystem?.launchApp('finder', { noWindow: true });
+            // Set Finder as the active app immediately
+            this.setActiveApp(this.system.appSystem?.getRunningApp('finder'));
         }
     }
 
@@ -82,8 +84,8 @@ class MenuBarManager {
     }
 
     setActiveApp(app) {
-        // If no app is provided and Finder isn't active, set Finder as active
-        if (!app && !this.activeApp?.id !== 'finder') {
+        // If no app is provided, set Finder as active
+        if (!app) {
             app = this.system.appSystem?.getRunningApp('finder');
         }
         
@@ -367,6 +369,24 @@ class MenuBarManager {
                (hasCmd || hasCtrl) && 
                (!parts.includes('shift') || hasShift) && 
                (!parts.includes('alt') && !parts.includes('⌥') || hasAlt);
+    }
+
+    handleMenuAction(action) {
+        const activeWindow = this.system.windowManager.activeWindow;
+        
+        switch (action) {
+            case 'close':
+                if (activeWindow && activeWindow.app === this.activeApp) {
+                    this.system.windowManager.closeWindow(activeWindow.id);
+                }
+                break;
+            case 'minimize':
+                if (activeWindow && activeWindow.app === this.activeApp) {
+                    this.system.windowManager.minimizeWindow(activeWindow.id);
+                }
+                break;
+            // ... existing code ...
+        }
     }
 }
 

@@ -82,7 +82,7 @@
 .window-title {
     flex: 1;
     text-align: center;
-    color: var(--text-color, #4a4a4a);
+    color: #808080;
     font-size: 13px;
     font-weight: 500;
     margin: 0 8px;
@@ -92,7 +92,7 @@
 }
 
 .window.active .window-title {
-    color: var(--text-color-active, #000);
+    color: var(--text-color-active, #eee);
 }
 
 .window-content {

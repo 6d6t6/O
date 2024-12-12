@@ -62,10 +62,15 @@ class OmegaOS {
             // Create OS UI structure
             this.createOSStructure();
             
-            // Initialize remaining components
+            // Initialize core system components in the correct order
             this.initializeWindowManager();
             this.initializeMenuBar();
+            this.initializeProcessManager();
             await this.initializeAppSystem();
+            
+            // Now that apps are initialized, set up system processes
+            this.processManager.initializeSystemProcesses();
+            
             await this.initializeDock();
             await this.initializeDesktop();
             
@@ -349,7 +354,7 @@ class OmegaOS {
     async initializeAppSystem() {
         this.appSystem = new AppSystem(this);
 
-        // Register core apps
+        // Register core system apps
         await this.appSystem.registerApp({
             id: 'finder',
             name: 'Finder',
@@ -367,6 +372,15 @@ class OmegaOS {
             name: 'Settings',
             icon: 'assets/icons/settings-icon.svg'
         });
+
+        await this.appSystem.registerApp({
+            id: 'activity-monitor',
+            name: 'Activity Monitor',
+            icon: 'assets/icons/activity-monitor-icon.svg'
+        });
+
+        // Initialize Finder without opening a window
+        await this.appSystem.launchApp('finder', { noWindow: true });
     }
 
     async initializeDock() {
@@ -582,6 +596,11 @@ class OmegaOS {
 
     initializeMenuBar() {
         this.menuBar = new MenuBarManager(this);
+    }
+
+    initializeProcessManager() {
+        this.processManager = new ProcessManager(this);
+        this.processManager.initialize();
     }
 }
 
