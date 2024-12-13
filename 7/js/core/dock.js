@@ -173,11 +173,42 @@ class Dock {
         item.className = 'dock-item';
         item.dataset.appId = app.id;
         
+        // Add keyboard accessibility
+        item.setAttribute('tabindex', '0');
+        item.setAttribute('role', 'button');
+        item.setAttribute('aria-label', `${app.name} application`);
+        
         item.innerHTML = `
             <img src="${app.icon}" alt="${app.name}">
             <div class="dock-item-indicator"></div>
             <div class="dock-item-tooltip">${app.name}</div>
         `;
+        
+        // Add keyboard event listeners
+        item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (e.shiftKey) {
+                    // Show context menu for long press
+                    e.preventDefault();
+                    this.showDockItemContextMenu(e, app.id);
+                } else {
+                    // Normal click
+                    this.handleDockItemClick(app.id);
+                }
+            }
+        });
+
+        // Add hover animations only for mouse and keyboard focus
+        item.addEventListener('mouseenter', () => {
+            if (!item.matches(':focus-visible')) {
+                item.classList.add('dock-item-hover');
+            }
+        });
+        item.addEventListener('mouseleave', () => {
+            if (!item.matches(':focus-visible')) {
+                item.classList.remove('dock-item-hover');
+            }
+        });
         
         this.appContainer.appendChild(item);
         this.runningIndicators.set(app.id, item.querySelector('.dock-item-indicator'));
@@ -191,10 +222,43 @@ class Dock {
     addTrashIcon() {
         const trashIcon = document.createElement('div');
         trashIcon.className = 'dock-trash-icon';
+        
+        // Add keyboard accessibility
+        trashIcon.setAttribute('tabindex', '0');
+        trashIcon.setAttribute('role', 'button');
+        trashIcon.setAttribute('aria-label', 'Trash');
+        
         trashIcon.innerHTML = `
             <img src="assets/icons/trash-icon.svg" alt="Trash">
             <div class="dock-item-tooltip">Trash</div>
         `;
+
+        // Add keyboard event listeners
+        trashIcon.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (e.shiftKey) {
+                    // Show context menu for long press
+                    e.preventDefault();
+                    this.showTrashContextMenu(e);
+                } else {
+                    // Normal click
+                    this.openTrash();
+                }
+            }
+        });
+
+        // Add hover animations only for mouse and keyboard focus
+        trashIcon.addEventListener('mouseenter', () => {
+            if (!trashIcon.matches(':focus-visible')) {
+                trashIcon.classList.add('dock-item-hover');
+            }
+        });
+        trashIcon.addEventListener('mouseleave', () => {
+            if (!trashIcon.matches(':focus-visible')) {
+                trashIcon.classList.remove('dock-item-hover');
+            }
+        });
+
         this.trashContainer.appendChild(trashIcon);
     }
 

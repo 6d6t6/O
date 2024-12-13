@@ -69,8 +69,8 @@ body {
     left: 0;
     right: 0;
     height: var(--menubar-height);
-    background: var(--toolbar-bg);
-    border-bottom: 1px solid var(--border-color);
+    background: #161616cc;
+    backdrop-filter: blur(64px) saturate(2.5);
     display: flex;
     align-items: center;
     padding: 0 8px;

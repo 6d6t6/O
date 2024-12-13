@@ -12,8 +12,8 @@
 }
 
 .dock-container {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(20px);
+    background: #80808060;
+    backdrop-filter: blur(20px) saturate(2.5);
     border-radius: 16px;
     padding: 6px;
     display: flex;
@@ -25,21 +25,48 @@
     width: 48px;
     height: 48px;
     border-radius: 12px;
-    transition: transform 0.2s ease;
+    transition: all 0.2s ease;
     cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* Only apply hover effect when no context menu is open */
-.dock-container:not(.has-open-menu) .dock-item:hover {
+/* Only show focus styles when using keyboard navigation */
+.dock-item:focus:not(:focus-visible) {
+    box-shadow: none;
+}
+/*
+.dock-item:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent-color);
+}*/
+
+.dock-apps>.dock-item:focus-visible, .dock-trash-icon:focus-visible {
+    outline: var(--accent-color) 2px solid;
+    outline-offset: 1px;
+}
+
+.dock-minimized-windows>.dock-item:focus-visible {
+    outline: var(--accent-color) 2px solid;
+    border-radius: 2px;
+    outline-offset: 1px;
+}
+
+/* Hover and keyboard focus styles for dock items */
+.dock-container:not(.has-open-menu) .dock-item:hover,
+.dock-container:not(.has-open-menu) .dock-item:focus-visible,
+.dock-container:not(.has-open-menu) .dock-item.dock-item-hover {
     transform: scale(1.1) translateY(-5px);
 }
 
-/* Keep the transform for the item with open context menu */
-.dock-item.context-menu-open {
-    transform: scale(1.1) translateY(-5px);
+/* Show tooltips only on hover and keyboard focus */
+.dock-container:not(.has-open-menu) .dock-item:hover .dock-item-tooltip,
+.dock-container:not(.has-open-menu) .dock-item:focus-visible .dock-item-tooltip,
+.dock-container:not(.has-open-menu) .dock-item.dock-item-hover .dock-item-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
-.dock-item img {
+.dock-item>img {
     width: 100%;
     height: 100%;
     border-radius: inherit;
@@ -67,7 +94,7 @@
     position: absolute;
     top: -30px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateY(5px);
     background: rgb(60 60 60 / 80%);
     box-shadow: 0 0 0 0.5px #808080, 0 0 0 1px #00000080;
     color: white;
@@ -76,13 +103,9 @@
     font-size: 12px;
     white-space: nowrap;
     opacity: 0;
-    transition: opacity 0.2s;
+    transition: all 0.2s ease;
     pointer-events: none;
-}
-
-/* Only show tooltip when no context menu is open */
-.dock-container:not(.has-open-menu) .dock-item:hover .dock-item-tooltip {
-    opacity: 1;
+    z-index: 1001;
 }
 
 .dock-separator {
@@ -97,18 +120,34 @@
     width: 48px;
     height: 48px;
     border-radius: 12px;
-    transition: transform 0.2s ease;
+    transition: all 0.2s ease;
     cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* Update trash icon hover behavior too */
-.dock-container:not(.has-open-menu) .dock-trash-icon:hover {
+/* Only show focus styles when using keyboard navigation */
+.dock-trash-icon:focus:not(:focus-visible) {
+    box-shadow: none;
+}
+/*
+.dock-trash-icon:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent-color);
+}*/
+
+/* Hover and keyboard focus styles for trash icon */
+.dock-container:not(.has-open-menu) .dock-trash-icon:hover,
+.dock-container:not(.has-open-menu) .dock-trash-icon:focus-visible,
+.dock-container:not(.has-open-menu) .dock-trash-icon.dock-item-hover {
     transform: scale(1.1) translateY(-5px);
 }
 
-/* Keep the transform for trash when its context menu is open */
-.dock-trash-icon.context-menu-open {
-    transform: scale(1.1) translateY(-5px);
+/* Show trash tooltip only on hover and keyboard focus */
+.dock-container:not(.has-open-menu) .dock-trash-icon:hover .dock-item-tooltip,
+.dock-container:not(.has-open-menu) .dock-trash-icon:focus-visible .dock-item-tooltip,
+.dock-container:not(.has-open-menu) .dock-trash-icon.dock-item-hover .dock-item-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
 .dock-trash-icon img {
@@ -116,11 +155,6 @@
     height: 100%;
     border-radius: inherit;
     object-fit: cover;
-}
-
-/* Only show trash tooltip when no context menu is open */
-.dock-container:not(.has-open-menu) .dock-trash-icon:hover .dock-item-tooltip {
-    opacity: 1;
 }
 
 /* Dock Context Menu */

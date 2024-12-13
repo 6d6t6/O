@@ -173,6 +173,10 @@ class WindowManager {
             currentX = e.clientX - initialX;
             currentY = e.clientY - initialY;
 
+            // Prevent dragging above menu bar
+            const menuBarHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--menubar-height'));
+            currentY = Math.max(menuBarHeight + 1, currentY);
+
             window.element.style.left = currentX + 'px';
             window.element.style.top = currentY + 'px';
         });
@@ -250,40 +254,78 @@ class WindowManager {
 
         window.isMinimized = true;
         
-        // Create minimized preview in dock
-        const minimizedPreview = document.createElement('div');
-        minimizedPreview.className = 'dock-item';
-        minimizedPreview.id = `minimized-${windowId}`;
+        // If this is the active window, try to activate another window of the same app
+        if (this.activeWindow === window) {
+            const sameAppWindow = Array.from(this.windows.values())
+                .filter(w => w.app === window.app && !w.isMinimized && w !== window)
+                .sort((a, b) => this.windowStack.indexOf(b) - this.windowStack.indexOf(a))[0];
+            
+            if (sameAppWindow) {
+                this.activateWindow(sameAppWindow.id);
+            } else {
+                this.deactivateAllWindows();
+            }
+        }
         
-        // Create tooltip exactly like dock items do
+        // Create minimized container in dock
+        const minimizedContainer = document.createElement('div');
+        minimizedContainer.className = 'dock-item';
+        minimizedContainer.id = `minimized-${windowId}`;
+        
+        // Add keyboard accessibility
+        minimizedContainer.setAttribute('tabindex', '0');
+        minimizedContainer.setAttribute('role', 'button');
+        const windowTitle = window.element.querySelector('.window-title').textContent;
+        minimizedContainer.setAttribute('aria-label', `Restore ${windowTitle} window`);
+        
+        // Create tooltip
         const tooltip = document.createElement('div');
         tooltip.className = 'dock-item-tooltip';
-        const windowTitle = window.element.querySelector('.window-title').textContent;
         tooltip.textContent = windowTitle || window.app.name;
-        minimizedPreview.appendChild(tooltip);
+        minimizedContainer.appendChild(tooltip);
         
-        // Create a container for the window preview
-        const previewContainer = document.createElement('div');
-        previewContainer.className = 'minimized-window-preview';
-        
+        // Add keyboard event listeners
+        minimizedContainer.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (e.shiftKey) {
+                    // Simulate long click/right click behavior
+                    // You can implement custom long-press behavior here
+                } else {
+                    this.restoreWindow(windowId);
+                }
+            }
+        });
+
+        // Add hover and focus animations
+        minimizedContainer.addEventListener('mouseenter', () => {
+            minimizedContainer.classList.add('dock-item-hover');
+        });
+        minimizedContainer.addEventListener('mouseleave', () => {
+            minimizedContainer.classList.remove('dock-item-hover');
+        });
+        minimizedContainer.addEventListener('focus', () => {
+            minimizedContainer.classList.add('dock-item-hover');
+        });
+        minimizedContainer.addEventListener('blur', () => {
+            minimizedContainer.classList.remove('dock-item-hover');
+        });
+
         // Get dimensions
-        const dockIconSize = 48; // Standard dock icon size
+        const dockIconSize = 48;
         const windowHeight = window.element.offsetHeight;
         const windowWidth = window.element.offsetWidth;
         
-        // Calculate scales for both dimensions
-        const scaleByHeight = (dockIconSize - 8) / windowHeight; // 4px margin top and bottom
-        const scaleByWidth = (dockIconSize + 8) / windowWidth;  // Allow slightly wider than icon
-        
-        // Use the smaller scale to ensure neither dimension is too large
+        // Calculate scales
+        const scaleByHeight = (dockIconSize - 8) / windowHeight;
+        const scaleByWidth = (dockIconSize + 8) / windowWidth;
         let targetScale = Math.min(scaleByHeight, scaleByWidth);
         
-        // Calculate resulting dimensions
+        // Calculate dimensions
         let previewWidth = Math.ceil(windowWidth * targetScale);
         let previewHeight = Math.ceil(windowHeight * targetScale);
         
-        // Ensure width stays within reasonable bounds
-        const maxWidth = dockIconSize + 8; // Just slightly wider than icon
+        // Adjust width bounds
+        const maxWidth = dockIconSize + 8;
         const minWidth = Math.max(dockIconSize * 0.75, 40);
         
         if (previewWidth > maxWidth) {
@@ -303,35 +345,62 @@ class WindowManager {
             previewWidth = Math.ceil(windowWidth * targetScale);
         }
         
-        // Set preview dimensions
-        minimizedPreview.style.width = `${previewWidth}px`;
-        minimizedPreview.style.height = `${dockIconSize}px`;
-        previewContainer.style.width = '100%';
-        previewContainer.style.height = '100%';
+        // Set container dimensions
+        minimizedContainer.style.width = `${previewWidth}px`;
+        minimizedContainer.style.height = `${dockIconSize}px`;
         
-        // Clone the entire window for preview
-        const windowClone = window.element.cloneNode(true);
-        windowClone.classList.add('preview-window');
-        windowClone.style.pointerEvents = 'none';
-        
-        // Center the window clone vertically
-        const topOffset = Math.max(0, (dockIconSize - previewHeight) / 2);
-        
-        // Apply the calculated scale and position
-        windowClone.style.transform = `scale(${targetScale})`;
-        windowClone.style.transformOrigin = 'top left';
-        windowClone.style.top = `${topOffset}px`;
-        windowClone.style.left = '0';
-        
-        previewContainer.appendChild(windowClone);
-        minimizedPreview.appendChild(previewContainer);
+        // Store original window styles for restoration
+        window.previousState = {
+            transform: window.element.style.transform || '',
+            width: window.element.style.width,
+            height: window.element.style.height,
+            left: window.element.style.left,
+            top: window.element.style.top,
+            zIndex: window.element.style.zIndex,
+            transition: window.element.style.transition,
+            position: window.element.style.position,
+            pointerEvents: window.element.style.pointerEvents,
+            tabIndex: window.element.getAttribute('tabindex'),
+            ariaHidden: window.element.getAttribute('aria-hidden')
+        };
 
         // Add click handler to restore
-        minimizedPreview.addEventListener('click', () => this.restoreWindow(windowId));
+        minimizedContainer.addEventListener('click', () => this.restoreWindow(windowId));
+        
+        // Add keyboard accessibility
+        minimizedContainer.setAttribute('tabindex', '0');
+        minimizedContainer.setAttribute('role', 'button');
+        minimizedContainer.setAttribute('aria-label', `Restore ${tooltip.textContent} window`);
+        
+        // Add keyboard and focus handling
+        minimizedContainer.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (e.shiftKey) {
+                    // Simulate long click/right click behavior
+                    // You can implement custom long-press behavior here
+                } else {
+                    this.restoreWindow(windowId);
+                }
+            }
+        });
 
-        // Add to dock's minimized section and update separator
+        // Add hover and focus animations
+        minimizedContainer.addEventListener('mouseenter', () => {
+            minimizedContainer.classList.add('dock-item-hover');
+        });
+        minimizedContainer.addEventListener('mouseleave', () => {
+            minimizedContainer.classList.remove('dock-item-hover');
+        });
+        minimizedContainer.addEventListener('focus', () => {
+            minimizedContainer.classList.add('dock-item-hover');
+        });
+        minimizedContainer.addEventListener('blur', () => {
+            minimizedContainer.classList.remove('dock-item-hover');
+        });
+
+        // Add to dock's minimized section
         const minimizedSection = document.querySelector('.dock-minimized-windows');
-        minimizedSection.appendChild(minimizedPreview);
+        minimizedSection.appendChild(minimizedContainer);
 
         // Update separator visibility
         const separator = document.querySelector('.dock-separator');
@@ -339,51 +408,98 @@ class WindowManager {
             separator.style.display = '';
         }
 
-        // Get the final position for animation
-        const previewBounds = minimizedPreview.getBoundingClientRect();
+        // Get positions for animation
+        const containerBounds = minimizedContainer.getBoundingClientRect();
         const windowBounds = window.element.getBoundingClientRect();
 
-        // Set initial position and scale
-        minimizedPreview.style.opacity = '0';
+        // Calculate the center position in the dock container
+        const topOffset = Math.max(0, (dockIconSize - previewHeight) / 2);
         
-        // Animate the window to the preview position
-        window.element.style.transition = 'all 0.3s ease';
-        window.element.style.transform = `translate(${previewBounds.left - windowBounds.left}px, ${previewBounds.top - windowBounds.top}px) scale(${targetScale})`;
-        window.element.style.opacity = '0';
+        // Animate the window towards the minimized container
+        const translateX = containerBounds.left - windowBounds.left;
+        const translateY = (containerBounds.top + topOffset) - windowBounds.top;
+        
+        // Apply initial position and start animation
+        Object.assign(window.element.style, {
+            position: 'fixed',
+            width: `${windowWidth}px`,
+            height: `${windowHeight}px`,
+            left: `${windowBounds.left}px`,
+            top: `${windowBounds.top}px`,
+            transform: 'none',
+            transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease',
+            zIndex: '9999'
+        });
 
-        // After animation completes
+        // Force a reflow to ensure the initial styles are applied
+        window.element.offsetHeight;
+
+        // Apply the animation transform
+        window.element.style.transform = `translate(${translateX}px, ${translateY}px) scale(${targetScale})`;
+        window.element.style.opacity = '0.8';
+
+        // After animation completes, move the window to its final position
         setTimeout(() => {
-            minimizedPreview.style.opacity = '1';
-            window.element.style.display = 'none';
+            // Move the actual window into the minimized container
+            minimizedContainer.appendChild(window.element);
+            
+            // Apply final transformation
+            Object.assign(window.element.style, {
+                position: 'absolute',
+                width: `${windowWidth}px`,
+                height: `${windowHeight}px`,
+                left: '0',
+                top: `${topOffset}px`,
+                transform: `scale(${targetScale})`,
+                transformOrigin: 'top left',
+                transition: 'none',
+                zIndex: 'auto',
+                opacity: '1',
+                pointerEvents: 'none'
+            });
         }, 300);
+
+        // Make window and all its children uninteractable
+        window.element.setAttribute('tabindex', '-1');
+        // window.element.setAttribute('aria-hidden', 'true'); // Removed for now because it might not be right or needed - but leave it here for now.
+        window.element.setAttribute('inert', '');
     }
 
     restoreWindow(windowId) {
         const window = this.windows.get(windowId);
         if (!window || !window.isMinimized) return;
 
-        const minimizedPreview = document.getElementById(`minimized-${windowId}`);
-        if (!minimizedPreview) return;
+        const minimizedContainer = document.getElementById(`minimized-${windowId}`);
+        if (!minimizedContainer) return;
 
-        // Get positions for animation
-        const previewBounds = minimizedPreview.getBoundingClientRect();
+        // Move window back to desktop
+        document.getElementById('desktop').appendChild(window.element);
         
-        // Show window and set it to preview position
-        window.element.style.display = '';
-        window.element.style.transform = `translate(${previewBounds.left}px, ${previewBounds.top}px) scale(0.2)`;
-        window.element.style.opacity = '0';
+        // Restore original styles and interactivity
+        if (window.previousState) {
+            Object.assign(window.element.style, window.previousState);
+            
+            // Restore tabindex
+            if (window.previousState.tabIndex) {
+                window.element.setAttribute('tabindex', window.previousState.tabIndex);
+            } else {
+                window.element.removeAttribute('tabindex');
+            }
+            
+            // Restore aria-hidden
+            if (window.previousState.ariaHidden) {
+                window.element.setAttribute('aria-hidden', window.previousState.ariaHidden);
+            } else {
+                window.element.removeAttribute('aria-hidden');
+            }
+            
+            // Remove inert attribute
+            window.element.removeAttribute('inert');
+        }
 
-        // Force a reflow
-        window.element.offsetHeight;
-
-        // Animate back to original position and clear transform
-        window.element.style.transform = '';
-        window.element.style.opacity = '1';
-
-        // Remove preview and update separator visibility
-        minimizedPreview.remove();
+        // Remove container and update separator visibility
+        minimizedContainer.remove();
         
-        // Update separator visibility
         const minimizedSection = document.querySelector('.dock-minimized-windows');
         const separator = document.querySelector('.dock-separator');
         if (separator && minimizedSection) {
@@ -408,16 +524,18 @@ class WindowManager {
                 width: window.element.style.width,
                 height: window.element.style.height,
                 left: window.element.style.left,
-                top: window.element.style.top
+                top: window.element.style.top,
+                borderRadius: window.element.style.borderRadius
             };
 
             // Maximize window
             Object.assign(window.element.style, {
                 width: '100vw',
-                height: `calc(100vh - var(--menubar-height) - var(--dock-height))`,
+                height: `calc(100vh - var(--menubar-height) - var(--dock-height) - 9px)`,
                 left: '0',
-                top: 'var(--menubar-height)',
+                top: 'calc(var(--menubar-height) + 1px)',
                 bottom: 'var(--dock-height)',
+                borderRadius: '0px'
             });
             window.isMaximized = true;
         }

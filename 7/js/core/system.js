@@ -334,17 +334,41 @@ class OmegaOS {
     }
 
     loadUserPreferences() {
+        // Try to load saved settings from localStorage first
+        const savedSettings = localStorage.getItem('omega-settings');
+        let settings = {};
+        
+        if (savedSettings) {
+            try {
+                const parsed = JSON.parse(savedSettings);
+                settings = parsed.appearance || {};
+            } catch (e) {
+                console.error('Failed to parse saved settings:', e);
+            }
+        }
+
+        // Get user settings from auth if available
         const user = this.auth.getCurrentUser();
         if (user && user.settings) {
-            this.state.systemPreferences = {
-                ...this.state.systemPreferences,
+            settings = {
+                ...settings,
                 ...user.settings
             };
         }
 
+        // Set default values if not present
+        this.state.systemPreferences = {
+            theme: 'light',
+            accentColor: '#007AFF',
+            fontSize: '14px',
+            ...this.state.systemPreferences,
+            ...settings
+        };
+
         // Apply preferences
         document.documentElement.setAttribute('data-theme', this.state.systemPreferences.theme);
         document.documentElement.style.setProperty('--accent-color', this.state.systemPreferences.accentColor);
+        document.documentElement.style.setProperty('--base-font-size', this.state.systemPreferences.fontSize);
     }
 
     initializeWindowManager() {

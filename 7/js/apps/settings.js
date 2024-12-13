@@ -1,11 +1,17 @@
 class SettingsApp extends OmegaApp {
     constructor(system, manifest) {
         super(system, manifest);
+        
+        // Try to load saved settings from localStorage
+        const savedSettings = localStorage.getItem('omega-settings');
+        const systemPreferences = system.state.systemPreferences || {};
+        
+        // Default settings
         this.settings = {
             appearance: {
-                theme: 'light',
-                accentColor: '#007AFF',
-                fontSize: '14px'
+                theme: systemPreferences.theme || 'light',
+                accentColor: systemPreferences.accentColor || '#007AFF',
+                fontSize: systemPreferences.fontSize || '14px'
             },
             system: {
                 notifications: true,
@@ -16,11 +22,35 @@ class SettingsApp extends OmegaApp {
                 order: 'newest-first'
             }
         };
+
+        // Override with saved settings if they exist
+        if (savedSettings) {
+            this.settings = {
+                ...this.settings,
+                ...JSON.parse(savedSettings)
+            };
+        }
     }
 
     async onInitialize(window) {
         // Store window reference
         this.window = window;
+
+        // Define preset accent colors
+        this.accentColors = [
+            { name: 'Blue', value: '#007AFF' },
+            { name: 'Purple', value: '#5856D6' },
+            { name: 'Pink', value: '#FF2D55' },
+            { name: 'Red', value: '#FF3B30' },
+            { name: 'Orange', value: '#FF9500' },
+            { name: 'Yellow', value: '#FFCC00' },
+            { name: 'Green', value: '#34C759' },
+            { name: 'Teal', value: '#5AC8FA' },
+            { name: 'Graphite', value: '#8E8E93' }
+        ];
+
+        // Apply current settings
+        this.applySettings();
 
         window.setContent(`
             <div class="settings">
@@ -43,7 +73,20 @@ class SettingsApp extends OmegaApp {
                         </div>
                         <div class="setting-group">
                             <label>Accent Color</label>
-                            <input type="color" id="accentColor" value="${this.settings.appearance.accentColor}">
+                            <div class="accent-colors" role="radiogroup" aria-label="Choose accent color">
+                                ${this.accentColors.map(color => `
+                                    <div class="accent-color-option ${color.value === this.settings.appearance.accentColor ? 'active' : ''}" 
+                                         data-color="${color.value}"
+                                         tabindex="0"
+                                         role="radio"
+                                         aria-checked="${color.value === this.settings.appearance.accentColor}"
+                                         aria-label="${color.name}"
+                                         style="background-color: ${color.value};"
+                                         title="${color.name}">
+                                         ${color.value === this.settings.appearance.accentColor ? '<div class="check-mark"></div>' : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
                         </div>
                         <div class="setting-group">
                             <label>Font Size</label>
@@ -167,6 +210,47 @@ class SettingsApp extends OmegaApp {
                 font-size: 24px;
                 font-weight: 500;
             }
+
+            .accent-colors {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 12px;
+                margin-top: 8px;
+            }
+
+            .accent-color-option {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                cursor: pointer;
+                position: relative;
+                transition: transform 0.2s, border-color 0.2s;
+                border: 2px solid transparent;
+                outline: none;
+            }
+
+            .accent-color-option:hover,
+            .accent-color-option:focus-visible {
+                transform: scale(1.1);
+            }
+
+            .accent-color-option:focus-visible {
+                box-shadow: 0 0 0 2px var(--accent-color);
+            }
+
+            .accent-color-option.active {
+                border-color: var(--text-color);
+            }
+
+            .accent-color-option .check-mark {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 16px;
+                height: 16px;
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>') center/contain no-repeat;
+            }
         `);
 
         this.initializeEventListeners(window);
@@ -183,7 +267,7 @@ class SettingsApp extends OmegaApp {
             }
         });
 
-        // Settings changes
+        // Theme select
         const themeSelect = window.querySelector('#theme');
         themeSelect.value = this.settings.appearance.theme;
         themeSelect.addEventListener('change', (e) => {
@@ -191,12 +275,70 @@ class SettingsApp extends OmegaApp {
             this.applySettings();
         });
 
-        const accentColor = window.querySelector('#accentColor');
-        accentColor.addEventListener('change', (e) => {
-            this.settings.appearance.accentColor = e.target.value;
+        // Accent colors
+        const accentColors = window.querySelector('.accent-colors');
+        
+        const updateAccentColor = (colorOption) => {
+            const color = colorOption.dataset.color;
+            this.settings.appearance.accentColor = color;
+            
+            // Update active state visually
+            window.querySelectorAll('.accent-color-option').forEach(option => {
+                const isActive = option.dataset.color === color;
+                option.classList.toggle('active', isActive);
+                option.setAttribute('aria-checked', isActive);
+                option.innerHTML = isActive ? '<div class="check-mark"></div>' : '';
+            });
+            
             this.applySettings();
+        };
+
+        accentColors.addEventListener('click', (e) => {
+            const colorOption = e.target.closest('.accent-color-option');
+            if (colorOption) {
+                updateAccentColor(colorOption);
+            }
         });
 
+        // Keyboard navigation for accent colors
+        accentColors.addEventListener('keydown', (e) => {
+            const colorOption = e.target.closest('.accent-color-option');
+            if (!colorOption) return;
+
+            const options = Array.from(window.querySelectorAll('.accent-color-option'));
+            const currentIndex = options.indexOf(colorOption);
+            let nextIndex;
+
+            switch (e.key) {
+                case 'Enter':
+                case ' ':
+                    e.preventDefault();
+                    updateAccentColor(colorOption);
+                    break;
+                case 'ArrowRight':
+                case 'ArrowDown':
+                    e.preventDefault();
+                    nextIndex = (currentIndex + 1) % options.length;
+                    options[nextIndex].focus();
+                    break;
+                case 'ArrowLeft':
+                case 'ArrowUp':
+                    e.preventDefault();
+                    nextIndex = (currentIndex - 1 + options.length) % options.length;
+                    options[nextIndex].focus();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    options[0].focus();
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    options[options.length - 1].focus();
+                    break;
+            }
+        });
+
+        // Font size select
         const fontSize = window.querySelector('#fontSize');
         fontSize.value = this.settings.appearance.fontSize;
         fontSize.addEventListener('change', (e) => {
@@ -235,12 +377,30 @@ class SettingsApp extends OmegaApp {
     }
 
     applySettings() {
-        // Here you would implement the actual settings application
-        // For now, we'll just save them and log
-        console.log('Settings updated:', this.settings);
+        // Apply theme
+        document.documentElement.setAttribute('data-theme', this.settings.appearance.theme);
         
-        // Notify system of settings change
-        this.system.broadcast('settingsChanged', this.settings);
+        // Apply accent color
+        document.documentElement.style.setProperty('--accent-color', this.settings.appearance.accentColor);
+        
+        // Apply font size
+        document.documentElement.style.setProperty('--base-font-size', this.settings.appearance.fontSize);
+        
+        // Save settings to system
+        this.system.state.systemPreferences = {
+            ...this.system.state.systemPreferences,
+            theme: this.settings.appearance.theme,
+            accentColor: this.settings.appearance.accentColor,
+            fontSize: this.settings.appearance.fontSize
+        };
+        
+        // Notify system of settings change using custom event
+        window.dispatchEvent(new CustomEvent('settingsChanged', { 
+            detail: this.settings 
+        }));
+        
+        // Save to local storage for persistence
+        localStorage.setItem('omega-settings', JSON.stringify(this.settings));
     }
 
     // Override handleMenuAction to ensure proper window closing

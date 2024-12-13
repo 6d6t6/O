@@ -98,7 +98,7 @@
 .window-content {
     flex: 1;
     overflow: auto;
-    background: #fff;
+    background: transparent;
     position: relative;
 }
 
@@ -194,7 +194,7 @@
     display: flex;
     align-items: center;
     height: 100%;
-    gap: 4px;
+    gap: 8px;
     padding: 0;
 }
 
@@ -281,7 +281,7 @@
 
 .menu-dropdown .menu-separator {
     height: 1px;
-    background: var(--separator-color);
+    background: var(--separator-color, #ffffff80);
     margin: 4px 0;
     opacity: 0.3;
 }
