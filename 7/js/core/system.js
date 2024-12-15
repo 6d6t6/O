@@ -182,45 +182,14 @@ class OmegaOS {
             // Only proceed with copying if needed
             if (needToCopy) {
                 console.log('Some wallpapers missing, copying required wallpapers...');
-                
-                // Get the base URL for assets
-                const baseUrl = this.getWallpaperBaseUrl();
-                console.log('Using wallpaper base URL:', baseUrl);
-
                 for (const wallpaper of presetWallpapers) {
                     const systemPath = `/System/Wallpapers/${wallpaper}`;
                     if (!await this.filesystem.getFile(systemPath)) {
                         try {
-                            // Try multiple possible paths for the wallpaper
-                            const possiblePaths = [
-                                `${baseUrl}/assets/wallpapers/${wallpaper}`,
-                                `${baseUrl}assets/wallpapers/${wallpaper}`,
-                                `./assets/wallpapers/${wallpaper}`,
-                                `../assets/wallpapers/${wallpaper}`,
-                                `/assets/wallpapers/${wallpaper}`
-                            ];
-
-                            let blob = null;
-                            for (const path of possiblePaths) {
-                                try {
-                                    console.log(`Attempting to fetch wallpaper from: ${path}`);
-                                    const response = await fetch(path);
-                                    if (response.ok) {
-                                        blob = await response.blob();
-                                        console.log(`Successfully fetched wallpaper from: ${path}`);
-                                        break;
-                                    }
-                                } catch (fetchError) {
-                                    console.log(`Failed to fetch from ${path}:`, fetchError.message);
-                                }
-                            }
-
-                            if (blob) {
-                                await this.filesystem.writeFile(systemPath, blob);
-                                console.log(`Copied wallpaper: ${wallpaper}`);
-                            } else {
-                                console.warn(`Could not fetch wallpaper ${wallpaper} from any known location`);
-                            }
+                            const response = await fetch(`/assets/wallpapers/${wallpaper}`);
+                            const blob = await response.blob();
+                            await this.filesystem.writeFile(systemPath, blob);
+                            console.log(`Copied wallpaper: ${wallpaper}`);
                         } catch (copyError) {
                             console.error(`Failed to copy wallpaper ${wallpaper}:`, copyError);
                         }
@@ -232,24 +201,6 @@ class OmegaOS {
         } catch (error) {
             console.error('Failed to initialize system folders:', error);
         }
-    }
-
-    getWallpaperBaseUrl() {
-        // Get the base URL for assets based on the current environment
-        const currentUrl = window.location.href;
-        
-        // Check if we're on GitHub Pages
-        if (currentUrl.includes('github.io')) {
-            // Extract the repository name from the URL
-            const pathParts = currentUrl.split('/');
-            const repoIndex = pathParts.indexOf('github.io') + 1;
-            if (repoIndex < pathParts.length) {
-                return `/${pathParts[repoIndex]}`;
-            }
-        }
-        
-        // For local development or other environments, return empty string
-        return '';
     }
 
     showLoadingScreen() {
