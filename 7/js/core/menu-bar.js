@@ -7,6 +7,12 @@ class MenuBarManager {
         this.activeApp = null;
         this.hoverTimeout = null;
 
+        // Register this manager with the system
+        if (!window.menuManagers) {
+            window.menuManagers = new Set();
+        }
+        window.menuManagers.add(this);
+
         // Default system menus that are always available
         this.systemMenus = {
             omega: {
@@ -198,9 +204,13 @@ class MenuBarManager {
         const menu = this.activeMenus[menuId];
         if (!menu) return;
 
+        // Close other types of menus
+        this.closeOtherMenuTypes('menubar');
+
         // Create and show menu dropdown
         const dropdown = document.createElement('div');
         dropdown.className = 'menu-dropdown';
+        dropdown.dataset.menuType = 'menubar';  // Add menu type identifier
         
         menu.items.forEach(item => {
             if (item.type === 'separator') {
@@ -287,6 +297,7 @@ class MenuBarManager {
         // Create submenu
         const submenu = document.createElement('div');
         submenu.className = 'menu-dropdown submenu';
+        submenu.dataset.menuType = 'menubar';  // Add menu type identifier
 
         items.forEach(item => {
             if (item.type === 'separator') {
@@ -387,6 +398,20 @@ class MenuBarManager {
                 break;
             // ... existing code ...
         }
+    }
+
+    closeOtherMenuTypes(currentType) {
+        // Close all other menu types
+        window.menuManagers.forEach(manager => {
+            if (manager !== this) {
+                // Try different close methods based on manager type
+                if (manager.closeAllMenus) {
+                    manager.closeAllMenus();
+                } else if (manager.closeContextMenu) {
+                    manager.closeContextMenu();
+                }
+            }
+        });
     }
 }
 

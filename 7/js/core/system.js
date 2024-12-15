@@ -7,7 +7,8 @@ class OmegaOS {
             systemPreferences: {
                 theme: 'dark',
                 accentColor: '#007AFF',
-                notificationOrder: 'newest-first'
+                notificationOrder: 'newest-first',
+                wallpaper: '/System/Wallpapers/milad-fakurian-iLHDO19h0ng-unsplash.jpg'
             }
         };
     }
@@ -56,8 +57,15 @@ class OmegaOS {
                 return false;
             }
 
+            // Initialize system folders and copy initial files
+            await this.initializeSystemFolders();
+
+            // Initialize settings manager
+            this.settingsManager = new SettingsManager(this);
+            await this.settingsManager.initialize();
+
             // Load user preferences
-            this.loadUserPreferences();
+            await this.loadUserPreferences();
 
             // Create OS UI structure
             this.createOSStructure();
@@ -66,6 +74,7 @@ class OmegaOS {
             this.initializeWindowManager();
             this.initializeMenuBar();
             this.initializeProcessManager();
+            this.initializeContextMenuManager();
             await this.initializeAppSystem();
             
             // Now that apps are initialized, set up system processes
@@ -115,6 +124,62 @@ class OmegaOS {
             console.error('Failed to initialize filesystem:', error);
             this.state.isFileSystemReady = false;
             return false;
+        }
+    }
+
+    async initializeSystemFolders() {
+        try {
+            console.log('Initializing system folders...');
+            
+            // Create system directory if it doesn't exist
+            await this.filesystem.createDirectory('/System');
+            await this.filesystem.createDirectory('/System/Preferences');
+            await this.filesystem.createDirectory('/System/Wallpapers');
+
+            // List of preset wallpapers
+            const presetWallpapers = [
+                'milad-fakurian-iLHDO19h0ng-unsplash.jpg',
+                'sean-sinclair-C_NJKfnTR5A-unsplash.jpg',
+                'patrick-tomasso-5hvn-2WW6rY-unsplash.jpg',
+                'anders-jilden-O85h02qZ24w-unsplash.jpg',
+                'milad-fakurian-PGdW_bHDbpI-unsplash.jpg',
+                'breno-machado-in9-n0JwgZ0-unsplash.jpg',
+                'dan-freeman-wAn4RfmXtxU-unsplash.jpg',
+                'john-fowler-RsRTIofe0HE-unsplash.jpg'
+            ];
+
+            // Check if we need to copy any wallpapers
+            let needToCopy = false;
+            for (const wallpaper of presetWallpapers) {
+                const systemPath = `/System/Wallpapers/${wallpaper}`;
+                const exists = await this.filesystem.getFile(systemPath);
+                if (!exists) {
+                    needToCopy = true;
+                    break;
+                }
+            }
+
+            // Only proceed with copying if needed
+            if (needToCopy) {
+                console.log('Some wallpapers missing, copying required wallpapers...');
+                for (const wallpaper of presetWallpapers) {
+                    const systemPath = `/System/Wallpapers/${wallpaper}`;
+                    if (!await this.filesystem.getFile(systemPath)) {
+                        try {
+                            const response = await fetch(`/assets/wallpapers/${wallpaper}`);
+                            const blob = await response.blob();
+                            await this.filesystem.writeFile(systemPath, blob);
+                            console.log(`Copied wallpaper: ${wallpaper}`);
+                        } catch (copyError) {
+                            console.error(`Failed to copy wallpaper ${wallpaper}:`, copyError);
+                        }
+                    }
+                }
+            } else {
+                console.log('All wallpapers already present, skipping copy');
+            }
+        } catch (error) {
+            console.error('Failed to initialize system folders:', error);
         }
     }
 
@@ -333,42 +398,50 @@ class OmegaOS {
         document.body.appendChild(errorScreen);
     }
 
-    loadUserPreferences() {
-        // Try to load saved settings from localStorage first
-        const savedSettings = localStorage.getItem('omega-settings');
-        let settings = {};
+    async loadUserPreferences() {
+        console.log('Loading user preferences...');
         
-        if (savedSettings) {
-            try {
-                const parsed = JSON.parse(savedSettings);
-                settings = parsed.appearance || {};
-            } catch (e) {
-                console.error('Failed to parse saved settings:', e);
-            }
-        }
-
-        // Get user settings from auth if available
-        const user = this.auth.getCurrentUser();
-        if (user && user.settings) {
-            settings = {
-                ...settings,
-                ...user.settings
-            };
-        }
-
-        // Set default values if not present
+        // Get settings from settings manager
+        const settings = this.settingsManager.getSettings();
+        
+        // Update system preferences with settings
         this.state.systemPreferences = {
-            theme: 'light',
-            accentColor: '#007AFF',
-            fontSize: '14px',
             ...this.state.systemPreferences,
-            ...settings
+            ...settings.appearance
         };
+
+        console.log('Final system preferences:', this.state.systemPreferences);
 
         // Apply preferences
         document.documentElement.setAttribute('data-theme', this.state.systemPreferences.theme);
         document.documentElement.style.setProperty('--accent-color', this.state.systemPreferences.accentColor);
         document.documentElement.style.setProperty('--base-font-size', this.state.systemPreferences.fontSize);
+
+        // Apply wallpaper
+        const wallpaper = this.state.systemPreferences.wallpaper;
+        if (wallpaper && wallpaper.startsWith('/System/Wallpapers/')) {
+            this.filesystem.getFileUrl(wallpaper)
+                .then(url => {
+                    document.getElementById('desktop').style.backgroundImage = `url(${url})`;
+                })
+                .catch(async (error) => {
+                    // If file not found, try to copy it from assets
+                    const wallpaperName = wallpaper.split('/').pop();
+                    try {
+                        const response = await fetch(`/assets/wallpapers/${wallpaperName}`);
+                        const blob = await response.blob();
+                        await this.filesystem.writeFile(wallpaper, blob);
+                        
+                        // Try getting the URL again
+                        const url = await this.filesystem.getFileUrl(wallpaper);
+                        document.getElementById('desktop').style.backgroundImage = `url(${url})`;
+                    } catch (copyError) {
+                        console.error('Failed to copy wallpaper:', copyError);
+                        // Fallback to assets directory
+                        document.getElementById('desktop').style.backgroundImage = `url(/assets/wallpapers/${wallpaperName})`;
+                    }
+                });
+        }
     }
 
     initializeWindowManager() {
@@ -413,23 +486,8 @@ class OmegaOS {
     }
 
     async initializeDesktop() {
-        try {
-            // Load desktop contents
-            const entries = await this.filesystem.readDirectory('/Desktop');
-            const desktop = document.getElementById('desktop');
-            
-            for (const entry of entries) {
-                const icon = document.createElement('div');
-                icon.className = 'desktop-icon';
-                icon.innerHTML = `
-                    <img src="assets/icons/${entry.type === 'directory' ? 'directory' : 'file'}.svg" alt="${entry.type}">
-                    <span>${entry.name}</span>
-                `;
-                desktop.appendChild(icon);
-            }
-        } catch (error) {
-            console.error('Failed to load desktop contents:', error);
-        }
+        this.desktop = new Desktop(this);
+        await this.desktop.refreshDesktop();
     }
 
     // System API Methods
@@ -548,15 +606,15 @@ class OmegaOS {
 
                 .desktop-notification {
                     position: relative;
-                    background: rgba(30, 30, 30, 0.95);
-                    backdrop-filter: blur(10px);
-                    border-radius: 8px;
-                    padding: 8px 12px;
+                    background: rgba(30, 30, 30, 0.65);
+                    backdrop-filter: blur(64px);
+                    border-radius: 12px;
+                    padding: 12px 16px;
                     color: white;
                     font-size: 13px;
                     width: 300px;
                     min-height: fit-content;
-                    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+                    box-shadow: 0 0 0px 0.5px #808080, 0 0 0 1px #00000080, 0 5px 20px rgba(0, 0, 0, 0.3);
                     transform: translateX(120%);
                     transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
                     pointer-events: auto;
@@ -625,6 +683,10 @@ class OmegaOS {
     initializeProcessManager() {
         this.processManager = new ProcessManager(this);
         this.processManager.initialize();
+    }
+
+    initializeContextMenuManager() {
+        this.contextMenuManager = new ContextMenuManager(this);
     }
 }
 

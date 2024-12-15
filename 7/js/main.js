@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.omegaOS.menuBar = null;  // Will be initialized later
         window.omegaOS.dock = null;  // Will be initialized later
         window.omegaOS.appSystem = null;  // Will be initialized later
+        window.omegaOS.contextMenuManager = null;  // Will be initialized later
+        window.omegaOS.desktop = null;  // Will be initialized later
 
         // Wait for all core scripts to load
         await new Promise(resolve => setTimeout(resolve, 100));

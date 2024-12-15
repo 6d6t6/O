@@ -8,6 +8,12 @@ class Dock {
         this.longPressStartPos = null;
         this.isDragging = false;
         this.longPressTriggered = false;
+
+        // Register this manager with the system
+        if (!window.menuManagers) {
+            window.menuManagers = new Set();
+        }
+        window.menuManagers.add(this);
     }
 
     async initialize() {
@@ -398,6 +404,9 @@ class Dock {
     }
 
     showDockContextMenu(dockItem, items) {
+        // Close other types of menus
+        this.closeOtherMenuTypes('dock');
+
         // If there's an existing menu, close it and wait for transitions
         const existingMenu = document.querySelector('.context-menu');
         if (existingMenu) {
@@ -424,6 +433,7 @@ class Dock {
         // Create context menu
         const menu = document.createElement('div');
         menu.className = 'context-menu dock-context-menu';
+        menu.dataset.menuType = 'dock';  // Add menu type identifier
 
         items.forEach(item => {
             if (item.type === 'separator') {
@@ -475,6 +485,20 @@ class Dock {
             this.element.querySelector('.dock-container').classList.remove('has-open-menu');
             existingMenu.remove();
         }
+    }
+
+    closeOtherMenuTypes(currentType) {
+        // Close all other menu types
+        window.menuManagers.forEach(manager => {
+            if (manager !== this) {
+                // Try different close methods based on manager type
+                if (manager.closeAllMenus) {
+                    manager.closeAllMenus();
+                } else if (manager.closeContextMenu) {
+                    manager.closeContextMenu();
+                }
+            }
+        });
     }
 }
 

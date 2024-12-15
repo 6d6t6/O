@@ -104,15 +104,47 @@ class FileSystem {
         }
     }
 
-    async readFile(path) {
+    async getFile(path) {
         try {
             const parts = path.split('/').filter(Boolean);
             const fileName = parts.pop();
             const dirPath = parts.length ? '/' + parts.join('/') : '/';
             
-            const dirHandle = await this.getDirectoryHandle(dirPath);
-            const fileHandle = await dirHandle.getFileHandle(fileName);
-            const file = await fileHandle.getFile();
+            try {
+                const dirHandle = await this.getDirectoryHandle(dirPath);
+                const fileHandle = await dirHandle.getFileHandle(fileName);
+                return await fileHandle.getFile();
+            } catch (error) {
+                if (error.name === 'NotFoundError') {
+                    return null;
+                }
+                throw error;
+            }
+        } catch (error) {
+            if (error.name === 'NotFoundError') {
+                return null;
+            }
+            console.error('Error getting file:', error);
+            throw error;
+        }
+    }
+
+    async getFileUrl(path) {
+        try {
+            const file = await this.getFile(path);
+            return URL.createObjectURL(file);
+        } catch (error) {
+            console.error('Error getting file URL:', error);
+            throw error;
+        }
+    }
+
+    async readFile(path) {
+        try {
+            const file = await this.getFile(path);
+            if (!file) {
+                return null;
+            }
             return await file.text();
         } catch (error) {
             console.error('Error reading file:', error);

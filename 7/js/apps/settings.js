@@ -2,34 +2,20 @@ class SettingsApp extends OmegaApp {
     constructor(system, manifest) {
         super(system, manifest);
         
-        // Try to load saved settings from localStorage
-        const savedSettings = localStorage.getItem('omega-settings');
-        const systemPreferences = system.state.systemPreferences || {};
-        
-        // Default settings
-        this.settings = {
-            appearance: {
-                theme: systemPreferences.theme || 'light',
-                accentColor: systemPreferences.accentColor || '#007AFF',
-                fontSize: systemPreferences.fontSize || '14px'
-            },
-            system: {
-                notifications: true,
-                animations: true,
-                soundEffects: true
-            },
-            notifications: {
-                order: 'newest-first'
-            }
-        };
+        // Get settings from settings manager
+        this.settings = system.settingsManager.getSettings();
 
-        // Override with saved settings if they exist
-        if (savedSettings) {
-            this.settings = {
-                ...this.settings,
-                ...JSON.parse(savedSettings)
-            };
-        }
+        // Define available wallpapers
+        this.wallpapers = [
+            'milad-fakurian-iLHDO19h0ng-unsplash.jpg',
+            'sean-sinclair-C_NJKfnTR5A-unsplash.jpg',
+            'patrick-tomasso-5hvn-2WW6rY-unsplash.jpg',
+            'anders-jilden-O85h02qZ24w-unsplash.jpg',
+            'milad-fakurian-PGdW_bHDbpI-unsplash.jpg',
+            'breno-machado-in9-n0JwgZ0-unsplash.jpg',
+            'dan-freeman-wAn4RfmXtxU-unsplash.jpg',
+            'john-fowler-RsRTIofe0HE-unsplash.jpg'
+        ];
     }
 
     async onInitialize(window) {
@@ -49,9 +35,11 @@ class SettingsApp extends OmegaApp {
             { name: 'Graphite', value: '#8E8E93' }
         ];
 
-        // Apply current settings
-        this.applySettings();
+        // Set up the UI with current settings
+        this.setupUI(window);
+    }
 
+    setupUI(window) {
         window.setContent(`
             <div class="settings">
                 <div class="settings-sidebar">
@@ -95,6 +83,27 @@ class SettingsApp extends OmegaApp {
                                 <option value="14px">Medium</option>
                                 <option value="16px">Large</option>
                             </select>
+                        </div>
+                        <div class="setting-group">
+                            <label>Desktop Wallpaper</label>
+                            <div class="wallpaper-grid">
+                                ${this.wallpapers.map(wallpaper => `
+                                    <div class="wallpaper-option ${this.settings.appearance.wallpaper === '/System/Wallpapers/' + wallpaper ? 'active' : ''}"
+                                         data-wallpaper="/System/Wallpapers/${wallpaper}"
+                                         tabindex="0"
+                                         role="radio"
+                                         aria-checked="${this.settings.appearance.wallpaper === '/System/Wallpapers/' + wallpaper}"
+                                         aria-label="Wallpaper ${wallpaper.split('.')[0]}"
+                                         style="background-image: url('assets/wallpapers/${wallpaper}')">
+                                         ${this.settings.appearance.wallpaper === '/System/Wallpapers/' + wallpaper ? '<div class="check-mark"></div>' : ''}
+                                    </div>
+                                `).join('')}
+                                <label class="wallpaper-upload" tabindex="0" role="button" aria-label="Upload custom wallpaper">
+                                    <input type="file" accept="image/*" id="wallpaperUpload" class="hidden">
+                                    <div class="upload-icon">+</div>
+                                    <div class="upload-text">Custom</div>
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="settings-section" id="notifications">
@@ -251,6 +260,88 @@ class SettingsApp extends OmegaApp {
                 height: 16px;
                 background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>') center/contain no-repeat;
             }
+
+            .wallpaper-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 16px;
+                margin-top: 12px;
+            }
+
+            .wallpaper-option {
+                aspect-ratio: 16/10;
+                border-radius: 8px;
+                cursor: pointer;
+                background-size: cover;
+                background-position: center;
+                position: relative;
+                transition: transform 0.2s, box-shadow 0.2s;
+                border: 2px solid transparent;
+                outline: none;
+            }
+
+            .wallpaper-option:hover,
+            .wallpaper-option:focus-visible {
+                transform: scale(1.05);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            .wallpaper-option.active {
+                border-color: var(--accent-color);
+            }
+
+            .wallpaper-option .check-mark {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                width: 20px;
+                height: 20px;
+                background: var(--accent-color);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .wallpaper-option .check-mark::after {
+                content: '✓';
+                color: white;
+                font-size: 14px;
+            }
+
+            .wallpaper-upload {
+                aspect-ratio: 16/10;
+                border-radius: 8px;
+                border: 2px dashed var(--border-color);
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: transform 0.2s, border-color 0.2s;
+                outline: none;
+            }
+
+            .wallpaper-upload:hover,
+            .wallpaper-upload:focus-visible {
+                transform: scale(1.05);
+                border-color: var(--accent-color);
+            }
+
+            .wallpaper-upload .upload-icon {
+                font-size: 24px;
+                margin-bottom: 4px;
+                color: var(--text-secondary);
+            }
+
+            .wallpaper-upload .upload-text {
+                font-size: 12px;
+                color: var(--text-secondary);
+            }
+
+            .hidden {
+                display: none;
+            }
         `);
 
         this.initializeEventListeners(window);
@@ -362,6 +453,95 @@ class SettingsApp extends OmegaApp {
             this.settings.notifications.order = e.target.value;
             this.applySettings();
         });
+
+        // Wallpaper selection
+        const wallpaperGrid = window.querySelector('.wallpaper-grid');
+        
+        const updateWallpaper = (wallpaperPath) => {
+            this.settings.appearance.wallpaper = wallpaperPath;
+            
+            // Update active state visually
+            window.querySelectorAll('.wallpaper-option').forEach(option => {
+                const isActive = option.dataset.wallpaper === wallpaperPath;
+                option.classList.toggle('active', isActive);
+                option.setAttribute('aria-checked', isActive);
+                option.innerHTML = isActive ? '<div class="check-mark"></div>' : '';
+            });
+            
+            // Apply settings with wallpaper change flag
+            this.applySettings({ wallpaper: true });
+        };
+
+        wallpaperGrid.addEventListener('click', (e) => {
+            const wallpaperOption = e.target.closest('.wallpaper-option');
+            if (wallpaperOption) {
+                updateWallpaper(wallpaperOption.dataset.wallpaper);
+            }
+        });
+
+        // Keyboard navigation for wallpapers
+        wallpaperGrid.addEventListener('keydown', (e) => {
+            const wallpaperOption = e.target.closest('.wallpaper-option');
+            if (!wallpaperOption) return;
+
+            const options = Array.from(window.querySelectorAll('.wallpaper-option'));
+            const currentIndex = options.indexOf(wallpaperOption);
+            let nextIndex;
+
+            switch (e.key) {
+                case 'Enter':
+                case ' ':
+                    e.preventDefault();
+                    updateWallpaper(wallpaperOption.dataset.wallpaper);
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    nextIndex = (currentIndex + 1) % options.length;
+                    options[nextIndex].focus();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    nextIndex = (currentIndex - 1 + options.length) % options.length;
+                    options[nextIndex].focus();
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    nextIndex = currentIndex - 3;
+                    if (nextIndex >= 0) options[nextIndex].focus();
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    nextIndex = currentIndex + 3;
+                    if (nextIndex < options.length) options[nextIndex].focus();
+                    break;
+            }
+        });
+
+        // Custom wallpaper upload
+        const wallpaperUpload = window.querySelector('#wallpaperUpload');
+        wallpaperUpload.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                try {
+                    // Generate a unique filename
+                    const timestamp = Date.now();
+                    const filename = `custom-${timestamp}-${file.name}`;
+                    const systemPath = `/System/Wallpapers/${filename}`;
+
+                    // Save file to system wallpapers directory
+                    await this.system.filesystem.writeFile(systemPath, file);
+
+                    // Update wallpaper setting
+                    updateWallpaper(systemPath);
+                } catch (error) {
+                    console.error('Failed to save wallpaper:', error);
+                    this.system.showNotification(
+                        'Error',
+                        'Failed to save wallpaper. Please try again.'
+                    );
+                }
+            }
+        });
     }
 
     switchSection(window, section) {
@@ -376,7 +556,7 @@ class SettingsApp extends OmegaApp {
         });
     }
 
-    applySettings() {
+    async applySettings(changedSettings = {}) {
         // Apply theme
         document.documentElement.setAttribute('data-theme', this.settings.appearance.theme);
         
@@ -386,21 +566,43 @@ class SettingsApp extends OmegaApp {
         // Apply font size
         document.documentElement.style.setProperty('--base-font-size', this.settings.appearance.fontSize);
         
+        // Only apply wallpaper if it was changed
+        if (changedSettings.wallpaper) {
+            const wallpaper = this.settings.appearance.wallpaper;
+            if (wallpaper.startsWith('/System/Wallpapers/')) {
+                // For system wallpapers, first try the filesystem URL
+                this.system.filesystem.getFileUrl(wallpaper)
+                    .then(url => {
+                        document.getElementById('desktop').style.backgroundImage = `url(${url})`;
+                    })
+                    .catch(async (error) => {
+                        // If file not found, try to copy it from assets
+                        const wallpaperName = wallpaper.split('/').pop();
+                        try {
+                            const response = await fetch(`/assets/wallpapers/${wallpaperName}`);
+                            const blob = await response.blob();
+                            await this.system.filesystem.writeFile(wallpaper, blob);
+                            
+                            // Try getting the URL again
+                            const url = await this.system.filesystem.getFileUrl(wallpaper);
+                            document.getElementById('desktop').style.backgroundImage = `url(${url})`;
+                        } catch (copyError) {
+                            console.error('Failed to copy wallpaper:', copyError);
+                            // Fallback to assets directory
+                            document.getElementById('desktop').style.backgroundImage = `url(/assets/wallpapers/${wallpaperName})`;
+                        }
+                    });
+            }
+        }
+        
         // Save settings to system
         this.system.state.systemPreferences = {
             ...this.system.state.systemPreferences,
-            theme: this.settings.appearance.theme,
-            accentColor: this.settings.appearance.accentColor,
-            fontSize: this.settings.appearance.fontSize
+            ...this.settings.appearance
         };
         
-        // Notify system of settings change using custom event
-        window.dispatchEvent(new CustomEvent('settingsChanged', { 
-            detail: this.settings 
-        }));
-        
-        // Save to local storage for persistence
-        localStorage.setItem('omega-settings', JSON.stringify(this.settings));
+        // Save settings using settings manager
+        await this.system.settingsManager.updateSettings(this.settings);
     }
 
     // Override handleMenuAction to ensure proper window closing
