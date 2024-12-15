@@ -138,14 +138,34 @@ class OmegaOS {
 
             // List of preset wallpapers
             const presetWallpapers = [
-                'milad-fakurian-iLHDO19h0ng-unsplash.jpg',
-                'sean-sinclair-C_NJKfnTR5A-unsplash.jpg',
-                'patrick-tomasso-5hvn-2WW6rY-unsplash.jpg',
+                'aaron-burden-Qy-CBKUg_X8-unsplash.jpg',
+                'amy-tran-L2owAEPX0Vk-unsplash.jpg',
+                'anders-jilden-AkUR27wtaxs-unsplash.jpg',
                 'anders-jilden-O85h02qZ24w-unsplash.jpg',
-                'milad-fakurian-PGdW_bHDbpI-unsplash.jpg',
+                'andrew-neel-jtsW--Z6bFw-unsplash.jpg',
+                'andrew-ridley-jR4Zf-riEjI-unsplash.jpg',
                 'breno-machado-in9-n0JwgZ0-unsplash.jpg',
                 'dan-freeman-wAn4RfmXtxU-unsplash.jpg',
-                'john-fowler-RsRTIofe0HE-unsplash.jpg'
+                'efe-kurnaz-RnCPiXixooY-unsplash.jpg',
+                'ian-dooley-DuBNA1QMpPA-unsplash.jpg',
+                'jakob-owens-EwRM05V0VSI-unsplash.jpg',
+                'jakob-owens-n5wwck8ES4w-unsplash.jpg',
+                'javen-yang-MWZi4XTIsKA-unsplash.jpg',
+                'jayanth-muppaneni-zRZqxAogRnY-unsplash.jpg',
+                'jeremy-bishop-B2Q7UC6QGLE-unsplash.jpg',
+                'jms-kFHz9Xh3PPU-unsplash.jpg',
+                'john-fowler-RsRTIofe0HE-unsplash.jpg',
+                'jr-korpa-9XngoIpxcEo-unsplash.jpg',
+                'meiying-ng-OrwkD-iWgqg-unsplash.jpg',
+                'milad-fakurian-bexwsdM5BCw-unsplash.jpg',
+                'milad-fakurian-iLHDO19h0ng-unsplash.jpg',
+                'milad-fakurian-PGdW_bHDbpI-unsplash.jpg',
+                'nasa-_SFJhRPzJHs-unsplash.jpg',
+                'patrick-tomasso-5hvn-2WW6rY-unsplash.jpg',
+                'rodion-kutsaiev-pVoEPpLw818-unsplash.jpg',
+                'sean-sinclair-C_NJKfnTR5A-unsplash.jpg',
+                'sora-sagano-Dksk8szLRN0-unsplash.jpg',
+                'vackground-com-iSaDQdcPozk-unsplash.jpg'
             ];
 
             // Check if we need to copy any wallpapers
@@ -162,14 +182,45 @@ class OmegaOS {
             // Only proceed with copying if needed
             if (needToCopy) {
                 console.log('Some wallpapers missing, copying required wallpapers...');
+                
+                // Get the base URL for assets
+                const baseUrl = this.getWallpaperBaseUrl();
+                console.log('Using wallpaper base URL:', baseUrl);
+
                 for (const wallpaper of presetWallpapers) {
                     const systemPath = `/System/Wallpapers/${wallpaper}`;
                     if (!await this.filesystem.getFile(systemPath)) {
                         try {
-                            const response = await fetch(`/assets/wallpapers/${wallpaper}`);
-                            const blob = await response.blob();
-                            await this.filesystem.writeFile(systemPath, blob);
-                            console.log(`Copied wallpaper: ${wallpaper}`);
+                            // Try multiple possible paths for the wallpaper
+                            const possiblePaths = [
+                                `${baseUrl}/assets/wallpapers/${wallpaper}`,
+                                `${baseUrl}assets/wallpapers/${wallpaper}`,
+                                `./assets/wallpapers/${wallpaper}`,
+                                `../assets/wallpapers/${wallpaper}`,
+                                `/assets/wallpapers/${wallpaper}`
+                            ];
+
+                            let blob = null;
+                            for (const path of possiblePaths) {
+                                try {
+                                    console.log(`Attempting to fetch wallpaper from: ${path}`);
+                                    const response = await fetch(path);
+                                    if (response.ok) {
+                                        blob = await response.blob();
+                                        console.log(`Successfully fetched wallpaper from: ${path}`);
+                                        break;
+                                    }
+                                } catch (fetchError) {
+                                    console.log(`Failed to fetch from ${path}:`, fetchError.message);
+                                }
+                            }
+
+                            if (blob) {
+                                await this.filesystem.writeFile(systemPath, blob);
+                                console.log(`Copied wallpaper: ${wallpaper}`);
+                            } else {
+                                console.warn(`Could not fetch wallpaper ${wallpaper} from any known location`);
+                            }
                         } catch (copyError) {
                             console.error(`Failed to copy wallpaper ${wallpaper}:`, copyError);
                         }
@@ -181,6 +232,24 @@ class OmegaOS {
         } catch (error) {
             console.error('Failed to initialize system folders:', error);
         }
+    }
+
+    getWallpaperBaseUrl() {
+        // Get the base URL for assets based on the current environment
+        const currentUrl = window.location.href;
+        
+        // Check if we're on GitHub Pages
+        if (currentUrl.includes('github.io')) {
+            // Extract the repository name from the URL
+            const pathParts = currentUrl.split('/');
+            const repoIndex = pathParts.indexOf('github.io') + 1;
+            if (repoIndex < pathParts.length) {
+                return `/${pathParts[repoIndex]}`;
+            }
+        }
+        
+        // For local development or other environments, return empty string
+        return '';
     }
 
     showLoadingScreen() {

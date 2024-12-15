@@ -7,14 +7,34 @@ class SettingsApp extends OmegaApp {
 
         // Define available wallpapers
         this.wallpapers = [
-            'milad-fakurian-iLHDO19h0ng-unsplash.jpg',
-            'sean-sinclair-C_NJKfnTR5A-unsplash.jpg',
-            'patrick-tomasso-5hvn-2WW6rY-unsplash.jpg',
+            'aaron-burden-Qy-CBKUg_X8-unsplash.jpg',
+            'amy-tran-L2owAEPX0Vk-unsplash.jpg',
+            'anders-jilden-AkUR27wtaxs-unsplash.jpg',
             'anders-jilden-O85h02qZ24w-unsplash.jpg',
-            'milad-fakurian-PGdW_bHDbpI-unsplash.jpg',
+            'andrew-neel-jtsW--Z6bFw-unsplash.jpg',
+            'andrew-ridley-jR4Zf-riEjI-unsplash.jpg',
             'breno-machado-in9-n0JwgZ0-unsplash.jpg',
             'dan-freeman-wAn4RfmXtxU-unsplash.jpg',
-            'john-fowler-RsRTIofe0HE-unsplash.jpg'
+            'efe-kurnaz-RnCPiXixooY-unsplash.jpg',
+            'ian-dooley-DuBNA1QMpPA-unsplash.jpg',
+            'jakob-owens-EwRM05V0VSI-unsplash.jpg',
+            'jakob-owens-n5wwck8ES4w-unsplash.jpg',
+            'javen-yang-MWZi4XTIsKA-unsplash.jpg',
+            'jayanth-muppaneni-zRZqxAogRnY-unsplash.jpg',
+            'jeremy-bishop-B2Q7UC6QGLE-unsplash.jpg',
+            'jms-kFHz9Xh3PPU-unsplash.jpg',
+            'john-fowler-RsRTIofe0HE-unsplash.jpg',
+            'jr-korpa-9XngoIpxcEo-unsplash.jpg',
+            'meiying-ng-OrwkD-iWgqg-unsplash.jpg',
+            'milad-fakurian-bexwsdM5BCw-unsplash.jpg',
+            'milad-fakurian-iLHDO19h0ng-unsplash.jpg',
+            'milad-fakurian-PGdW_bHDbpI-unsplash.jpg',
+            'nasa-_SFJhRPzJHs-unsplash.jpg',
+            'patrick-tomasso-5hvn-2WW6rY-unsplash.jpg',
+            'rodion-kutsaiev-pVoEPpLw818-unsplash.jpg',
+            'sean-sinclair-C_NJKfnTR5A-unsplash.jpg',
+            'sora-sagano-Dksk8szLRN0-unsplash.jpg',
+            'vackground-com-iSaDQdcPozk-unsplash.jpg'
         ];
     }
 
