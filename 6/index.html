@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>o-0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+</head>
+<body>
+    <div id="boot-screen">
+        <div id="boot-icon">
+            <span class="material-symbols-rounded" style="font-size: 48px; font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 48;">brightness_7</span>
+        </div>
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+    </div>
+    <div id="setup-wizard" style="display: none;">
+        <div class="setup-wizard-window">
+            <h2>Welcome!</h2>
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password (optional)">
+            <button id="folder-access-button">Select Home Folder</button>
+            <button id="finish-setup">Finish Setup</button>
+        </div>
+    </div>
+    <div id="sign-in-screen" style="display: none;">
+        <div class="sign-in-window">
+            <input type="text" id="sign-in-username" placeholder="Username" required disabled>
+            <input type="password" id="sign-in-password" placeholder="Password">
+            <button id="sign-in-button">Sign In</button>
+        </div>
+    </div>
+    <div id="menu-bar">
+        <ul id="menu-items"></ul>
+        <div id="tray">
+            <div id="tray-items">
+                <div id="battery">
+                    <span id="battery-percentage"></span>
+                    <div id="battery-progress-container">
+                        <div id="battery-progress"></div>
+                        <div id="charging-overlay" class="charging-overlay">
+                            <i class="material-symbols-rounded">bolt</i>
+                        </div>
+                    </div>
+                    <div id="battery-nub"></div>
+                </div>
+                <div id="wifi-icon" class="wifi-container">
+                    <span class="material-symbols-rounded base-icon">wifi</span>
+                    <span class="strength-icon material-symbols-rounded"></span>
+                </div>
+                <div id="bluetooth-icon" class="bluetooth-container"></div>
+                <div id="control-center-icon" class="control-center-container">
+                    <span class="material-symbols-rounded tray-icon">page_info</span>
+                </div>
+                <div id="zero-icon" class="zero-container">
+                    <span class="material-symbols-rounded tray-icon">circle</span>
+                </div>
+                <div id="date"></div>
+                <div id="time"></div>
+                <!-- tray items -->
+            </div>
+        </div>
+    </div>
+    <div id="desktop">
+        <!-- desktop background -->
+        <div id="desktop-background">
+            <!-- desktop wallpaper -->
+        </div>
+        
+        <!-- desktop icons -->
+        <div id="desktop-icons">
+            <!-- icon elements -->
+        </div>
+
+        <!-- selection box -->
+        <div id="selection-box"></div>
+
+        <!-- dock -->
+        <div id="dock">
+            <div id="dockItems">
+                <div id="dockIcons">
+                    <!-- dock icons -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+</body>
+</html>
