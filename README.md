@@ -4,9 +4,9 @@
 
 [O/7](https://6d6t6.github.io/O/7) Omega 0.1.7 In development
 
-### Past versions
+### Previous versions
 
-[O/6](https://6d6t6.github.io/O/6) Omega 0.1.6 Unstable
+[O/6](https://6d6t6.github.io/O/6) Omega 0.1.6 Unstable, assets don't load use [this](https://128bb82c.o-0.pages.dev/) to demo instead
 
 [O/5](https://6d6t6.github.io/O/5) Omega 0.1.5 Stable
 
