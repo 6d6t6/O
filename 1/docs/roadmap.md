@@ -2,140 +2,136 @@
 
 ---
 ## File System
-Simple, integrated, locally sandboxed using File System Access API.
+- [x] Simple, integrated, locally sandboxed using File System Access API.
 
 ---
 ## Web Browser
-Simple integrated web browser, similar to Chrome and Firefox.
+- [ ] Simple integrated web browser, similar to Chrome and Firefox.
 Additionally:
 * An extension for chromium based browsers (the external, "native" web browser), to allow a less restrictive experience.
 * Failsafes including a "blurred screenshot" error page.
 
 ---
 ## IRC Client / IM Client
-Simple IRC client.
+- [ ] Simple IRC client.
 
 ---
 ## Mail Client
-Simple email client. (Hopefully, if possible)
+- [ ] Simple email client. (Hopefully, if possible)
 
 ---
 ## Text Editor
-Simple integrated text editor.
+- [ ] Simple integrated text editor.
 
 ---
 ## Creative Suite
 Creative suite of tools:
 
 ### Word Processor
-Similar to Microsoft Word, Apple Pages, and Google Docs.
+- [ ] Similar to Microsoft Word, Apple Pages, and Google Docs.
 
 ### Spreadsheet Software
-Similar to Microsoft Excel, Apple Numbers, and Google Sheets.
+- [ ] Similar to Microsoft Excel, Apple Numbers, and Google Sheets.
 
 ### Presentation/Slideshows Software
-Similar to Microsoft PowerPoint, Apple Keynote, and Google Slides.
+- [ ] Similar to Microsoft PowerPoint, Apple Keynote, and Google Slides.
 
 ### Creator Software [ ~ ? ~ ]
-Similar to Microsoft Publisher.
-
-Maybe something like Microsoft Publisher meets Google Drawings.
+- [ ] Similar to Microsoft Publisher. Maybe something like Microsoft Publisher meets Google Drawings.
 
 ### PDF Software
-Simple PDF viewer (and editor, maybe).
+- [ ] Simple PDF viewer (and editor, maybe).
 
 ### Photo Editor
-... *
+- [ ] ... *
 
 ### Video Editor
-... *
+- [ ] ... *
 
 ### Audio Editor
-... *
+- [ ] ... *
 
 ---
 ## Paint / Draw
-Simple paint / drawing application.
+- [ ] Simple paint / drawing application.
 
 ---
 ## Notes
-Simple integrated notes app.
+- [ ] Simple integrated notes app.
 
-Possibly a sticky-note widget / application (hybrid), with pinnable notes.
+- [ ] Possibly a sticky-note widget / application (hybrid), with pinnable notes.
 
 ---
 ## Media Player
-Simple integrated media player for playing local and web media.
+- [ ] Simple integrated media player for playing local and web media.
 
 ---
 ## Calendar
-Simple integrated calendar / agenda app.
+- [ ] Simple integrated calendar / agenda app.
 
 ---
 ## Calculator
-Simple calculator app.
+- [ ] Simple calculator app.
 
 ---
 ## Task Manager
-Simple task manager.
+- [ ] Simple task manager.
 
 ---
 ## Control Panel
-Simple integrated panel with Notification History and quick access to settings and tools.
+- [ ] Simple integrated panel with Notification History and quick access to settings and tools.
 
 ---
 ## Search
-Simple integrated universal search.
+- [ ] Simple integrated universal search.
 
 ---
 ## Evo
-Simple, friendly, integrated operator.
+- [ ] Simple, friendly, integrated operator.
 
 ---
 ## Video Calling
-Simple and secure integrated video calling similar to FaceTime, Zoom, and Skype.
+- [ ] Simple and secure integrated video calling similar to FaceTime, Zoom, and Skype.
 
 ---
 ## Development Environment
-Environment for developing applications for O, and more.
+- [ ] Environment for developing applications for O, and more.
 
 ---
 ## App Center
-Simple marketplace for installable apps built for the O system.
+- [ ] Simple marketplace for installable apps built for the O system.
 
 ---
 ## Customization Features
-... *
+- [ ] ... *
 
 ---
 ## Native Device Statuses
-... *
+- [ ] ... *
 
 ---
 ## Accessibility Features
-... *
+- [ ] ... *
 
 ---
 ## Security Features
-... *
+- [ ] ... *
 
 ---
 ## Backup & Restore
-... *
+- [ ] ... *
 
 ---
 ## Localization
-... *
+- [ ] ... *
 
 ---
 ## External Service Integration
-Optional integration with external services / third parties.
+- [ ] Optional integration with external services / third parties.
 
 ---
 ## Cloud Storage
-Simple and secure integrated cloud storage service.
-
-(Hopefully by 2025 or 2026)
+- [ ] Simple and secure integrated cloud storage service. (2025-2027?)
 
 ---
 ### and this is just the beginning...
