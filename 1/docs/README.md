@@ -1,4 +1,4 @@
-# ⊙ web-based operating system
+# Omega: web-based operating system
 
 [![GitHub repo size](https://img.shields.io/github/repo-size/6d6t6/O?logo=github&color=purple)](https://github.com/6d6t6/O)
 [![GitHub last commit](https://img.shields.io/github/last-commit/6d6t6/O?logo=github)](https://github.com/6d6t6/O)
@@ -8,7 +8,7 @@
 
 ## 💻 Development
 
-⊙ is an operating system built entirely out of web technologies.
+Omega is an operating system built entirely out of web technologies.
 
 ## 📍 Roadmap
 
@@ -16,9 +16,9 @@
 
 ## 🙏 Thank you
 
-* (ChatGPT) GPT 3.5, GPT 4, Cursor
+* AI*, Cursor (GPT 3.5, GPT 4, GPT 4o, GPT o1-mini, Claude) ♡
 * Friends ♡
-* Developers everywhere, whose code possibly helped train these LLMs like ChatGPT
+* Developers everywhere, whose code helped train these LLMs like ChatGPT ♡
 
 ## 💛 Support
 Thank you for your support!
