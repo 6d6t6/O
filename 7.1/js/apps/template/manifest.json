@@ -1,0 +1,15 @@
+{
+    "id": "template",
+    "name": "Template App",
+    "version": "1.0.0",
+    "author": "OMEGA OS",
+    "description": "A template application for OMEGA OS developers",
+    "icon": "assets/icons/template-icon.svg",
+    "permissions": ["notifications"],
+    "defaultWindow": {
+        "width": 800,
+        "height": 600,
+        "resizable": true,
+        "frame": true
+    }
+} 

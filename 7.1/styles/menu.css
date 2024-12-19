@@ -1,0 +1,124 @@
+.menu-dropdown {
+    position: fixed;
+    background: rgba(30, 30, 30, 0.65);
+    backdrop-filter: blur(64px);
+    border-radius: 6px;
+    min-width: 120px;
+    max-width: 400px;
+    width: fit-content;
+    padding: 4px;
+    box-shadow: 0 0 0 0.5px #808080, 0 0 0 1px #00000080, 0 5px 20px rgba(0, 0, 0, 0.3);
+    z-index: 1100;
+    color: white;
+    font-size: 13px;
+}
+
+.menu-item {
+    padding: 4px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: default;
+    user-select: none;
+    position: relative;
+    border-radius: 4px;
+    min-height: 20px;
+    gap: 8px;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+.menu-dropdown>.menu-item:hover {
+    background: var(--accent-color);
+}
+
+.menu-separator {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 4px 0;
+}
+
+.menu-shortcut {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+}
+
+.menu-item:hover .menu-shortcut {
+    color: white;
+}
+
+.menu-item-label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.submenu-arrow {
+    margin-left: auto;
+    margin-right: -5px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.menu-item:hover .submenu-arrow {
+    color: white;
+}
+
+.submenu {
+    position: absolute;
+    margin-left: 1px;
+}
+
+/* Menu Bar Specific Styles */
+#menu-bar .menu-item {
+    height: 100%;
+    padding: 0 10px;
+    font-weight: 400;
+}
+
+#menu-bar .menu-item.active {
+    background: rgba(30, 30, 30, 0.65);
+    backdrop-filter: blur(64px);
+    border-radius: 4px;
+}
+
+.active-app-name {
+    font-weight: 500;
+}
+
+/* Disabled menu items */
+.menu-item.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Menu item icons */
+.menu-item-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+}
+
+/* OMEGA Menu Styles */
+.omega-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 100%;
+    padding: 0;
+    margin: 0 4px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.omega-menu .menu-icon {
+    width: 20px;
+    height: 20px;
+} 

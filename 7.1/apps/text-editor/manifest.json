@@ -1,0 +1,16 @@
+{
+    "id": "text-editor",
+    "name": "Text Editor",
+    "version": "1.0.0",
+    "author": "OMEGA OS",
+    "description": "A simple text editor for OMEGA OS",
+    "icon": "text-editor.svg",
+    "entry": "app.js",
+    "permissions": ["filesystem"],
+    "defaultWindow": {
+        "width": 800,
+        "height": 600,
+        "resizable": true,
+        "frame": true
+    }
+} 
