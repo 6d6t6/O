@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background -->
+    <rect width="512" height="512" rx="128" fill="url(#b)"/>
+    <clipPath id="a">
+        <path d="M0 0h512v512H0z"/>
+    </clipPath>
+    <g clip-path="url(#a)">
+        <path d="M0 0h512v512H0z"/>
+        <!-- Inner Rectangle with Inset Shadow -->
+        <rect x="24" y="24" width="464" height="464" rx="118" fill="url(#middle-gradient)" filter="url(#inset-shadow)"/>
+        <!-- Subtle Grid Lines -->
+        <g opacity="0.1">
+            <path d="M60 64 L452 64" stroke="#4dff4d" stroke-width="8"/>
+            <path d="M32 128 L480 128" stroke="#4dff4d" stroke-width="8"/>
+            <path d="M32 192 L480 192" stroke="#4dff4d" stroke-width="8"/>
+            <path d="M32 256 L480 256" stroke="#4dff4d" stroke-width="8"/>
+            <path d="M32 320 L480 320" stroke="#4dff4d" stroke-width="8"/>
+            <path d="M32 384 L480 384" stroke="#4dff4d" stroke-width="8"/>
+            <path d="M60 448 L452 448" stroke="#4dff4d" stroke-width="8"/>
+            
+            <path d="M64 60 L64 452" stroke="#4dff4d" stroke-width="8"/>
+            <path d="M128 32 L128 480" stroke="#4dff4d" stroke-width="8"/>
+            <path d="M192 32 L192 480" stroke="#4dff4d" stroke-width="8"/>
+            <path d="M256 32 L256 480" stroke="#4dff4d" stroke-width="8"/>
+            <path d="M320 32 L320 480" stroke="#4dff4d" stroke-width="8"/>
+            <path d="M384 32 L384 480" stroke="#4dff4d" stroke-width="8"/>
+            <path d="M448 60 L448 450" stroke="#4dff4d" stroke-width="8"/>
+        </g>
+        <!-- Activity Line -->
+        <path stroke="url(#line-gradient)" stroke-width="24" stroke-linejoin="round" stroke-linecap="butt" d="M32.008 255.818c8.681.009 39.065.04 52.089.055s17.425.06 26.055.036c8.63-.023 15.658 22.006 25.727-.178 10.068-22.184 26.588-156.626 34.684-132.924 8.096 23.703 4.341 256.243 13.893 275.14 9.55 18.896 31.09-143.613 43.415-161.762s23.486 51.357 30.531 52.869 7.918-40.248 11.737-43.798 6.5 20.652 11.181 22.499 9.057-9.441 16.906-11.42c7.85-1.98 19.69-.359 30.187-.454 10.499-.096 20.543-.117 32.802-.121s20.955.08 40.751.097c19.796.016 65.022 0 78.026 0"/>
+    </g>
+    <defs>
+        <linearGradient id="b" x1="0" y1="0" x2="0" y2="512" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" style="stop-color:#cfe7ec"/>
+            <stop offset="100%" style="stop-color:#757676"/>
+        </linearGradient>
+        <linearGradient id="middle-gradient" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" style="stop-color:#323232"/>
+            <stop offset="100%" style="stop-color:#161616"/>
+        </linearGradient>
+        <linearGradient id="line-gradient" x1="0" y1="512" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" style="stop-color:#53ec7c00"/>
+            <stop offset="10%" style="stop-color:#53ec7c10"/>
+            <stop offset="25%" style="stop-color:#53ec7c80"/>
+            <stop offset="35%" style="stop-color:#53ec7c"/>
+            <stop offset="50%" style="stop-color:#53ec7c"/>
+            <stop offset="65%" style="stop-color:#53ec7c"/>
+            <stop offset="75%" style="stop-color:#53ec7c80"/>
+            <stop offset="90%" style="stop-color:#53ec7c10"/>
+            <stop offset="100%" style="stop-color:#53ec7c00"/>
+        </linearGradient>
+        <!-- Inset Shadow Filter -->
+        <filter id="inset-shadow" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
+            <feComponentTransfer in="SourceAlpha">
+                <feFuncA type="table" tableValues="1 0"/>
+            </feComponentTransfer>
+            <feGaussianBlur stdDeviation="10"/>
+            <feOffset dx="0" dy="0" result="offsetblur"/>
+            <feFlood flood-color="black" result="color"/>
+            <feComposite in2="offsetblur" operator="in"/>
+            <feComposite in2="SourceAlpha" operator="in"/>
+            <feMerge>
+                <feMergeNode in="SourceGraphic"/>
+                <feMergeNode/>
+            </feMerge>
+        </filter>
+    </defs>
+</svg>
