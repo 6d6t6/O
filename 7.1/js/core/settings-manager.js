@@ -7,8 +7,10 @@ class SettingsManager {
             appearance: {
                 theme: 'dark',
                 accentColor: '#007AFF',
-                fontSize: '14px',
-                wallpaper: '/System/Wallpapers/milad-fakurian-iLHDO19h0ng-unsplash.jpg'
+                fontSize: '14px'
+            },
+            wallpaper: {
+                path: '/System/Wallpapers/milad-fakurian-iLHDO19h0ng-unsplash.jpg'
             },
             system: {
                 notifications: true,
@@ -18,7 +20,8 @@ class SettingsManager {
                 language: 'en-US'
             },
             notifications: {
-                order: 'newest-first'
+                order: 'newest-first',
+                browserNotifications: true
             }
         };
         this.settings = JSON.parse(JSON.stringify(this.defaultSettings)); // Deep clone defaults
@@ -35,6 +38,10 @@ class SettingsManager {
                     appearance: {
                         ...this.defaultSettings.appearance,
                         ...settings.appearance
+                    },
+                    wallpaper: {
+                        ...this.defaultSettings.wallpaper,
+                        ...settings.wallpaper
                     },
                     system: {
                         ...this.defaultSettings.system,
@@ -147,6 +154,10 @@ class SettingsManager {
                 ...this.settings.appearance,
                 ...(newSettings.appearance || {})
             },
+            wallpaper: {
+                ...this.settings.wallpaper,
+                ...(newSettings.wallpaper || {})
+            },
             system: {
                 ...this.settings.system,
                 ...(newSettings.system || {})
@@ -184,6 +195,14 @@ class SettingsManager {
         this.settings.notifications = {
             ...this.settings.notifications,
             ...notificationSettings
+        };
+        return await this.saveSettingsToFile();
+    }
+
+    async updateWallpaper(wallpaperSettings) {
+        this.settings.wallpaper = {
+            ...this.settings.wallpaper,
+            ...wallpaperSettings
         };
         return await this.saveSettingsToFile();
     }

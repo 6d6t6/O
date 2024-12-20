@@ -113,8 +113,8 @@ class ContextMenuManager {
                 // Add submenu arrow if has items
                 if (item.items) {
                     const arrow = document.createElement('span');
-                    arrow.className = 'submenu-arrow';
-                    arrow.textContent = '›';
+                    arrow.className = 'submenu-arrow material-symbols-rounded';
+                    arrow.textContent = 'chevron_right';
                     menuItem.appendChild(arrow);
                     menuItem.dataset.submenuId = Math.random().toString(36).substr(2, 9);
                 }

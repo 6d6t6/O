@@ -11,6 +11,17 @@ class OmegaOS {
                 wallpaper: '/System/Wallpapers/milad-fakurian-iLHDO19h0ng-unsplash.jpg'
             }
         };
+
+        // Listen for settings changes
+        window.addEventListener('settingsChanged', (event) => {
+            const settings = event.detail;
+            if (settings.appearance) {
+                // Update theme and accent color
+                document.documentElement.setAttribute('data-theme', settings.appearance.theme);
+                document.documentElement.style.setProperty('--accent-color', settings.appearance.accentColor);
+                document.documentElement.style.setProperty('--base-font-size', settings.appearance.fontSize);
+            }
+        });
     }
 
     async init() {
@@ -427,7 +438,8 @@ class OmegaOS {
         // Update system preferences with settings
         this.state.systemPreferences = {
             ...this.state.systemPreferences,
-            ...settings.appearance
+            ...settings.appearance,
+            wallpaper: settings.wallpaper.path
         };
 
         console.log('Final system preferences:', this.state.systemPreferences);
@@ -600,7 +612,8 @@ class OmegaOS {
         });
     }
 
-    showNotification(title, message, iconPath = null) {
+    async showNotification(title, message, iconPath = null) {
+        // Show in-app notification
         const notification = document.createElement('div');
         notification.className = 'desktop-notification';
         notification.innerHTML = `
@@ -703,6 +716,27 @@ class OmegaOS {
                 }
             }, 300);
         }, 5000);
+
+        // Show browser notification if enabled and supported
+        if (this.settingsManager.settings.notifications.browserNotifications && 'Notification' in window) {
+            try {
+                // Request permission if not granted
+                if (Notification.permission === 'default') {
+                    await Notification.requestPermission();
+                }
+
+                // Show browser notification if permission is granted
+                if (Notification.permission === 'granted') {
+                    const options = {
+                        body: message,
+                        icon: iconPath || 'assets/icons/system-icon.svg'
+                    };
+                    new Notification(title, options);
+                }
+            } catch (error) {
+                console.warn('Failed to show browser notification:', error);
+            }
+        }
     }
 
     async requestPermission(appId, permission) {

@@ -2,7 +2,7 @@
     position: absolute;
     background: var(--window-bg);
     border-radius: var(--window-border-radius);
-    box-shadow: 0 0 0 0.5px #404040, 0 0 0 1px black, 0 5px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--window-shadow);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -12,7 +12,7 @@
 }
 
 .window.active {
-    box-shadow: 0 0 0 0.5px #404040, 0 0 0 1px black, 0 5px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--window-shadow-active);
 }
 
 .window-header {
@@ -56,6 +56,7 @@
     color: rgba(0, 0, 0, 0.5);
     opacity: 0;
     font-variation-settings: 'FILL' 0, 'wght' 700, 'GRAD' 200, 'opsz' 20;
+    font-display: block;
 }
 
 button.window-control:focus-visible {
@@ -112,7 +113,7 @@ button.window-control:focus-visible {
 }
 
 .window.active .window-title {
-    color: var(--text-color-active, #eee);
+    color: var(--text-color, #eee);
 }
 
 .window-content {

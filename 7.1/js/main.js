@@ -22,6 +22,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Initialize OS
         await window.omegaOS.init();
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            });
+        }
     } catch (error) {
         console.error('Failed to initialize OMEGA OS:', error);
     }

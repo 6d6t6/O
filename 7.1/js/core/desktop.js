@@ -81,7 +81,7 @@ class Desktop {
             },
             { type: 'separator' },
             {
-                label: 'Change Wallpaper',
+                label: 'Change Wallpaper...',
                 action: () => this.system.appSystem.launchApp('settings', { section: 'wallpaper' })
             },
             { type: 'separator' },

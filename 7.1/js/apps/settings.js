@@ -57,6 +57,11 @@ class SettingsApp extends OmegaApp {
 
         // Set up the UI with current settings
         this.setupUI(window);
+
+        // Switch to the specified section if provided in options
+        if (window.options && window.options.section) {
+            this.switchSection(window, window.options.section);
+        }
     }
 
     setupUI(window) {
@@ -67,55 +72,125 @@ class SettingsApp extends OmegaApp {
                         <div class="nav-item active" data-section="appearance">Appearance</div>
                         <div class="nav-item" data-section="notifications">Notifications</div>
                         <div class="nav-item" data-section="system">System</div>
+                        <div class="nav-item" data-section="wallpaper">Wallpaper</div>
                     </div>
                 </div>
                 <div class="settings-content">
+
                     <div class="settings-section active" id="appearance">
                         <h2>Appearance</h2>
-                        <div class="setting-group">
-                            <label>Theme</label>
-                            <select id="theme">
-                                <option value="light">Light</option>
-                                <option value="dark">Dark</option>
-                            </select>
-                        </div>
-                        <div class="setting-group">
-                            <label>Accent Color</label>
-                            <div class="accent-colors" role="radiogroup" aria-label="Choose accent color">
-                                ${this.accentColors.map(color => `
-                                    <div class="accent-color-option ${color.value === this.settings.appearance.accentColor ? 'active' : ''}" 
-                                         data-color="${color.value}"
-                                         tabindex="0"
-                                         role="radio"
-                                         aria-checked="${color.value === this.settings.appearance.accentColor}"
-                                         aria-label="${color.name}"
-                                         style="background-color: ${color.value};"
-                                         title="${color.name}">
-                                         ${color.value === this.settings.appearance.accentColor ? '<div class="check-mark"></div>' : ''}
+                        <div class="settings-subsection">
+                            <div class="setting-group">
+                                <label class="toggle-label">
+                                    <span>Theme</span>
+                                    <select id="theme">
+                                        <option value="light">Light</option>
+                                        <option value="dark">Dark</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="setting-group">
+                                <label class="toggle-label">
+                                    <span>Accent Color</span>
+                                    <div class="accent-colors" role="radiogroup" aria-label="Choose accent color">
+                                        ${this.accentColors.map(color => `
+                                            <div class="accent-color-option ${color.value === this.settings.appearance.accentColor ? 'active' : ''}" 
+                                                data-color="${color.value}"
+                                                tabindex="0"
+                                                role="radio"
+                                                aria-checked="${color.value === this.settings.appearance.accentColor}"
+                                                aria-label="${color.name}"
+                                                style="background-color: ${color.value};"
+                                                title="${color.name}">
+                                                ${color.value === this.settings.appearance.accentColor ? '<div class="check-mark"></div>' : ''}
+                                            </div>
+                                        `).join('')}
                                     </div>
-                                `).join('')}
+                                </label>
+                            </div>
+                            <div class="setting-group">
+                                <label class="toggle-label">
+                                    <span>Font Size</span>
+                                    <select id="fontSize">
+                                        <option value="12px">Small</option>
+                                        <option value="14px">Medium</option>
+                                        <option value="16px">Large</option>
+                                    </select>
+                                </label>
                             </div>
                         </div>
-                        <div class="setting-group">
-                            <label>Font Size</label>
-                            <select id="fontSize">
-                                <option value="12px">Small</option>
-                                <option value="14px">Medium</option>
-                                <option value="16px">Large</option>
-                            </select>
+                    </div>
+
+                    <div class="settings-section" id="notifications">
+                        <h2>Notifications</h2>
+                        <div class="settings-subsection">
+                            <div class="setting-group">
+                                <label class="toggle-label">
+                                    <span>Enable Notifications</span>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="notifications" ${this.settings.system.notifications ? 'checked' : ''}>
+                                        <span class="toggle-slider"></span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="setting-group">
+                                <label class="toggle-label">
+                                    <span>Show Browser Notifications</span>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="browserNotifications" ${this.settings.notifications.browserNotifications ? 'checked' : ''}>
+                                        <span class="toggle-slider"></span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="setting-group">
+                                <label class="toggle-label">
+                                    <span>Notification Order</span>
+                                    <select id="notificationOrder">
+                                        <option value="newest-first">Newest First (Bottom)</option>
+                                        <option value="oldest-first">Oldest First (Top)</option>
+                                    </select>
+                                </label>
+                            </div>
                         </div>
+                    </div>
+                    
+                    <div class="settings-section" id="system">
+                        <h2>System</h2>
+                        <div class="settings-subsection">
+                            <div class="setting-group">
+                                <label class="toggle-label">
+                                    <span>Enable Animations</span>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="animations" ${this.settings.system.animations ? 'checked' : ''}>
+                                        <span class="toggle-slider"></span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="setting-group">
+                                <label class="toggle-label">
+                                    <span>Enable Sound Effects</span>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="soundEffects" ${this.settings.system.soundEffects ? 'checked' : ''}>
+                                        <span class="toggle-slider"></span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section" id="wallpaper">
+                        <h2>Desktop Wallpaper</h2>
                         <div class="setting-group">
-                            <label>Desktop Wallpaper</label>
                             <div class="wallpaper-grid">
                                 ${this.wallpapers.map(wallpaper => `
-                                    <div class="wallpaper-option ${this.settings.appearance.wallpaper === '/System/Wallpapers/' + wallpaper ? 'active' : ''}"
+                                    <div class="wallpaper-option ${this.settings.wallpaper.path === '/System/Wallpapers/' + wallpaper ? 'active' : ''}"
                                          data-wallpaper="/System/Wallpapers/${wallpaper}"
                                          tabindex="0"
                                          role="radio"
-                                         aria-checked="${this.settings.appearance.wallpaper === '/System/Wallpapers/' + wallpaper}"
+                                         aria-checked="${this.settings.wallpaper.path === '/System/Wallpapers/' + wallpaper}"
                                          aria-label="Wallpaper ${wallpaper.split('.')[0]}"
                                          style="background-image: url('assets/wallpapers/${wallpaper}')">
-                                         ${this.settings.appearance.wallpaper === '/System/Wallpapers/' + wallpaper ? '<div class="check-mark"></div>' : ''}
+                                         ${this.settings.wallpaper.path === '/System/Wallpapers/' + wallpaper ? '<div class="check-mark"></div>' : ''}
                                     </div>
                                 `).join('')}
                                 <label class="wallpaper-upload" tabindex="0" role="button" aria-label="Upload custom wallpaper">
@@ -124,37 +199,6 @@ class SettingsApp extends OmegaApp {
                                     <div class="upload-text">Custom</div>
                                 </label>
                             </div>
-                        </div>
-                    </div>
-                    <div class="settings-section" id="notifications">
-                        <h2>Notifications</h2>
-                        <div class="setting-group">
-                            <label>
-                                <input type="checkbox" id="notifications" ${this.settings.system.notifications ? 'checked' : ''}>
-                                Enable Notifications
-                            </label>
-                        </div>
-                        <div class="setting-group">
-                            <label>Notification Order</label>
-                            <select id="notificationOrder">
-                                <option value="newest-first">Newest First (Bottom)</option>
-                                <option value="oldest-first">Oldest First (Top)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="settings-section" id="system">
-                        <h2>System</h2>
-                        <div class="setting-group">
-                            <label>
-                                <input type="checkbox" id="animations" ${this.settings.system.animations ? 'checked' : ''}>
-                                Enable Animations
-                            </label>
-                        </div>
-                        <div class="setting-group">
-                            <label>
-                                <input type="checkbox" id="soundEffects" ${this.settings.system.soundEffects ? 'checked' : ''}>
-                                Enable Sound Effects
-                            </label>
                         </div>
                     </div>
                 </div>
@@ -210,25 +254,45 @@ class SettingsApp extends OmegaApp {
             .settings-section.active {
                 display: block;
             }
-
-            .setting-group {
-                margin-bottom: 24px;
+            
+            .settings-subsection {
+                background: #8080800d;
+                box-shadow: 0 0 0 0.5px #404040;
+                padding: 0 12px;
+                border-radius: 8px;
             }
 
-            .setting-group label {
+            .setting-group {
+                /* margin-bottom: 2px; */
+                box-shadow: 0 1px 0 #404040;
+                min-height: 48px;
+                display: flex;
+                align-items: center;
+            }
+
+            .setting-group label:not(.toggle-label) {
                 display: block;
                 margin-bottom: 8px;
                 font-weight: 500;
             }
 
+            .setting-group .toggle-label {
+                margin: 0;
+            }
+            
+            .settings-subsection>:last-child {
+                box-shadow: none;
+            }
+
             select, input[type="color"] {
-                padding: 8px;
                 border-radius: 4px;
                 border: 1px solid var(--border-color);
                 background: var(--input-bg);
                 color: var(--text-color);
-                width: 200px;
+                margin-left: auto;
+                flex-shrink: 0;
             }
+            
 
             input[type="checkbox"] {
                 margin-right: 8px;
@@ -242,14 +306,14 @@ class SettingsApp extends OmegaApp {
 
             .accent-colors {
                 display: flex;
-                flex-wrap: wrap;
-                gap: 12px;
-                margin-top: 8px;
+                gap: 8px;
+                margin-top: 0;
+                margin-left: auto;
             }
 
             .accent-color-option {
-                width: 32px;
-                height: 32px;
+                width: 16px;
+                height: 16px;
                 border-radius: 50%;
                 cursor: pointer;
                 position: relative;
@@ -276,8 +340,8 @@ class SettingsApp extends OmegaApp {
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                width: 16px;
-                height: 16px;
+                width: 12px;
+                height: 12px;
                 background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>') center/contain no-repeat;
             }
 
@@ -361,6 +425,75 @@ class SettingsApp extends OmegaApp {
 
             .hidden {
                 display: none;
+            }
+
+            .settings-nav .nav-item:hover {
+                background: var(--hover-bg);
+            }
+
+            /* Toggle Switch Styles */
+            .toggle-label {
+                display: flex;
+                align-items: center;
+                width: 100%;
+            }
+
+            .toggle-label span {
+                flex-grow: 1;
+            }
+
+            .toggle-switch {
+                position: relative;
+                width: 40px;
+                height: 24px;
+                margin-left: 8px;
+            }
+
+            .toggle-switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+                position: absolute;
+            }
+
+            .toggle-slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(255, 255, 255, 0.1);
+                transition: 0.3s;
+                border-radius: 24px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .toggle-slider:before {
+                position: absolute;
+                content: "";
+                height: 18px;
+                width: 18px;
+                left: 2px;
+                bottom: 2px;
+                background-color: white;
+                transition: 0.3s;
+                border-radius: 50%;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+            .toggle-switch input:checked + .toggle-slider {
+                background-color: var(--accent-color);
+                border-color: transparent;
+            }
+
+            .toggle-switch input:checked + .toggle-slider:before {
+                transform: translateX(16px);
+            }
+
+            .toggle-switch input:focus-visible + .toggle-slider {
+                outline: 2px solid var(--accent-color);
+                outline-offset: 2px;
             }
         `);
 
@@ -466,6 +599,18 @@ class SettingsApp extends OmegaApp {
             });
         });
 
+        // Browser notifications setting
+        const browserNotificationsCheckbox = window.querySelector('#browserNotifications');
+        browserNotificationsCheckbox.addEventListener('change', (e) => {
+            this.settings.notifications.browserNotifications = e.target.checked;
+            this.applySettings();
+            
+            // Request browser notification permission if enabled
+            if (e.target.checked && 'Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+        });
+
         // Add notification order listener
         const notificationOrder = window.querySelector('#notificationOrder');
         notificationOrder.value = this.settings.notifications.order;
@@ -478,18 +623,27 @@ class SettingsApp extends OmegaApp {
         const wallpaperGrid = window.querySelector('.wallpaper-grid');
         
         const updateWallpaper = (wallpaperPath) => {
-            this.settings.appearance.wallpaper = wallpaperPath;
-            
-            // Update active state visually
+            // Remove active class from all wallpaper options
             window.querySelectorAll('.wallpaper-option').forEach(option => {
-                const isActive = option.dataset.wallpaper === wallpaperPath;
-                option.classList.toggle('active', isActive);
-                option.setAttribute('aria-checked', isActive);
-                option.innerHTML = isActive ? '<div class="check-mark"></div>' : '';
+                option.classList.remove('active');
+                option.removeAttribute('aria-checked');
+                option.querySelector('.check-mark')?.remove();
             });
-            
-            // Apply settings with wallpaper change flag
-            this.applySettings({ wallpaper: true });
+
+            // Add active class to selected wallpaper
+            const selectedOption = window.querySelector(`[data-wallpaper="${wallpaperPath}"]`);
+            if (selectedOption) {
+                selectedOption.classList.add('active');
+                selectedOption.setAttribute('aria-checked', 'true');
+                selectedOption.innerHTML += '<div class="check-mark"></div>';
+            }
+
+            // Update settings
+            this.applySettings({
+                wallpaper: {
+                    path: wallpaperPath
+                }
+            });
         };
 
         wallpaperGrid.addEventListener('click', (e) => {
@@ -577,52 +731,45 @@ class SettingsApp extends OmegaApp {
     }
 
     async applySettings(changedSettings = {}) {
-        // Apply theme
-        document.documentElement.setAttribute('data-theme', this.settings.appearance.theme);
-        
-        // Apply accent color
-        document.documentElement.style.setProperty('--accent-color', this.settings.appearance.accentColor);
-        
-        // Apply font size
-        document.documentElement.style.setProperty('--base-font-size', this.settings.appearance.fontSize);
-        
-        // Only apply wallpaper if it was changed
+        // Update settings in settings manager
+        await this.system.settingsManager.updateSettings(changedSettings);
+
+        // Get updated settings
+        this.settings = this.system.settingsManager.getSettings();
+
+        // Apply appearance changes
+        if (changedSettings.appearance) {
+            document.documentElement.setAttribute('data-theme', this.settings.appearance.theme);
+            document.documentElement.style.setProperty('--accent-color', this.settings.appearance.accentColor);
+            document.documentElement.style.setProperty('--base-font-size', this.settings.appearance.fontSize);
+        }
+
+        // Apply wallpaper changes
         if (changedSettings.wallpaper) {
-            const wallpaper = this.settings.appearance.wallpaper;
-            if (wallpaper.startsWith('/System/Wallpapers/')) {
-                // For system wallpapers, first try the filesystem URL
-                this.system.filesystem.getFileUrl(wallpaper)
-                    .then(url => {
+            const wallpaper = this.settings.wallpaper.path;
+            if (wallpaper && wallpaper.startsWith('/System/Wallpapers/')) {
+                try {
+                    const url = await this.system.filesystem.getFileUrl(wallpaper);
+                    document.getElementById('desktop').style.backgroundImage = `url(${url})`;
+                } catch (error) {
+                    // If file not found, try to copy it from assets
+                    const wallpaperName = wallpaper.split('/').pop();
+                    try {
+                        const response = await fetch(`/assets/wallpapers/${wallpaperName}`);
+                        const blob = await response.blob();
+                        await this.system.filesystem.writeFile(wallpaper, blob);
+                        
+                        // Try getting the URL again
+                        const url = await this.system.filesystem.getFileUrl(wallpaper);
                         document.getElementById('desktop').style.backgroundImage = `url(${url})`;
-                    })
-                    .catch(async (error) => {
-                        // If file not found, try to copy it from assets
-                        const wallpaperName = wallpaper.split('/').pop();
-                        try {
-                            const response = await fetch(`/assets/wallpapers/${wallpaperName}`);
-                            const blob = await response.blob();
-                            await this.system.filesystem.writeFile(wallpaper, blob);
-                            
-                            // Try getting the URL again
-                            const url = await this.system.filesystem.getFileUrl(wallpaper);
-                            document.getElementById('desktop').style.backgroundImage = `url(${url})`;
-                        } catch (copyError) {
-                            console.error('Failed to copy wallpaper:', copyError);
-                            // Fallback to assets directory
-                            document.getElementById('desktop').style.backgroundImage = `url(/assets/wallpapers/${wallpaperName})`;
-                        }
-                    });
+                    } catch (copyError) {
+                        console.error('Failed to copy wallpaper:', copyError);
+                        // Fallback to assets directory
+                        document.getElementById('desktop').style.backgroundImage = `url(/assets/wallpapers/${wallpaperName})`;
+                    }
+                }
             }
         }
-        
-        // Save settings to system
-        this.system.state.systemPreferences = {
-            ...this.system.state.systemPreferences,
-            ...this.settings.appearance
-        };
-        
-        // Save settings using settings manager
-        await this.system.settingsManager.updateSettings(this.settings);
     }
 
     // Override handleMenuAction to ensure proper window closing
