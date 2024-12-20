@@ -27,9 +27,15 @@
 
 .window-controls {
     display: flex;
+    border-radius: 8px;
     gap: 8px;
     margin-right: 8px;
+    filter: grayscale(1) contrast(100) brightness(0.25);
     -webkit-app-region: no-drag;
+}
+
+.window-controls:hover {
+    filter: none;
 }
 
 .window-control {
@@ -37,9 +43,24 @@
     height: 12px;
     border-radius: 50%;
     border: none;
-    cursor: pointer;
+    cursor: default;
     position: relative;
     padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.window-control .material-symbols-rounded {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    font-variation-settings: 'FILL' 0, 'wght' 700, 'GRAD' 200, 'opsz' 20;
+}
+
+.window-controls:hover .window-control .material-symbols-rounded,
+.window-control:hover .material-symbols-rounded {
+    opacity: 1;
 }
 
 .window-control.close {
@@ -54,29 +75,23 @@
     background: #28c840;
 }
 
+.maximize>span.material-symbols-rounded {
+    transform: rotate(90deg);
+}
+
+.window.active>.window-header>.window-controls {
+    filter: none !important;
+}
+
+/* Remove old hover styles since we're using Material Icons now */
 .window-control:hover::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 8px;
-    height: 8px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
+    display: none;
 }
 
-.window-control.close:hover::before {
-    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><path d="M1 1l6 6M1 7l6-6" stroke="rgba(0,0,0,0.4)" stroke-width="1"/></svg>');
-}
-
-.window-control.minimize:hover::before {
-    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><path d="M1 4h6" stroke="rgba(0,0,0,0.4)" stroke-width="1"/></svg>');
-}
-
+.window-control.close:hover::before,
+.window-control.minimize:hover::before,
 .window-control.maximize:hover::before {
-    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><rect x="1" y="1" width="6" height="6" stroke="rgba(0,0,0,0.4)" stroke-width="1" fill="none"/></svg>');
+    display: none;
 }
 
 .window-title {

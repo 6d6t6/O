@@ -9,9 +9,15 @@ class WindowManager {
         this.windowTemplate = `
             <div class="window-header">
                 <div class="window-controls">
-                    <button class="window-control close"></button>
-                    <button class="window-control minimize"></button>
-                    <button class="window-control maximize"></button>
+                    <button class="window-control close">
+                        <span class="material-symbols-rounded">close</span>
+                    </button>
+                    <button class="window-control minimize">
+                        <span class="material-symbols-rounded">remove</span>
+                    </button>
+                    <button class="window-control maximize">
+                        <span class="material-symbols-rounded">expand_content</span>
+                    </button>
                 </div>
                 <div class="window-title"></div>
             </div>
@@ -153,8 +159,16 @@ class WindowManager {
         });
 
         // Maximize button
-        controls.querySelector('.maximize').addEventListener('click', () => {
+        const maximizeButton = controls.querySelector('.maximize');
+        const maximizeIcon = maximizeButton.querySelector('.material-symbols-rounded');
+        
+        // Set initial icon
+        maximizeIcon.textContent = window.isMaximized ? 'collapse_content' : 'expand_content';
+        
+        maximizeButton.addEventListener('click', () => {
             this.toggleMaximizeWindow(window.id);
+            // Update icon after maximizing/unmaximizing
+            maximizeIcon.textContent = window.isMaximized ? 'collapse_content' : 'expand_content';
         });
 
         // Activate window on click
