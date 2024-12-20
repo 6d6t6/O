@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<browserconfig>
+    <tile>
+        <square150x150logo src="icon.svg" />
+        <square310x310logo src="icon.svg" />
+        <TileColor>#000000</TileColor>
+        <text>Omega</text>
+    </tile>
+</browserconfig>

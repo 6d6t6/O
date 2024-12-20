@@ -1,0 +1,20 @@
+{
+    "id": "omega",
+    "name": "Omega OS",
+    "version": "1.0.0",
+    "author": "Oo-Z International",
+    "description": "Omega OS is a modern, open-source operating system designed for the future.",
+    "icon": "icon.svg",
+    "permissions": ["notifications"],
+    "defaultWindow": {
+        "width": 800,
+        "height": 600,
+        "resizable": true,
+        "frame": true
+    },
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#000000",
+    "short_name": "Omega"
+}

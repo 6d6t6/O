@@ -58,6 +58,11 @@
     font-variation-settings: 'FILL' 0, 'wght' 700, 'GRAD' 200, 'opsz' 20;
 }
 
+button.window-control:focus-visible {
+    outline: 2px solid #808080;
+    outline-offset: 2px;
+}
+
 .window-controls:hover .window-control .material-symbols-rounded,
 .window-control:hover .material-symbols-rounded {
     opacity: 1;

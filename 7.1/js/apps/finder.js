@@ -78,7 +78,7 @@ class FinderApp extends OmegaApp {
         
         // Create window-specific state
         this.windowStates.set(window.id, {
-            currentPath: '/',
+            currentPath: window.options?.path || '/',
             history: [],
             historyIndex: -1
         });
@@ -230,8 +230,9 @@ class FinderApp extends OmegaApp {
         // Initialize event listeners with window reference
         this.initializeEventListeners(window);
 
-        // Load initial directory
-        await this.loadDirectory(window, '/');
+        // Load initial directory (use the path from options if provided)
+        const initialPath = window.options?.path || '/';
+        await this.loadDirectory(window, initialPath);
 
         // Add window-specific close handler
         window.element.querySelector('.window-control.close').addEventListener('click', () => {

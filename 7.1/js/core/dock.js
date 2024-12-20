@@ -269,11 +269,42 @@ class Dock {
     }
 
     async openTrash() {
-        this.system.showNotification(
-            'Trash',
-            'Trash functionality is not implemented yet!',
-            'assets/icons/trash-icon.svg'
-        );
+        try {
+            console.log('Opening Trash folder...');
+            
+            // Check for existing empty trash dialog
+            const existingDialog = Array.from(this.system.windowManager.windows.values())
+                .find(win => win.element.classList.contains('empty-trash-dialog'));
+            
+            if (existingDialog) {
+                // If dialog exists, just bring it to front
+                this.system.windowManager.activateWindow(existingDialog.id);
+                return;
+            }
+            
+            // Check for existing Finder windows showing the Trash folder
+            const existingTrashWindow = Array.from(this.system.windowManager.windows.values())
+                .find(win => win.app.id === 'finder' && win.app.getWindowState(win)?.currentPath === '/Trash');
+
+            if (existingTrashWindow) {
+                // If window is minimized, restore it
+                if (existingTrashWindow.isMinimized) {
+                    this.system.windowManager.restoreWindow(existingTrashWindow.id);
+                }
+                // Bring window to front and activate it
+                this.system.windowManager.activateWindow(existingTrashWindow.id);
+            } else {
+                // No existing Trash window, create a new one
+                await this.system.appSystem.launchApp('finder', { path: '/Trash', createWindow: true });
+            }
+        } catch (error) {
+            console.error('Failed to open Trash:', error);
+            this.system.showNotification(
+                'Trash',
+                'Failed to open Trash folder',
+                'assets/icons/trash-icon.svg'
+            );
+        }
     }
 
     async handleDockItemClick(appId) {
@@ -395,17 +426,291 @@ class Dock {
         const menuItems = [
             { label: 'Open', action: () => this.openTrash() },
             { type: 'separator' },
-            { label: 'Empty Trash', action: () => {
-                this.system.showNotification(
-                    'Trash',
-                    'Empty Trash functionality is not implemented yet!',
-                    'assets/icons/trash-icon.svg'
-                );
-            }}
+            { label: 'Empty Trash', action: () => this.emptyTrash() }
         ];
 
         const trashItem = e.target.closest('.dock-trash-icon');
         this.showDockContextMenu(trashItem, menuItems);
+    }
+
+    async emptyTrash() {
+        // Check if there's already an empty trash dialog
+        const existingDialog = Array.from(this.system.windowManager.windows.values())
+            .find(win => win.element.classList.contains('empty-trash-dialog'));
+
+        if (existingDialog) {
+            // If dialog exists, just bring it to front
+            this.system.windowManager.activateWindow(existingDialog.id);
+            return;
+        }
+
+        // Create a proper app object for the dialog
+        const dialogApp = {
+            id: 'finder',  // Use finder ID since this is a Finder alert
+            name: 'Finder',
+            parentApp: this.system.appSystem.getRunningApp('finder'),  // Store reference to parent app
+            getMenus() {
+                if (!this.parentApp) return {};
+
+                // Get parent app's menus
+                const parentMenus = this.parentApp.getMenus();
+                
+                // Create a disabled version of all menu items
+                const disabledMenus = {};
+                for (const [key, menu] of Object.entries(parentMenus)) {
+                    disabledMenus[key] = {
+                        title: menu.title,
+                        items: menu.items.map(item => {
+                            if (item.type === 'separator') {
+                                return { type: 'separator' };
+                            }
+                            return {
+                                label: item.label,
+                                shortcut: item.shortcut,
+                                enabled: () => false,  // Disable all menu items
+                                action: () => {}  // Empty action
+                            };
+                        })
+                    };
+                }
+
+                return disabledMenus;
+            },
+            getWindowState() {
+                return null;
+            },
+            system: this.system
+        };
+
+        // Create dialog as a special window
+        const dialog = document.createElement('div');
+        dialog.className = 'window empty-trash-dialog';
+        dialog.innerHTML = `
+            <div class="window-content dialog-content">
+                <img src="assets/icons/trash-icon.svg" alt="Trash" class="dialog-icon">
+                <h2>Are you sure you want to permanently erase the items in the Trash?</h2>
+                <p>You can't undo this action.</p>
+                <div class="dialog-buttons">
+                    <button class="dialog-button" id="cancel-empty-trash">Cancel</button>
+                    <button class="dialog-button dialog-button-danger" id="confirm-empty-trash">Empty Trash</button>
+                </div>
+            </div>
+        `;
+
+        // Add styles specific to this dialog
+        const style = document.createElement('style');
+        style.textContent = `
+            .empty-trash-dialog {
+                position: fixed;
+                background: var(--window-bg-75);
+                backdrop-filter: var(--blur-filter);
+                border-radius: 12px;
+                box-shadow: 0 0 0 0.5px #404040, 0 0 0 1px black, 0 5px 30px rgba(0, 0, 0, 0.3);
+                width: 280px;
+                height: auto;
+                animation: windowAppear 0.2s ease-out;
+                user-select: none;
+            }
+
+            .empty-trash-dialog.active {
+                box-shadow: 0 0 0 0.5px #404040, 0 0 0 1px black, 0 5px 30px rgba(0, 0, 0, 0.5);
+            }
+
+            .empty-trash-dialog .window-content {
+                padding: 24px 16px 16px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                height: 100%;
+            }
+
+            .empty-trash-dialog .dialog-icon {
+                width: 64px;
+                height: 64px;
+                margin-bottom: 16px;
+                pointer-events: none;
+            }
+
+            .empty-trash-dialog h2 {
+                color: var(--text-color);
+                font-size: 16px;
+                margin: 0 0 8px 0;
+                font-weight: 500;
+                pointer-events: none;
+            }
+
+            .empty-trash-dialog p {
+                color: var(--text-secondary);
+                font-size: 13px;
+                margin: 0 0 24px 0;
+                pointer-events: none;
+            }
+
+            .empty-trash-dialog .dialog-buttons {
+                display: flex;
+                gap: 8px;
+                justify-content: center;
+            }
+
+            .empty-trash-dialog .dialog-button {
+                padding: 6px 12px;
+                border-radius: 6px;
+                border: none;
+                background: #ffffff40;
+                color: var(--text-color);
+                width: 120px;
+                height: 32px;
+                font-size: 12px;
+                font-weight: bold;
+                font-family: 'Inter';
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+
+            .empty-trash-dialog .dialog-button:hover {
+                background: var(--button-hover-bg);
+            }
+
+            .empty-trash-dialog .dialog-button-danger {
+                background: var(--danger-color, #ff3b30);
+                color: white;
+            }
+
+            .empty-trash-dialog .dialog-button-danger:hover {
+                background: var(--danger-color-hover, #ff2d55);
+            }
+        `;
+
+        document.head.appendChild(style);
+        document.getElementById('desktop').appendChild(dialog);
+
+        // Center the dialog on screen
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const dialogWidth = 280;
+        const dialogHeight = 250; // Approximate height
+        dialog.style.left = `${(viewportWidth - dialogWidth) / 2}px`;
+        dialog.style.top = `${(viewportHeight - dialogHeight) / 2}px`;
+
+        // Create a special window object to track this dialog
+        const dialogWindow = {
+            id: 'empty-trash-dialog-' + Date.now(),
+            element: dialog,
+            app: dialogApp,
+            isDialog: true,
+            isMinimized: false,
+            isMaximized: false,
+            setTitle: () => {},  // No-op since dialog doesn't have a title bar
+            minimize: () => {},   // No-op since dialog can't be minimized
+            maximize: () => {},   // No-op since dialog can't be maximized
+            restore: () => {},    // No-op since dialog can't be restored
+            close: () => cleanup()
+        };
+
+        // Make dialog draggable
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+
+        const handleMouseDown = (e) => {
+            // Only allow dragging from the dialog content, not the buttons
+            if (e.target.closest('.dialog-buttons')) return;
+
+            isDragging = true;
+            initialX = e.clientX - dialog.offsetLeft;
+            initialY = e.clientY - dialog.offsetTop;
+
+            // Bring window to front when starting to drag
+            this.system.windowManager.activateWindow(dialogWindow.id);
+        };
+
+        const handleMouseMove = (e) => {
+            if (!isDragging) return;
+
+            e.preventDefault();
+            currentX = e.clientX - initialX;
+            currentY = e.clientY - initialY;
+
+            dialog.style.left = `${currentX}px`;
+            dialog.style.top = `${currentY}px`;
+        };
+
+        const handleMouseUp = () => {
+            isDragging = false;
+        };
+
+        dialog.addEventListener('mousedown', (e) => {
+            handleMouseDown(e);
+            // Bring window to front when clicked anywhere
+            this.system.windowManager.activateWindow(dialogWindow.id);
+        });
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+
+        // Add to window manager and its stack
+        this.system.windowManager.windows.set(dialogWindow.id, dialogWindow);
+        this.system.windowManager.windowStack.push(dialogWindow);
+        this.system.windowManager.activateWindow(dialogWindow.id);
+
+        return new Promise((resolve) => {
+            const cancelBtn = dialog.querySelector('#cancel-empty-trash');
+            const confirmBtn = dialog.querySelector('#confirm-empty-trash');
+
+            const cleanup = () => {
+                dialog.removeEventListener('mousedown', handleMouseDown);
+                document.removeEventListener('mousemove', handleMouseMove);
+                document.removeEventListener('mouseup', handleMouseUp);
+                this.system.windowManager.windowStack = this.system.windowManager.windowStack.filter(w => w !== dialogWindow);
+                this.system.windowManager.windows.delete(dialogWindow.id);
+                dialog.remove();
+                style.remove();
+            };
+
+            cancelBtn.addEventListener('click', () => {
+                cleanup();
+                resolve(false);
+            });
+
+            confirmBtn.addEventListener('click', async () => {
+                cleanup();
+                resolve(true);
+                
+                try {
+                    // Get all items in the Trash folder
+                    const filesystem = await this.system.filesystem.readDirectory('/Trash');
+                    
+                    // Delete each item
+                    for (const item of filesystem) {
+                        await this.system.filesystem.deleteEntry(`/Trash/${item.name}`);
+                    }
+
+                    // Show success notification
+                    this.system.showNotification(
+                        'Trash',
+                        'Trash has been emptied',
+                        'assets/icons/trash-icon.svg'
+                    );
+
+                    // Refresh any open Trash windows
+                    const trashWindows = Array.from(this.system.windowManager.windows.values())
+                        .filter(win => win.app.id === 'finder' && win.app.getWindowState(win)?.currentPath === '/Trash');
+                    
+                    for (const window of trashWindows) {
+                        await window.app.loadDirectory(window, '/Trash');
+                    }
+                } catch (error) {
+                    console.error('Failed to empty trash:', error);
+                    this.system.showNotification(
+                        'Trash',
+                        'Failed to empty the Trash',
+                        'assets/icons/trash-icon.svg'
+                    );
+                }
+            });
+        });
     }
 
     showDockContextMenu(dockItem, items) {

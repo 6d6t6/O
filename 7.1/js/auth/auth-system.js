@@ -122,10 +122,10 @@ class AuthSystem {
                         <h1>Sign in</h1>
                     </div>
                     <form id="signin-form" class="signin-form">
-                        <input type="text" id="username" placeholder="Username" required>
-                        <input type="password" id="password" placeholder="Password">
+                        <input type="text" id="username" placeholder="Username" required autofocus autocomplete="off" spellcheck="false">
+                        <input type="password" id="password" placeholder="Password" autocomplete="off" spellcheck="false">
                         <button type="submit">Sign In</button>
-                        <button type="button" id="create-account">Create Account</button>
+                        <button type="button" id="create-account" style="background: transparent;">Create a new user account</button>
                     </form>
                 </div>
             </div>

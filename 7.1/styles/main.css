@@ -6,6 +6,9 @@
 
     /* Colors - Light Theme */
     --window-bg: #ffffff;
+    --window-bg-75: #ffffffbf;
+    --window-bg-50: #ffffff80;
+    --window-bg-25: #ffffff40;
     --text-color: #000000;
     --text-secondary: #666666;
     --border-color: #e0e0e0;
@@ -22,11 +25,15 @@
     --terminal-text: #f0f0f0;
     --terminal-prompt: #4CAF50;
     --terminal-error: #ff5555;
+    --blur-filter: blur(64px) saturate(2.5);
 }
 
 [data-theme="dark"] {
     /* Colors - Dark Theme */
     --window-bg: #1e1e1e;
+    --window-bg-75: #1e1e1ebf;
+    --window-bg-50: #1e1e1e80;
+    --window-bg-25: #1e1e1e40;
     --text-color: #ffffff;
     --text-secondary: #999999;
     --border-color: #333333;
@@ -82,6 +89,18 @@ body {
     background: #000;
     color: var(--text-color);
     font-family: 'Inter', sans-serif;
+}
+/*
+input, button {
+    outline: none;
+}
+
+input:focus-visible, button:focus-visible {
+    outline: 4px solid var(--accent-color);
+}*/
+
+*:focus-visible {
+    outline: 4px solid var(--accent-color);
 }
 
 #omega-os {

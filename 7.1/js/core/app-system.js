@@ -70,6 +70,7 @@ class AppSystem {
             // For Finder, only create window if explicitly requested
             if (!options.noWindow && (appId !== 'finder' || options.createWindow)) {
                 const window = this.system.windowManager.createWindow(app);
+                window.options = options;
                 await app.onInitialize(window);
             }
 
