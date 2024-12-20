@@ -463,10 +463,10 @@ class SettingsApp extends OmegaApp {
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background-color: rgba(255, 255, 255, 0.1);
+                background-color: #80808033;
                 transition: 0.3s;
                 border-radius: 24px;
-                border: 1px solid rgba(255, 255, 255, 0.2);
+                border: 1px solid #80808033;
             }
 
             .toggle-slider:before {
