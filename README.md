@@ -2,10 +2,11 @@
 
 [`O/7.1`](https://github.com/6d6t6/O/tree/main/7) `Omega` `0.1.7.1` [`demo`](https://o-0.pages.dev/) `Pv3` `BETA` `In active development`
 
-### Known bugs
+### Known Issues
 
-- [ ] multiple terminals will result in buggy experience
-- [ ] github and local file versions of the OS will result in buggy experiences
+- [ ] **Accessibility limitations**, including incomplete keyboard navigation support and insufficient adherence to OS-level accessibility standards.
+- [ ] **Running multiple terminals concurrently** may result in inconsistent or unstable behavior.
+- [ ] **Directly running the project locally via `index.html` or accessing it through GitHub Pages** may cause issues with asset loading (e.g., images, fonts) and other potential bugs. 
 
 ### Previous versions
 [`O/7.0`](https://github.com/6d6t6/O/tree/main/7) `Omega` `0.1.7.0` `xxxx` `Pv3` `BETA`
