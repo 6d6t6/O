@@ -297,44 +297,63 @@ class AuthSystem {
             <div class="setup-wizard">
                 <div class="setup-container">
                     <div class="setup-header">
-                        <img src="assets/omega-logo.svg" alt="Omega" class="setup-logo">
-                        <h1>Welcome to Omega</h1>
+                        <h1 style="font-variation-settings: 'wght' 200; letter-spacing: 0.8px;">Welcome</h1>
+                        <p style="font-size: 12px; font-variation-settings: 'wght' 500; letter-spacing: 0.02em; margin-top: 12px;">In just a few steps, you'll be ready to use Omega.</p>
+                        <img src="assets/world.svg" alt="Omega World Map" class="setup-world">
                     </div>
                     
-                    <!-- Step 1: Account Creation -->
+                    <!-- Step 1: Language -->
                     <div class="setup-step" id="step-1">
+                        <h2>Choose Your Language</h2>
+                        <form id="language-form" class="setup-form">
+                            <div class="select-wrapper">
+                                <div class="classic-select">
+                                    <select id="language" required size="10">
+                                        <option value="" disabled>Select Language</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit">Continue</button>
+                        </form>
+                    </div>
+
+                    <!-- Step 2: Region -->
+                    <div class="setup-step" id="step-2" style="display: none;">
+                        <h2>Choose Your Region</h2>
+                        <form id="region-form" class="setup-form">
+                            <div class="select-wrapper">
+                                <div class="classic-select">
+                                    <select id="region" required size="10">
+                                        <option value="" disabled>Select Region</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit">Continue</button>
+                        </form>
+                    </div>
+
+                    <!-- Step 3: Account Creation -->
+                    <div class="setup-step" id="step-3" style="display: none;">
                         <h2>Create Your Account</h2>
                         <form id="account-form" class="setup-form">
-                            <input type="text" id="display-name" placeholder="Display Name" required>
-                            <input type="text" id="username" placeholder="Username" required>
-                            <input type="password" id="password" placeholder="Password (optional)">
-                            <button type="submit">Continue</button>
-                        </form>
-                    </div>
-
-                    <!-- Step 2: Region & Language -->
-                    <div class="setup-step" id="step-2" style="display: none;">
-                        <h2>Choose Your Region & Language</h2>
-                        <form id="locale-form" class="setup-form">
-                            <div class="select-wrapper">
-                                <select id="region" required>
-                                    <option value="" disabled selected>Select Region</option>
-                                </select>
+                            <div class="input-group">
+                                <label for="display-name">Display Name</label>
+                                <input type="text" id="display-name" required autofocus autocomplete="off" spellcheck="false">
                             </div>
-                            <div class="select-wrapper">
-                                <select id="language" required>
-                                    <option value="" disabled selected>Select Language</option>
-                                </select>
+                            <div class="input-group">
+                                <label for="username">Username</label>
+                                <input type="text" id="username" required autocomplete="off" spellcheck="false">
                             </div>
-                            <div class="setup-info">
-                                <p>We'll try to detect your region and language automatically.</p>
+                            <div class="input-group">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" autocomplete="off" spellcheck="false">
                             </div>
                             <button type="submit">Continue</button>
                         </form>
                     </div>
 
-                    <!-- Step 3: Date & Time -->
-                    <div class="setup-step" id="step-3" style="display: none;">
+                    <!-- Step 4: Date & Time -->
+                    <div class="setup-step" id="step-4" style="display: none;">
                         <h2>Date & Time Settings</h2>
                         <form id="datetime-form" class="setup-form">
                             <div class="setup-info">
@@ -347,10 +366,22 @@ class AuthSystem {
                             </div>
 
                             <div class="checkbox-wrapper">
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="auto-time" checked>
-                                    <span class="toggle-slider"></span>
-                                    <span class="toggle-label">Set Time & Date Automatically</span>
+                                <label class="toggle-label">
+                                    <span>Use 24-hour format</span>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="24hour" checked>
+                                        <span class="toggle-slider"></span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="checkbox-wrapper">
+                                <label class="toggle-label">
+                                    <span>Set Time & Date Automatically</span>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="auto-time" checked>
+                                        <span class="toggle-slider"></span>
+                                    </div>
                                 </label>
                                 <p class="setting-description">Synchronize with Internet time servers</p>
                             </div>
@@ -367,33 +398,25 @@ class AuthSystem {
                             </div>
 
                             <div class="select-wrapper">
-                                <label>Time Zone</label>
+                                <label for="timezone">Time Zone</label>
                                 <select id="timezone" required>
                                     <option value="" disabled selected>Select Time Zone</option>
                                 </select>
-                            </div>
-
-                            <div class="checkbox-wrapper">
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="24hour" checked>
-                                    <span class="toggle-slider"></span>
-                                    <span class="toggle-label">Use 24-hour format</span>
-                                </label>
                             </div>
 
                             <button type="submit">Continue</button>
                         </form>
                     </div>
 
-                    <!-- Step 4: File System Access -->
-                    <div class="setup-step" id="step-4" style="display: none;">
+                    <!-- Step 5: File System Access -->
+                    <div class="setup-step" id="step-5" style="display: none;">
                         <h2>Storage Location</h2>
                         <p>Omega needs a location to store your files and settings.</p>
                         <button id="grant-access" class="primary-button">Choose Location</button>
                     </div>
 
-                    <!-- Step 5: Summary -->
-                    <div class="setup-step" id="step-5" style="display: none;">
+                    <!-- Step 6: Summary -->
+                    <div class="setup-step" id="step-6" style="display: none;">
                         <h2>Setup Complete!</h2>
                         <div class="setup-summary">
                             <ul id="setup-summary">
@@ -424,12 +447,15 @@ class AuthSystem {
 
             .setup-container {
                 width: 100%;
-                max-width: 500px;
+                max-width: 640px;
                 padding: 40px;
-                background: rgba(255, 255, 255, 0.1);
+                background: #323232;
                 border-radius: 16px;
                 backdrop-filter: blur(10px);
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+                box-shadow: 0 0 0 0.5px #404040, 0 0 0 1px black, 0 5px 30px rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                flex-direction: column;
             }
 
             .setup-header {
@@ -442,11 +468,17 @@ class AuthSystem {
                 height: 80px;
                 margin-bottom: 20px;
             }
+            
+            .setup-world {
+                width: 320px;
+                margin: 20px 0;
+            }
 
             .setup-form {
                 display: flex;
                 flex-direction: column;
                 gap: 16px;
+                width: 560px;
             }
 
             .setup-form input,
@@ -463,21 +495,60 @@ class AuthSystem {
             .setup-form select {
                 appearance: none;
                 cursor: pointer;
+                padding: 4px 8px !important;
+                text-align: left;
             }
 
             .select-wrapper {
                 position: relative;
+                display: grid;
+                grid-template-columns: 0.5fr 1.5fr;
+                align-items: center;
+                gap: 16px;
+                padding: 8px 0;
+            }
+
+            .select-wrapper label {
+                font-size: 14px;
+                font-weight: 500;
+                margin: 0;
+                color: white;
+                text-align: right;
+            }
+
+            .select-wrapper select {
+                width: 100%;
+                min-width: 200px;
+                padding: 8px 32px 8px 12px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                font-size: 14px;
+                cursor: pointer;
+                appearance: none;
             }
 
             .select-wrapper::after {
-                content: '▼';
+                content: '';
                 position: absolute;
                 right: 12px;
                 top: 50%;
                 transform: translateY(-50%);
                 pointer-events: none;
-                font-size: 12px;
+                font-size: 10px;
                 color: rgba(255, 255, 255, 0.5);
+            }
+
+            .select-wrapper select:hover {
+                background: rgba(255, 255, 255, 0.15);
+                border-color: rgba(255, 255, 255, 0.3);
+            }
+
+            .select-wrapper select:focus {
+                outline: none;
+                border-color: var(--accent-color);
+                background: rgba(255, 255, 255, 0.2);
             }
 
             .setup-form input::placeholder {
@@ -507,47 +578,80 @@ class AuthSystem {
             }
 
             .checkbox-wrapper {
-                margin: 16px 0;
+                margin: 0;
+            }
+
+            .toggle-label {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                cursor: pointer;
+                font-weight: 500;
+                margin: 0 !important;
+                padding: 8px 0;
+            }
+
+            .toggle-label span {
+                font-size: 14px;
+                font-variation-settings: 'wght' 400;
+                letter-spacing: 0.01em;
+                /* padding: 0 8px; */
             }
 
             .toggle-switch {
-                display: flex;
-                align-items: center;
-                cursor: pointer;
+                position: relative;
+                width: 40px;
+                height: 24px;
+                margin-left: 8px;
+                flex-shrink: 0;
             }
 
             .toggle-switch input {
-                display: none;
+                opacity: 0;
+                width: 0;
+                height: 0;
+                position: absolute;
             }
 
             .toggle-slider {
-                position: relative;
-                width: 50px;
-                height: 24px;
-                background: rgba(255, 255, 255, 0.1);
-                border-radius: 12px;
-                margin-right: 12px;
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(255, 255, 255, 0.1);
                 transition: 0.3s;
+                border-radius: 24px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
             }
 
             .toggle-slider:before {
-                content: '';
                 position: absolute;
-                width: 20px;
-                height: 20px;
-                background: white;
-                border-radius: 50%;
-                top: 2px;
+                content: "";
+                height: 18px;
+                width: 18px;
                 left: 2px;
+                bottom: 2px;
+                background-color: white;
                 transition: 0.3s;
+                border-radius: 50%;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             }
 
             .toggle-switch input:checked + .toggle-slider {
-                background: var(--accent-color, #007AFF);
+                background-color: var(--accent-color);
+                border-color: transparent;
             }
 
             .toggle-switch input:checked + .toggle-slider:before {
-                transform: translateX(26px);
+                transform: translateX(16px);
+            }
+
+            .toggle-switch input:focus-visible + .toggle-slider {
+                outline: 2px solid var(--accent-color);
+                outline-offset: 2px;
             }
 
             .toggle-label {
@@ -555,7 +659,7 @@ class AuthSystem {
             }
 
             .setting-description {
-                margin: 4px 0 0 62px;
+                margin: 4px 0 0 0;
                 font-size: 12px;
                 color: rgba(255, 255, 255, 0.5);
             }
@@ -563,13 +667,16 @@ class AuthSystem {
             .time-input-group,
             .date-input-group {
                 margin: 16px 0;
+                display: grid;
+                grid-template-columns: 0.5fr 1.5fr;
+                align-items: center;
+                gap: 16px;
             }
 
             .time-input-group label,
-            .date-input-group label,
-            .select-wrapper label {
-                display: block;
-                margin-bottom: 8px;
+            .date-input-group label {
+                text-align: right;
+                margin: 0;
                 color: rgba(255, 255, 255, 0.7);
             }
 
@@ -629,20 +736,172 @@ class AuthSystem {
 
             .setup-step {
                 animation: fadeIn 0.3s ease-out;
+                width: 560px;
             }
 
             @keyframes fadeIn {
                 from { opacity: 0; transform: translateY(10px); }
                 to { opacity: 1; transform: translateY(0); }
             }
+
+            /* Add new styles for account form inputs */
+            #account-form {
+                display: grid;
+                gap: 16px;
+                width: 560px;
+            }
+
+            #account-form .input-group {
+                display: grid;
+                grid-template-columns: 0.5fr 1.5fr;
+                align-items: center;
+                gap: 16px;
+            }
+
+            #account-form .input-group label {
+                text-align: right;
+                color: white;
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            #account-form button {
+                grid-column: 1 / -1;
+            }
+
+            .classic-select {
+                background: #1c1c1e;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                margin: 12px 0;
+                width: 320px;
+                max-width: none;
+            }
+
+            .classic-select select {
+                width: 100%;
+                height: 260px;
+                border: none;
+                outline: none;
+                background: transparent;
+                font-size: 12px;
+                line-height: 1.6;
+                color: white;
+                padding: 4px !important;
+                -webkit-appearance: none !important;
+                -moz-appearance: none !important;
+                appearance: none !important;
+            }
+            
+            .classic-select select:hover, .classic-select select:focus {
+                background: unset !important;
+            }
+
+            .classic-select select:focus {
+                outline: none;
+            }
+
+            .classic-select select option {
+                padding: 4px 8px;
+                border-radius: 4px;
+                cursor: default;
+                background: #1c1c1e;
+                color: white;
+                font-size: 12px;
+                line-height: 1.6 !important;
+            }
+
+            .classic-select select option:checked,
+            .classic-select select option:hover {
+                background: #0064D2;
+                color: white;
+            }
+
+            .select-wrapper {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 24px;
+                width: 100%;
+                padding: 0 40px;
+            }
+
+            .select-wrapper label {
+                font-size: 13px;
+                color: rgba(255, 255, 255, 0.9);
+                margin-bottom: 8px;
+            }
+
+            /* Hide scrollbar for Chrome, Safari and Opera */
+            .classic-select select::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            .classic-select select::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 4px;
+            }
+
+            .classic-select select::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 4px;
+            }
+
+            .classic-select select::-webkit-scrollbar-thumb:hover {
+                background: rgba(255, 255, 255, 0.3);
+            }
+
+            /* Firefox scrollbar styles */
+            .classic-select select {
+                scrollbar-width: thin;
+                scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+            }
+
+            /* Remove Firefox dotted outline */
+            .classic-select select:-moz-focusring {
+                color: transparent;
+                text-shadow: 0 0 0 #fff;
+            }
+
+            /* Hide the default arrow in IE */
+            .classic-select select::-ms-expand {
+                display: none;
+            }
         `;
         document.head.appendChild(style);
 
         let currentStep = 1;
 
+        // Function to scroll to selected option
+        const scrollToSelected = (selectElement) => {
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            if (selectedOption) {
+                // Get the height of the select element's viewport
+                const selectHeight = selectElement.getBoundingClientRect().height;
+                // Get the option's height
+                const optionHeight = selectedOption.getBoundingClientRect().height;
+                // Calculate position to center the option
+                const scrollPosition = selectedOption.offsetTop - (selectHeight / 2) + (optionHeight / 2);
+                // Ensure we don't scroll past the bounds
+                const maxScroll = selectElement.scrollHeight - selectHeight;
+                const finalScroll = Math.max(0, Math.min(scrollPosition, maxScroll));
+                selectElement.scrollTop = finalScroll;
+            }
+        };
+
+        // Function to show step
         const showStep = (step) => {
             document.querySelectorAll('.setup-step').forEach(el => el.style.display = 'none');
-            document.getElementById(`step-${step}`).style.display = 'block';
+            const stepElement = document.getElementById(`step-${step}`);
+            stepElement.style.display = '';
+            
+            // If this is the region step, ensure it scrolls to selection
+            if (step === 2) {
+                setTimeout(() => {
+                    const regionSelect = document.getElementById('region');
+                    scrollToSelected(regionSelect);
+                }, 50);
+            }
         };
 
         // Initialize region and language dropdowns
@@ -730,9 +989,62 @@ class AuthSystem {
                     }
                 }
             }
+
+            // Also scroll when switching steps
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.target.style.display === '') {
+                        const select = mutation.target.querySelector('select');
+                        if (select) {
+                            // Add a small delay to ensure the select is fully rendered
+                            setTimeout(() => {
+                                scrollToSelected(select);
+                            }, 50);
+                        }
+                    }
+                });
+            });
+
+            // Observe both step containers for display changes
+            document.querySelectorAll('.setup-step').forEach(step => {
+                observer.observe(step, { attributes: true, attributeFilter: ['style'] });
+            });
+
+            // Handle initial scroll for language select
+            setTimeout(() => {
+                scrollToSelected(languageSelect);
+            }, 50);
+
         } catch (error) {
             console.warn('Failed to auto-detect region/language:', error);
         }
+
+        // Handle language selection
+        const languageForm = document.getElementById('language-form');
+        languageForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            setupData.language = document.getElementById('language').value;
+            currentStep = 2;
+            showStep(2);
+        });
+
+        // Handle region selection
+        const regionForm = document.getElementById('region-form');
+        regionForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            setupData.region = document.getElementById('region').value;
+
+            // Store settings in setupData
+            setupData.settings = {
+                system: {
+                    region: setupData.region,
+                    language: setupData.language
+                }
+            };
+
+            currentStep = 3;
+            showStep(3);
+        });
 
         // Handle account creation
         const accountForm = document.getElementById('account-form');
@@ -747,34 +1059,13 @@ class AuthSystem {
                 if (success) {
                     setupData.username = username;
                     setupData.displayName = displayName;
-                    currentStep = 2;
-                    showStep(2);
+                    currentStep = 4;
+                    showStep(4);
+                    initializeDateTimeStep();
                 }
             } catch (error) {
                 alert(error.message);
             }
-        });
-
-        // Handle region & language selection
-        const localeForm = document.getElementById('locale-form');
-        localeForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            setupData.region = document.getElementById('region').value;
-            setupData.language = document.getElementById('language').value;
-
-            // Store settings in setupData instead of updating immediately
-            setupData.settings = {
-                system: {
-                    region: setupData.region,
-                    language: setupData.language
-                }
-            };
-
-            currentStep = 3;
-            showStep(3);
-
-            // Initialize date & time step
-            initializeDateTimeStep();
         });
 
         // Initialize and handle date & time settings
@@ -873,8 +1164,8 @@ class AuthSystem {
                     setupData.settings.system.manualTime = `${manualDate.toISOString().split('.')[0]}${tzOffset}`;
                 }
 
-                currentStep = 4;
-                showStep(4);
+                currentStep = 5;
+                showStep(5);
             });
 
             // If we have an Internet connection, use the browser's timezone
@@ -910,16 +1201,16 @@ class AuthSystem {
                     const timezone = document.getElementById('timezone').value;
                     
                     summary.innerHTML = `
+                        <li><strong>Language:</strong> ${language?.nativeName || language?.name}</li>
+                        <li><strong>Region:</strong> ${region?.nativeName || region?.name}</li>
                         <li><strong>Display Name:</strong> ${setupData.displayName}</li>
                         <li><strong>Username:</strong> ${setupData.username}</li>
-                        <li><strong>Region:</strong> ${region?.nativeName || region?.name}</li>
-                        <li><strong>Language:</strong> ${language?.nativeName || language?.name}</li>
                         <li><strong>Time Zone:</strong> ${timezone}</li>
                         <li><strong>Storage Location:</strong> ${this.lastDirectoryPath}</li>
                     `;
                     
-                    currentStep = 5;
-                    showStep(5);
+                    currentStep = 6;
+                    showStep(6);
                 } else {
                     throw new Error('Failed to get file system access');
                 }

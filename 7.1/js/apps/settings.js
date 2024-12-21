@@ -69,10 +69,22 @@ class SettingsApp extends OmegaApp {
             <div class="settings">
                 <div class="settings-sidebar">
                     <div class="settings-nav">
-                        <div class="nav-item active" data-section="appearance">Appearance</div>
-                        <div class="nav-item" data-section="notifications">Notifications</div>
-                        <div class="nav-item" data-section="system">System</div>
-                        <div class="nav-item" data-section="wallpaper">Wallpaper</div>
+                        <div class="nav-item active" data-section="appearance">
+                            <span class="material-symbols-rounded">palette</span>
+                            Appearance
+                        </div>
+                        <div class="nav-item" data-section="notifications">
+                            <span class="material-symbols-rounded">notifications</span>
+                            Notifications
+                        </div>
+                        <div class="nav-item" data-section="system">
+                            <span class="material-symbols-rounded">settings</span>
+                            System
+                        </div>
+                        <div class="nav-item" data-section="wallpaper">
+                            <span class="material-symbols-rounded">wallpaper</span>
+                            Wallpaper
+                        </div>
                     </div>
                 </div>
                 <div class="settings-content">
@@ -227,10 +239,14 @@ class SettingsApp extends OmegaApp {
             }
 
             .nav-item {
-                padding: 8px 16px;
+                padding: 6px 6px;
                 border-radius: 6px;
                 cursor: pointer;
                 transition: background-color 0.2s;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 14px;
             }
 
             .nav-item:hover {
@@ -494,6 +510,10 @@ class SettingsApp extends OmegaApp {
             .toggle-switch input:focus-visible + .toggle-slider {
                 outline: 2px solid var(--accent-color);
                 outline-offset: 2px;
+            }
+
+            .nav-item .material-symbols-rounded {
+                font-size: 20px;
             }
         `);
 
