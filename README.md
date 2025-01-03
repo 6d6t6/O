@@ -14,14 +14,31 @@
 - [ ] 🖼️ **Directly running the project locally via `index.html` or accessing it through GitHub Pages** may cause issues with asset loading (e.g., images, fonts) and other potential bugs.
 
 ### ⚙️ Support
-|    | ![Chrome](https://img.icons8.com/color/48/chrome--v1.png) | ![Edge](https://img.icons8.com/color/48/ms-edge-new.png)  | ![Firefox](https://img.icons8.com/color/48/firefox.png) | ![Opera](https://img.icons8.com/color/48/opera--v1.png) | ![Safari](https://img.icons8.com/color/48/safari--v1.png) | Unknown Browsers |
-|----|---------|-------|---------|-------|--------|------------------|
-| 🖥️ | `Yes`   | `Yes` | `No *`  | `Yes` | `No *` | `?`              |
-| 📱 | `Yes ~` | `? ~` | `No ~`  | `? ~` | `No ~` | `?`              |
 
-` *` Partial support
-` ~` Not yet optimized
-` ?` Unknown 
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center;"><img src="https://img.icons8.com/color/48/chrome--v1.png" alt="Chrome"><br>Chrome</th>
+      <th style="text-align: center;"><img src="https://img.icons8.com/color/48/ms-edge-new.png" alt="Edge"><br>Edge</th>
+      <th style="text-align: center;"><img src="https://img.icons8.com/color/48/firefox.png" alt="Firefox"><br>Firefox</th>
+      <th style="text-align: center;"><img src="https://img.icons8.com/color/48/opera--v1.png" alt="Opera"><br>Opera</th>
+      <th style="text-align: center;"><img src="https://img.icons8.com/color/48/safari--v1.png" alt="Safari"><br>Safari</th>
+      <th style="text-align: center;"><img src="https://img.icons8.com/color/48/internet--v1.png" alt="other"><br>Other</th>
+    </tr>
+  </thead>
+  <thead>
+    <tr>
+      <th style="text-align: center; vertical-align: middle;">Yes</th>
+      <th style="text-align: center; vertical-align: middle;">Yes</th>
+      <th style="text-align: center; vertical-align: middle;">No*</th>
+      <th style="text-align: center; vertical-align: middle;">Yes</th>
+      <th style="text-align: center; vertical-align: middle;">No*</th>
+      <th style="text-align: center; vertical-align: middle;">?**</th>
+    </tr>
+  </thead>
+</table>
+* Partial support, not recommended<br>
+** Unknown
 
 
 ### 📜 Previous versions
