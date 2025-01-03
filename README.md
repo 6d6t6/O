@@ -76,19 +76,9 @@
   </thead>
 </table>
 
-## 💙 With the help of the following AI...
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center;"><a href="../../../../6d6t6" target="_blank"><img style="width: 64px;" src="https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://chatgpt.com&size=128" alt="ChatGPT by OpenAI"></a></th>
-      <th style="text-align: center;"><a href="../../../../6d6t6" target="_blank"><img style="width: 64px;" src="https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://claude.ai/&size=128" alt="Claude by Anthropic"></a></th>
-    </tr>
-    <tr>
-      <th style="text-align: center; vertical-align: middle;"><code>ChatGPT</code></th>
-      <th style="text-align: center; vertical-align: middle;"><code>Claude</code></th>
-    </tr>
-  </thead>
-</table>
+## 🤖 With help from the following AI...
+<img style="width: 12px; border-radius: 12px;" src="https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://chatgpt.com&size=128" alt="ChatGPT by OpenAI"> **ChatGPT** by OpenAI<br>
+<img style="width: 12px;" src="https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://claude.ai/&size=128" alt="Claude by Anthropic"> **Claude** by Anthropic
 
 ## 📝 License
 
@@ -101,15 +91,15 @@ The current version of **Omega**, including its source code, documentation, and 
    - **Omega's core services** and **local services** are open source, and we encourage collaboration and improvement. However, future online services or features may not be open source and may include proprietary elements.
 
 2. **Omega Brand & Logos**: 
-   - The **Omega** name, logo, and related branding elements are **not open source** and are the intellectual property of the creator (currently, 6d6t6). We reserve the right to trademark and copyright these assets in the future.
+   - The **Omega** name, logo, and related branding elements are **not open source** and are the intellectual property of **Omega**. We reserve the right to trademark and copyright these assets in the future.
    - You are not permitted to use, reproduce, or distribute any part of the **Omega** brand or logos without explicit permission.
 
-3. **Third-Party Logos**: 
-   - **ChatGPT** and **Claude** logos (and any associated branding) are the intellectual property of their respective owners, OpenAI and Anthropic. These logos are used for reference and are not owned by the creator of **Omega**. You are not authorized to use these logos for any purpose outside of the original reference.
+3. **No Warranty**: 
+   - This software is provided "as-is," without warranty of any kind, either express or implied. The creator does not guarantee its functionality, stability, or security. You use **Omega** at your own risk, and we disclaim any responsibility for any third-party software or services that may be integrated or used alongside **Omega**.
 
-4. **No Warranty**: 
-   - This software is provided "as-is," without warranty of any kind, either express or implied. The creator does not guarantee its functionality, stability, or security. You use **Omega** at your own risk.
-   
+4. **Third-Party Software**: 
+   - **Omega** may include or interface with third-party software, libraries, or services that are not owned or controlled by **Omega**. Such third-party software may be subject to its own terms, conditions, and licensing agreements. **Omega** is not responsible for the functionality, security, or support of any third-party software.
+
 5. **Modifications**: 
    - Any modification of **Omega** must include a clear notice that it is a modified version and not the original. All modifications will remain subject to this license.
 
@@ -119,4 +109,4 @@ The current version of **Omega**, including its source code, documentation, and 
 ---
 
 ###### © 2025 Omega - All Rights Reserved (Except Where Noted)  
-###### **ChatGPT** and **Claude** logos are trademarks of OpenAI and Anthropic, respectively.
+###### **Claude** (Anthropic), **Safari** (Apple), **Discord**, **GitHub**, **Chrome** (Google), **Edge** (Microsoft), **Firefox** (Mozilla), **ChatGPT** (OpenAI), and **Opera** logos are trademarks of their respective owners.
