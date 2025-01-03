@@ -14,31 +14,28 @@
 - [ ] 🖼️ **Directly running the project locally via `index.html` or accessing it through GitHub Pages** may cause issues with asset loading (e.g., images, fonts) and other potential bugs.
 
 ### ⚙️ Support
-
 <table>
   <thead>
     <tr>
-      <th style="text-align: center;"><img src="https://img.icons8.com/color/48/chrome--v1.png" alt="Chrome"><br>Chrome</th>
-      <th style="text-align: center;"><img src="https://img.icons8.com/color/48/ms-edge-new.png" alt="Edge"><br>Edge</th>
-      <th style="text-align: center;"><img src="https://img.icons8.com/color/48/firefox.png" alt="Firefox"><br>Firefox</th>
-      <th style="text-align: center;"><img src="https://img.icons8.com/color/48/opera--v1.png" alt="Opera"><br>Opera</th>
-      <th style="text-align: center;"><img src="https://img.icons8.com/color/48/safari--v1.png" alt="Safari"><br>Safari</th>
-      <th style="text-align: center;"><img src="https://img.icons8.com/color/48/internet--v1.png" alt="other"><br>Other</th>
+      <th style="text-align: center;"><a href="https://www.google.com/chrome/" target="_blank"><img style="width: 48px;" src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg" alt="Chrome"><br>Chrome</a></th>
+      <th style="text-align: center;"><a href="https://www.microsoft.com/edge" target="_blank"><img style="width: 48px;" src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Microsoft_Edge_logo_%282019%29.png" alt="Edge"><br>Edge</a></th>
+      <th style="text-align: center;"><a href="https://www.mozilla.org/firefox/" target="_blank"><img style="width: 48px;" src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2019.svg" alt="Firefox"><br>Firefox</a></th>
+      <th style="text-align: center;"><a href="https://www.opera.com/" target="_blank"><img style="width: 48px;" src="https://upload.wikimedia.org/wikipedia/commons/4/49/Opera_2015_icon.svg" alt="Opera"><br>Opera</a></th>
+      <th style="text-align: center;"><a href="https://www.apple.com/safari/" target="_blank"><img style="width: 48px;" src="https://upload.wikimedia.org/wikipedia/commons/5/52/Safari_browser_logo.svg" alt="Safari"><br>Safari</a></th>
+      <th style="text-align: center;"><a href="https://en.wikipedia.org/wiki/List_of_web_browsers" target="_blank"><img style="width: 48px;" src="https://cdn-icons-png.flaticon.com/512/11024/11024036.png" alt="Other"><br>Other</a></th>
     </tr>
-  </thead>
-  <thead>
     <tr>
       <th style="text-align: center; vertical-align: middle;">Yes</th>
       <th style="text-align: center; vertical-align: middle;">Yes</th>
       <th style="text-align: center; vertical-align: middle;">No*</th>
       <th style="text-align: center; vertical-align: middle;">Yes</th>
       <th style="text-align: center; vertical-align: middle;">No*</th>
-      <th style="text-align: center; vertical-align: middle;">?**</th>
+      <th style="text-align: center; vertical-align: middle;">?</th>
     </tr>
   </thead>
 </table>
 * Partial support, not recommended<br>
-** Unknown
+? Unknown
 
 
 ### 📜 Previous versions
@@ -57,8 +54,17 @@
 ### 💌 Contact
 [![Discord](https://img.shields.io/discord/1207017475041009724?logo=discord&logoColor=white&color=5865F2&label=discord%20server)](https://discord.gg/UJsJbXxb2v)
 
-### ❤️ Made with love by
+### ❤️ Made with love by...
 - humans
 - aliens
-- [![GPT](https://img.shields.io/badge/ChatGPT%20by%20OpenAI-412991?logo=openai)](https://chat.openai.com)
-- [![Claude AI](https://img.shields.io/badge/Claude%20by%20Anthropic-1c1211?logo=claude&logoColor=f5f5f5)](https://claude.ai)
+
+### 💗 Made with help from...
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center;"><img src="https://img.icons8.com/color/48/chatgpt.png" alt="Chrome"><br>ChatGPT by OpenAI</th>
+      <th style="text-align: center;"><img src="https://img.icons8.com/fluency/48/claude.png" alt="Claude by Anthropic"><br>Claude by Anthropic</th>
+      <th style="text-align: center;"><img src="https://img.icons8.com/fluency/48/bard.png" alt="Gemini by Google"><br>Gemini by Google</th>
+    </tr>
+  </thead>
+</table>
