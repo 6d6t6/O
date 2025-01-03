@@ -62,9 +62,9 @@
 <table>
   <thead>
     <tr>
-      <th style="text-align: center;"><img src="https://img.icons8.com/color/48/chatgpt.png" alt="Chrome"><br>ChatGPT by OpenAI</th>
-      <th style="text-align: center;"><img src="https://img.icons8.com/fluency/48/claude.png" alt="Claude by Anthropic"><br>Claude by Anthropic</th>
-      <th style="text-align: center;"><img src="https://img.icons8.com/fluency/48/bard.png" alt="Gemini by Google"><br>Gemini by Google</th>
+      <th style="text-align: center;"><a href="https://chatgpt.com" target="_blank"><img src="https://img.icons8.com/color/48/chatgpt.png" alt="Chrome"><br>ChatGPT by OpenAI</a></th>
+      <th style="text-align: center;"><a href="https://claude.ai" target="_blank"><img src="https://img.icons8.com/fluency/48/claude.png" alt="Claude by Anthropic"><br>Claude by Anthropic</a></th>
+      <th style="text-align: center;"><a href="https://gemini.google.com" target="_blank"><img src="https://img.icons8.com/fluency/48/bard.png" alt="Gemini by Google"><br>Gemini by Google</a></th>
     </tr>
   </thead>
 </table>
