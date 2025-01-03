@@ -4,9 +4,6 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/6d6t6/O?logo=github)](https://github.com/6d6t6/O)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/t/6d6t6/O?logo=github)](https://github.com/6d6t6/O)
 
-### 🟢 Current version
-[`O/7.1`](https://github.com/6d6t6/O/tree/main/7) `Omega` `0.1.7.1` [`demo`](https://o-0.pages.dev/) `Pv3` `BETA` `In active development`
-
 ### ⚠️ Known Issues
 - [ ] 🔐 **Password protection for user accounts does not secure the storage location of the Omega File System.** Users are responsible for ensuring the safety of this folder, as it remains accessible to others with access to the device. To minimize risks, avoid storing sensitive data in the Omega File System, especially on shared and/or unlocked devices.
 - [ ] 🦾 **Accessibility limitations**, including incomplete keyboard navigation support and insufficient adherence to OS-level accessibility standards.
@@ -25,18 +22,26 @@
       <th style="text-align: center;"><a href="https://en.wikipedia.org/wiki/List_of_web_browsers" target="_blank"><img style="width: 48px;" src="https://cdn-icons-png.flaticon.com/512/11024/11024036.png" alt="Other"><br>Other</a></th>
     </tr>
     <tr>
-      <th style="text-align: center; vertical-align: middle;">Yes</th>
-      <th style="text-align: center; vertical-align: middle;">Yes</th>
-      <th style="text-align: center; vertical-align: middle;">No*</th>
-      <th style="text-align: center; vertical-align: middle;">Yes</th>
-      <th style="text-align: center; vertical-align: middle;">No*</th>
-      <th style="text-align: center; vertical-align: middle;">?</th>
+      <th style="text-align: center; vertical-align: middle;"><code>121</code></th>
+      <th style="text-align: center; vertical-align: middle;"><code>121</code></th>
+      <th style="text-align: center; vertical-align: middle;"><code>111</code></th>
+      <th style="text-align: center; vertical-align: middle;"><code>107</code></th>
+      <th style="text-align: center; vertical-align: middle;"><code>16.4</code></th>
+      <th style="text-align: center; vertical-align: middle;"><code>---</code></th>
+    </tr>
+    <tr>
+      <th style="text-align: center; vertical-align: middle;">✅</th>
+      <th style="text-align: center; vertical-align: middle;">✅</th>
+      <th style="text-align: center; vertical-align: middle;">⚠️</th>
+      <th style="text-align: center; vertical-align: middle;">✅</th>
+      <th style="text-align: center; vertical-align: middle;">⚠️</th>
+      <th style="text-align: center; vertical-align: middle;">❔</th>
     </tr>
   </thead>
 </table>
-* Partial support, not recommended<br>
-? Unknown
 
+### 🟢 Current version
+[`O/7.1`](https://github.com/6d6t6/O/tree/main/7) `Omega` `0.1.7.1` [`demo`](https://o-0.pages.dev/) `Pv3` `BETA` `In active development`
 
 ### 📜 Previous versions
 [`O/7.0`](https://github.com/6d6t6/O/tree/main/7) `Omega` `0.1.7.0` `xxxx` `Pv3` `BETA`
