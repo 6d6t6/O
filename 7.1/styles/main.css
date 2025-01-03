@@ -29,6 +29,7 @@
     --blur-filter: blur(64px) saturate(2.5);
     --window-shadow: 0 0 0 0.5px #bbb, 0 0 0 1px #00000040, 0 5px 30px rgba(0, 0, 0, 0.3);
     --window-shadow-active: 0 0 0 0.5px #bbb, 0 0 0 1px #00000040, 0 5px 30px rgba(0, 0, 0, 0.5);
+    --shading: 0 0 0 1px black, inset 0 -2px 6px #00000040, inset 0 12px 6px #ffffff10;
 }
 
 [data-theme="dark"] {
@@ -104,6 +105,27 @@ input:focus-visible, button:focus-visible {
 
 *:focus-visible {
     outline: 4px solid var(--accent-color);
+}
+
+*:disabled {
+    opacity: 0.5;
+}
+
+button {
+    background: var(--accent-color, #007AFF);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    display: flex;
+    padding: 6px 12px;
+    align-items: center;
+    box-shadow: 0 0 0 0.5px #ffffff40, 0 0 0 0.5px var(--accent-color, #007AFF), 0 0 0 1px black, var(--shading);
+}
+
+button:disabled {
+    opacity: 0.5;
+    box-shadow: 0 0 0 0.5px #ffffff40, 0 0 0 0.5px #808080, 0 0 0 1px black, inset 0 -2px 6px #00000040, inset 0 2px 6px #ffffff40;
 }
 
 #omega-os {
@@ -240,4 +262,35 @@ select {
     font-size: 12px;
     text-align: end;
     width: auto;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 0 4px 14px 0;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 8px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.material-symbols-rounded {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    cursor: default;
 }

@@ -22,6 +22,10 @@ class SettingsManager {
             notifications: {
                 order: 'newest-first',
                 browserNotifications: true
+            },
+            accessibility: {
+                enabled: false,
+                features: []
             }
         };
         this.settings = JSON.parse(JSON.stringify(this.defaultSettings)); // Deep clone defaults
@@ -50,6 +54,10 @@ class SettingsManager {
                     notifications: {
                         ...this.defaultSettings.notifications,
                         ...settings.notifications
+                    },
+                    accessibility: {
+                        ...this.defaultSettings.accessibility,
+                        ...settings.accessibility
                     }
                 };
                 console.log('Loaded and merged settings:', this.settings);
@@ -165,6 +173,10 @@ class SettingsManager {
             notifications: {
                 ...this.settings.notifications,
                 ...(newSettings.notifications || {})
+            },
+            accessibility: {
+                ...this.settings.accessibility,
+                ...(newSettings.accessibility || {})
             }
         };
         

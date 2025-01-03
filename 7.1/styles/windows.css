@@ -29,7 +29,6 @@
     display: flex;
     border-radius: 8px;
     gap: 8px;
-    margin-right: 8px;
     filter: grayscale(1) contrast(100) brightness(0.25);
     -webkit-app-region: no-drag;
 }
@@ -49,6 +48,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: none;
 }
 
 .window-control .material-symbols-rounded {

@@ -8,10 +8,333 @@ class AuthSystem {
         
         // Remove the localStorage.getItem call since we can't use the path directly
         this.lastDirectoryPath = null;
+
+        // Define browser support information
+        this.browserSupport = {
+            chrome: {
+                name: 'Chrome',
+                minVersion: '121',
+                support: 'full'
+            },
+            edge: {
+                name: 'Edge',
+                minVersion: '121',
+                support: 'full'
+            },
+            firefox: {
+                name: 'Firefox',
+                minVersion: '111',
+                support: 'partial'
+            },
+            safari: {
+                name: 'Safari',
+                minVersion: '16.4',
+                support: 'partial'
+            },
+            opera: {
+                name: 'Opera',
+                minVersion: '107',
+                support: 'full'
+            },
+            unknown: {
+                name: 'Unknown Browser',
+                support: 'none'
+            }
+        };
+    }
+
+    // Helper method to compare versions
+    compareVersions(version1, version2) {
+        // Split versions into parts
+        const v1Parts = version1.toString().split('.').map(Number);
+        const v2Parts = version2.toString().split('.').map(Number);
+
+        // Pad arrays with zeros if needed
+        while (v1Parts.length < 3) v1Parts.push(0);
+        while (v2Parts.length < 3) v2Parts.push(0);
+
+        // Compare major version
+        if (v1Parts[0] !== v2Parts[0]) return v1Parts[0] - v2Parts[0];
+        // Compare minor version
+        if (v1Parts[1] !== v2Parts[1]) return v1Parts[1] - v2Parts[1];
+        // Compare patch version
+        return v1Parts[2] - v2Parts[2];
+    }
+
+    // Add browser detection method
+    detectBrowser() {
+        const userAgent = navigator.userAgent.toLowerCase();
+        let browser = 'unknown';
+        let version = '0.0.0';
+
+        // Opera - check first because it includes 'chrome'
+        if (userAgent.includes('opr') || userAgent.includes('opera')) {
+            browser = 'opera';
+            console.log('Opera userAgent:', userAgent);
+            const match = userAgent.match(/(?:opr|opera)\/(\d+)\.(\d+)\.(\d+)/);
+            if (match) {
+                version = `${match[1]}.${match[2]}.${match[3]}`;
+                console.log('Detected Opera version:', version);
+            }
+        }
+        // Edge (Chromium) - check before Chrome because it includes 'chrome'
+        else if (userAgent.includes('edg')) {
+            browser = 'edge';
+            console.log('Edge userAgent:', userAgent);
+            const match = userAgent.match(/edg\/(\d+)\.(\d+)\.(\d+)/);
+            if (match) {
+                version = `${match[1]}.${match[2]}.${match[3]}`;
+                console.log('Detected Edge version:', version);
+            }
+        }
+        // Chrome - check after Opera and Edge
+        else if (userAgent.includes('chrome')) {
+            browser = 'chrome';
+            console.log('Chrome userAgent:', userAgent);
+            const match = userAgent.match(/chrome\/(\d+)\.(\d+)\.(\d+)\.(\d+)/);
+            if (match) {
+                version = `${match[1]}.${match[2]}.${match[3]}`;
+                console.log('Detected Chrome version:', version);
+            }
+        }
+        // Firefox
+        else if (userAgent.includes('firefox')) {
+            browser = 'firefox';
+            console.log('Firefox userAgent:', userAgent);
+            const match = userAgent.match(/firefox\/(\d+)\.(\d+)/);
+            if (match) {
+                version = `${match[1]}.${match[2]}.0`;
+            }
+            console.log('Detected Firefox version:', version);
+        }
+        // Safari - must be last because Chrome also includes 'safari'
+        else if (userAgent.includes('safari')) {
+            browser = 'safari';
+            console.log('Safari userAgent:', userAgent);
+            const match = userAgent.match(/version\/(\d+)\.(\d+)\.?(\d+)?/);
+            if (match) {
+                version = `${match[1]}.${match[2]}.${match[3] || '0'}`;
+                console.log('Detected Safari version:', version);
+            }
+        }
+
+        console.log('Final browser detection:', { browser, version });
+        return { browser, version };
+    }
+
+    // Add browser compatibility check
+    checkBrowserCompatibility() {
+        const { browser, version } = this.detectBrowser();
+        const browserInfo = this.browserSupport[browser] || this.browserSupport.unknown;
+        const { name, minVersion, support } = browserInfo;
+
+        if (support === 'none') {
+            return { 
+                isSupported: false, 
+                browser, 
+                version, 
+                message: 'Your browser is not officially supported.' 
+            };
+        }
+
+        const isOutdated = minVersion && this.compareVersions(version, minVersion) < 0;
+        const isPartial = support === 'partial';
+
+        if (isOutdated && isPartial) {
+            return {
+                isSupported: 'partial',
+                browser,
+                version,
+                message: `Your ${name} version (${version}) is outdated and has partial support. Please update to version ${minVersion} or higher. Some features may not work correctly.`
+            };
+        }
+
+        if (isOutdated) {
+            return {
+                isSupported: false,
+                browser,
+                version,
+                message: `Your ${name} version (${version}) is outdated. Please update to version ${minVersion} or higher.`
+            };
+        }
+
+        if (isPartial) {
+            return {
+                isSupported: 'partial',
+                browser,
+                version,
+                message: `${name} has partial support. Some features may not work correctly.`
+            };
+        }
+
+        return { isSupported: true, browser, version };
+    }
+
+    // Add browser warning dialog
+    async showBrowserWarning(compatibility) {
+        return new Promise((resolve) => {
+            const dialog = document.createElement('div');
+            dialog.className = 'window browser-warning-dialog';
+            dialog.innerHTML = `
+                <div class="window-content dialog-content">
+                    <span class="material-symbols-rounded" style="font-size: 48px; color: #ff9500; font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;">warning</span>
+                    <h2>Browser Compatibility Warning</h2>
+                    <p>${compatibility.message}</p>
+                    <p style="font-size: 12px; margin-top: 8px;">For the best experience, we recommend using the latest version of Chrome, Edge, or Opera.</p>
+                    <div class="dialog-buttons">
+                        <button class="dialog-button" id="continue-anyway">Continue Anyway</button>
+                    </div>
+                </div>
+            `;
+
+            // Add styles specific to this dialog
+            const style = document.createElement('style');
+            style.textContent = `
+                .browser-warning-dialog {
+                    position: fixed;
+                    background: #1e1e1ebf;
+                    backdrop-filter: var(--blur-filter);
+                    border-radius: 12px;
+                    box-shadow: 0 0 0 0.5px #404040, 0 0 0 1px black, 0 5px 30px rgba(0, 0, 0, 0.3);
+                    width: 320px;
+                    height: auto;
+                    animation: windowAppear 0.2s ease-out;
+                    user-select: none;
+                    z-index: 10000;
+                }
+
+                .browser-warning-dialog.active {
+                    box-shadow: 0 0 0 0.5px #404040, 0 0 0 1px black, 0 5px 30px rgba(0, 0, 0, 0.5);
+                }
+
+                .browser-warning-dialog .window-content {
+                    padding: 24px 16px 16px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    text-align: center;
+                    height: 100%;
+                }
+
+                .browser-warning-dialog h2 {
+                    color: var(--text-color);
+                    font-size: 16px;
+                    margin: 16px 0 8px 0;
+                    font-weight: 500;
+                    pointer-events: none;
+                }
+
+                .browser-warning-dialog p {
+                    color: var(--text-secondary);
+                    font-size: 13px;
+                    margin: 0;
+                    pointer-events: none;
+                }
+
+                .browser-warning-dialog .dialog-buttons {
+                    display: flex;
+                    gap: 8px;
+                    justify-content: center;
+                    margin-top: 24px;
+                }
+
+                .browser-warning-dialog .dialog-button {
+                    padding: 6px 12px;
+                    border-radius: 6px;
+                    border: none;
+                    background: #ffffff40;
+                    color: var(--text-color);
+                    width: 132px;
+                    height: 32px;
+                    font-size: 12px;
+                    font-weight: bold;
+                    font-family: 'Inter';
+                    cursor: pointer;
+                    transition: background 0.2s;
+                    justify-content: center;
+                }
+
+                .browser-warning-dialog .dialog-button:hover {
+                    background: var(--button-hover-bg);
+                }
+
+                @keyframes windowAppear {
+                    from { opacity: 0; transform: scale(0.95); }
+                    to { opacity: 1; transform: scale(1); }
+                }
+            `;
+
+            document.head.appendChild(style);
+            document.body.appendChild(dialog);
+
+            // Center the dialog on screen
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const dialogWidth = 320;
+            const dialogHeight = 280; // Approximate height
+            dialog.style.left = `${(viewportWidth - dialogWidth) / 2}px`;
+            dialog.style.top = `${(viewportHeight - dialogHeight) / 2}px`;
+
+            // Make dialog draggable
+            let isDragging = false;
+            let currentX;
+            let currentY;
+            let initialX;
+            let initialY;
+
+            const handleMouseDown = (e) => {
+                if (e.target.closest('.dialog-buttons')) return;
+                isDragging = true;
+                initialX = e.clientX - dialog.offsetLeft;
+                initialY = e.clientY - dialog.offsetTop;
+            };
+
+            const handleMouseMove = (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+                dialog.style.left = `${currentX}px`;
+                dialog.style.top = `${currentY}px`;
+            };
+
+            const handleMouseUp = () => {
+                isDragging = false;
+            };
+
+            dialog.addEventListener('mousedown', handleMouseDown);
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+
+            // Handle continue button
+            const continueBtn = dialog.querySelector('#continue-anyway');
+            continueBtn.addEventListener('click', () => {
+                dialog.removeEventListener('mousedown', handleMouseDown);
+                document.removeEventListener('mousemove', handleMouseMove);
+                document.removeEventListener('mouseup', handleMouseUp);
+                dialog.remove();
+                style.remove();
+                resolve();
+            });
+        });
     }
 
     async initialize() {
         try {
+            // Check browser compatibility first
+            const compatibility = this.checkBrowserCompatibility();
+            if (!compatibility.isSupported || compatibility.isSupported === 'partial') {
+                await this.showBrowserWarning(compatibility);
+            }
+
+            // Continue with normal initialization
+            const isSetupComplete = localStorage.getItem('omega-setup-complete') === 'true';
+            
+            if (!isSetupComplete) {
+                await this.showSetupWizard();
+                return;
+            }
+
             // Try to restore session
             const savedSession = localStorage.getItem('omega_session');
             if (savedSession) {
@@ -188,21 +511,6 @@ class AuthSystem {
                 color: rgba(255, 255, 255, 0.5);
             }
 
-            button {
-                padding: 12px;
-                border: none;
-                border-radius: 8px;
-                background: var(--accent-color, #007AFF);
-                color: white;
-                font-size: 16px;
-                cursor: pointer;
-                transition: background 0.2s;
-            }
-
-            button:hover {
-                background: var(--accent-color-hover, #0066CC);
-            }
-
             #create-account {
                 background: rgba(255, 255, 255, 0.1);
             }
@@ -296,30 +604,15 @@ class AuthSystem {
         document.body.innerHTML = `
             <div class="setup-wizard">
                 <div class="setup-container">
-                    <div class="setup-header">
-                        <h1 style="font-variation-settings: 'wght' 200; letter-spacing: 0.8px;">Welcome</h1>
-                        <p style="font-size: 12px; font-variation-settings: 'wght' 500; letter-spacing: 0.02em; margin-top: 12px;">In just a few steps, you'll be ready to use Omega.</p>
-                        <img src="assets/world.svg" alt="Omega World Map" class="setup-world">
+                    <div class="setup-header" id="setup-header">
+                        <div class="setup-welcome">
+                            <h1 style="font-variation-settings: 'wght' 200; letter-spacing: 0.8px;">Welcome</h1>
+                            <p style="font-size: 12px; font-variation-settings: 'wght' 500; letter-spacing: 0.02em; margin-top: 12px;">In just a few steps, you'll be ready to use Omega.</p>
+                        </div>
                     </div>
                     
-                    <!-- Step 1: Language -->
+                    <!-- Step 1: Region -->
                     <div class="setup-step" id="step-1">
-                        <h2>Choose Your Language</h2>
-                        <form id="language-form" class="setup-form">
-                            <div class="select-wrapper">
-                                <div class="classic-select">
-                                    <select id="language" required size="10">
-                                        <option value="" disabled>Select Language</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <button type="submit">Continue</button>
-                        </form>
-                    </div>
-
-                    <!-- Step 2: Region -->
-                    <div class="setup-step" id="step-2" style="display: none;">
-                        <h2>Choose Your Region</h2>
                         <form id="region-form" class="setup-form">
                             <div class="select-wrapper">
                                 <div class="classic-select">
@@ -328,33 +621,54 @@ class AuthSystem {
                                     </select>
                                 </div>
                             </div>
-                            <button type="submit">Continue</button>
+                            <div class="button-group">
+                                <button type="button" class="back-button" disabled>Back</button>
+                                <button type="submit">Continue</button>
+                            </div>
                         </form>
                     </div>
 
-                    <!-- Step 3: Account Creation -->
-                    <div class="setup-step" id="step-3" style="display: none;">
-                        <h2>Create Your Account</h2>
+                    <!-- Step 2: Language -->
+                    <div class="setup-step" id="step-2" style="display: none;">
+                        <form id="language-form" class="setup-form">
+                            <div class="select-wrapper">
+                                <div class="classic-select">
+                                    <select id="language" required size="10">
+                                        <option value="" disabled>Select Language</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <button type="button" class="back-button">Back</button>
+                                <button type="submit">Continue</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Step 4: Account Creation -->
+                    <div class="setup-step" id="step-4" style="display: none;">
                         <form id="account-form" class="setup-form">
                             <div class="input-group">
                                 <label for="display-name">Display Name</label>
-                                <input type="text" id="display-name" required autofocus autocomplete="off" spellcheck="false">
+                                <input type="text" id="display-name" required autofocus autocomplete="off" spellcheck="false" placeholder="Steve Jobs">
                             </div>
                             <div class="input-group">
                                 <label for="username">Username</label>
-                                <input type="text" id="username" required autocomplete="off" spellcheck="false">
+                                <input type="text" id="username" required autocomplete="off" spellcheck="false" placeholder="steve_jobs">
                             </div>
                             <div class="input-group">
-                                <label for="password">Password</label>
-                                <input type="password" id="password" autocomplete="off" spellcheck="false">
+                                <label for="password">Password (optional)</label>
+                                <input type="password" id="password" autocomplete="off" spellcheck="false" placeholder="•••••••••">
                             </div>
-                            <button type="submit">Continue</button>
+                            <div class="button-group">
+                                <button type="button" class="back-button">Back</button>
+                                <button type="submit">Continue</button>
+                            </div>
                         </form>
                     </div>
 
-                    <!-- Step 4: Date & Time -->
-                    <div class="setup-step" id="step-4" style="display: none;">
-                        <h2>Date & Time Settings</h2>
+                    <!-- Step 5: Date & Time -->
+                    <div class="setup-step" id="step-5" style="display: none;">
                         <form id="datetime-form" class="setup-form">
                             <div class="setup-info">
                                 <div class="current-time">
@@ -404,29 +718,70 @@ class AuthSystem {
                                 </select>
                             </div>
 
-                            <button type="submit">Continue</button>
+                            <div class="button-group">
+                                <button type="button" class="back-button">Back</button>
+                                <button type="submit">Continue</button>
+                            </div>
                         </form>
                     </div>
 
-                    <!-- Step 5: File System Access -->
-                    <div class="setup-step" id="step-5" style="display: none;">
-                        <h2>Storage Location</h2>
+                    <!-- Step 6: File System Access -->
+                    <div class="setup-step" id="step-6" style="display: none;">
                         <p>Omega needs a location to store your files and settings.</p>
-                        <button id="grant-access" class="primary-button">Choose Location</button>
+                        <div class="button-group">
+                            <button type="button" class="back-button">Back</button>
+                            <button id="grant-access" class="primary-button">Choose Location</button>
+                        </div>
                     </div>
 
-                    <!-- Step 6: Summary -->
-                    <div class="setup-step" id="step-6" style="display: none;">
-                        <h2>Setup Complete!</h2>
+                    <!-- Step 7: Summary -->
+                    <div class="setup-step" id="step-7" style="display: none;">
                         <div class="setup-summary">
                             <ul id="setup-summary">
                             </ul>
                         </div>
-                        <button id="start-omega" class="primary-button">Start Using Omega</button>
+                        <div class="button-group">
+                            <button type="button" class="back-button">Back</button>
+                            <button id="start-omega" class="primary-button">Start Using Omega</button>
+                        </div>
                     </div>
                 </div>
             </div>
         `;
+
+        // Create and add accessibility step
+        const accessibilityStep = document.createElement('div');
+        accessibilityStep.id = 'step-3';
+        accessibilityStep.className = 'setup-step';
+        accessibilityStep.style.display = 'none';
+        accessibilityStep.innerHTML = `
+            <div class="accessibility-grid">
+                <div class="accessibility-option" data-feature="vision">
+                    <span class="material-symbols-rounded">visibility</span>
+                    <h3>Vision</h3>
+                </div>
+                <div class="accessibility-option" data-feature="motor">
+                    <span class="material-symbols-rounded">back_hand</span>
+                    <h3>Motor</h3>
+                </div>
+                <div class="accessibility-option" data-feature="hearing">
+                    <span class="material-symbols-rounded">hearing</span>
+                    <h3>Hearing</h3>
+                </div>
+                <div class="accessibility-option" data-feature="cognitive">
+                    <span class="material-symbols-rounded">cognition</span>
+                    <h3>Cognitive</h3>
+                </div>
+            </div>
+            <div class="button-group">
+                <button type="button" class="back-button">Back</button>
+                <button type="button" class="primary-button" id="accessibility-continue">Not Now</button>
+            </div>
+        `;
+
+        // Insert accessibility step after language step
+        const languageStep = document.getElementById('step-2');
+        languageStep.parentNode.insertBefore(accessibilityStep, languageStep.nextSibling);
 
         // Add setup wizard styles
         const style = document.createElement('style');
@@ -460,7 +815,26 @@ class AuthSystem {
 
             .setup-header {
                 text-align: center;
-                margin-bottom: 40px;
+                /* margin-bottom: 16px; */
+                height: 160px !important;
+                margin: 32px 0;
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                justify-content: center;
+            }
+            
+            .setup-welcome {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                width: 100%;
+                background-image: url('assets/world.svg');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
             }
 
             .setup-logo {
@@ -471,7 +845,7 @@ class AuthSystem {
             
             .setup-world {
                 width: 320px;
-                margin: 20px 0;
+                margin: 0 0 -80px 0;
             }
 
             .setup-form {
@@ -494,7 +868,6 @@ class AuthSystem {
 
             .setup-form select {
                 appearance: none;
-                cursor: pointer;
                 padding: 4px 8px !important;
                 text-align: left;
             }
@@ -525,7 +898,6 @@ class AuthSystem {
                 background: rgba(255, 255, 255, 0.1);
                 color: white;
                 font-size: 14px;
-                cursor: pointer;
                 appearance: none;
             }
 
@@ -586,7 +958,6 @@ class AuthSystem {
                 align-items: center;
                 justify-content: space-between;
                 width: 100%;
-                cursor: pointer;
                 font-weight: 500;
                 margin: 0 !important;
                 padding: 8px 0;
@@ -616,7 +987,6 @@ class AuthSystem {
 
             .toggle-slider {
                 position: absolute;
-                cursor: pointer;
                 top: 0;
                 left: 0;
                 right: 0;
@@ -698,21 +1068,6 @@ class AuthSystem {
             @keyframes fadeIn {
                 from { opacity: 0; transform: translateY(10px); }
                 to { opacity: 1; transform: translateY(0); }
-            }
-
-            button {
-                padding: 12px;
-                border: none;
-                border-radius: 8px;
-                background: var(--accent-color, #007AFF);
-                color: white;
-                font-size: 16px;
-                cursor: pointer;
-                transition: background 0.2s;
-            }
-
-            button:hover {
-                background: var(--accent-color-hover, #0066CC);
             }
 
             .setup-summary {
@@ -803,18 +1158,58 @@ class AuthSystem {
 
             .classic-select select option {
                 padding: 4px 8px;
+                align-content: center;
+                display: flex;
+                height: 24px;
                 border-radius: 4px;
                 cursor: default;
                 background: #1c1c1e;
                 color: white;
                 font-size: 12px;
                 line-height: 1.6 !important;
+                -webkit-appearance: none;
+                align-items: center;
             }
 
-            .classic-select select option:checked,
             .classic-select select option:hover {
-                background: #0064D2;
+                background: #80808040;
                 color: white;
+            }
+
+            /* Enhanced selection styles */
+            .classic-select select option:active,
+            .classic-select select option:checked,
+            .classic-select select option:focus,
+            .classic-select select option:hover:active {
+                background-color: #0064D2 !important;
+                background: #0064D2 !important;
+                color: white !important;
+                -webkit-text-fill-color: white !important;
+                -webkit-background-clip: text !important;
+                -webkit-appearance: none !important;
+                -moz-appearance: none !important;
+                appearance: none !important;
+            }
+
+            /* Force blue background for selected options */
+            .classic-select select option::selection {
+                background: #0064D2 !important;
+                color: white !important;
+            }
+
+            .classic-select select option::-moz-selection {
+                background: #0064D2 !important;
+                color: white !important;
+            }
+
+            /* Additional WebKit-specific styles */
+            .classic-select select:focus option:checked,
+            .classic-select select option:checked {
+                background: #0064D2 linear-gradient(0deg, #0064D2 0%, #0064D2 100%) !important;
+                background-color: #0064D2 !important;
+                -webkit-appearance: none !important;
+                color: white !important;
+                -webkit-text-fill-color: white !important;
             }
 
             .select-wrapper {
@@ -832,29 +1227,31 @@ class AuthSystem {
                 margin-bottom: 8px;
             }
 
-            /* Hide scrollbar for Chrome, Safari and Opera */
-            .classic-select select::-webkit-scrollbar {
+            /* width */
+            ::-webkit-scrollbar {
                 width: 8px;
+                height: 8px;
+                background: #222;
+                border-radius: 0 8px 8px 0; // only on the right sides
             }
 
-            .classic-select select::-webkit-scrollbar-track {
-                background: rgba(255, 255, 255, 0.05);
-                border-radius: 4px;
+            /* Track */
+            ::-webkit-scrollbar-track {
+                background: transparent;
+                margin: 12px 0;
+                
             }
 
-            .classic-select select::-webkit-scrollbar-thumb {
-                background: rgba(255, 255, 255, 0.2);
-                border-radius: 4px;
+            /* Handle */
+            ::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 8px;
+                border: 2px solid #222;
             }
 
-            .classic-select select::-webkit-scrollbar-thumb:hover {
-                background: rgba(255, 255, 255, 0.3);
-            }
-
-            /* Firefox scrollbar styles */
-            .classic-select select {
-                scrollbar-width: thin;
-                scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+            /* Handle on hover */
+            ::-webkit-scrollbar-thumb:hover {
+                background: #999;
             }
 
             /* Remove Firefox dotted outline */
@@ -867,6 +1264,80 @@ class AuthSystem {
             .classic-select select::-ms-expand {
                 display: none;
             }
+
+            .accessibility-grid {
+                display: flex;
+                justify-content: space-between;
+                margin: 20px 0;
+                gap: 8px;
+            }
+
+            .accessibility-option {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 12px;
+                width: 100%;
+                padding: 24px;
+                text-align: center;
+                transition: all 0.2s ease;
+                user-select: none;
+                -moz-user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+                cursor: pointer;
+                position: relative;
+                outline: none;
+            }
+
+            .accessibility-option:focus-visible {
+                box-shadow: 0 0 0 2px var(--accent-color);
+            }
+
+            .accessibility-option:hover {
+                background: rgba(255, 255, 255, 0.15);
+                border-color: rgba(255, 255, 255, 0.3);
+            }
+
+            .accessibility-option.selected {
+                background: var(--accent-color);
+                border-color: transparent;
+            }
+
+            .accessibility-option .material-symbols-rounded {
+                font-size: 24px !important;
+                margin-bottom: 12px;
+                color: rgba(255, 255, 255, 0.9);
+                font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24 !important;
+            }
+
+            .accessibility-option h3 {
+                font-size: 16px;
+                margin: 0;
+                font-weight: 500;
+            }
+
+            .button-group {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 24px;
+            }
+
+            .back-button {
+                background: #ffffff40;
+                color: white;
+                transition: background 0.2s;
+                box-shadow: 0 0 0 0.5px #ffffff40, 0 0 0 0.5px #808080, 0 0 0 1px black, inset 0 -2px 6px #00000040, inset 0 2px 6px #ffffff40;
+            }
+
+            .back-button:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            .back-button:disabled {
+                background: rgba(255, 255, 255, 0.1);
+                opacity: 0.25;
+            }
+            
         `;
         document.head.appendChild(style);
 
@@ -878,13 +1349,18 @@ class AuthSystem {
             if (selectedOption) {
                 // Get the height of the select element's viewport
                 const selectHeight = selectElement.getBoundingClientRect().height;
-                // Get the option's height
+                // Get the option's height (assuming all options have the same height)
                 const optionHeight = selectedOption.getBoundingClientRect().height;
                 // Calculate position to center the option
                 const scrollPosition = selectedOption.offsetTop - (selectHeight / 2) + (optionHeight / 2);
-                // Ensure we don't scroll past the bounds
+                
+                // Calculate the maximum scroll position
                 const maxScroll = selectElement.scrollHeight - selectHeight;
+                
+                // Ensure we don't scroll past the bounds
+                // This allows partial centering for items near the top or bottom
                 const finalScroll = Math.max(0, Math.min(scrollPosition, maxScroll));
+                
                 selectElement.scrollTop = finalScroll;
             }
         };
@@ -895,13 +1371,76 @@ class AuthSystem {
             const stepElement = document.getElementById(`step-${step}`);
             stepElement.style.display = '';
             
-            // If this is the region step, ensure it scrolls to selection
-            if (step === 2) {
-                setTimeout(() => {
+            // Update header based on current step
+            updateHeader(step);
+            
+            // Add a small delay to ensure the select is fully rendered
+            setTimeout(() => {
+                // Apply scrolling to both region and language selects when their steps are shown
+                if (step === 1) {
                     const regionSelect = document.getElementById('region');
                     scrollToSelected(regionSelect);
-                }, 50);
+                } else if (step === 2) {
+                    const languageSelect = document.getElementById('language');
+                    scrollToSelected(languageSelect);
+                }
+            }, 50);
+        };
+
+        // Function to update header content
+        const updateHeader = (step) => {
+            const header = document.getElementById('setup-header');
+            let headerContent = '';
+
+            switch(step) {
+                case 1:
+                    headerContent = `
+                        <div class="setup-welcome">
+                            <h1 style="font-variation-settings: 'wght' 200; letter-spacing: 0.8px;">Welcome</h1>
+                            <p style="font-size: 12px; font-variation-settings: 'wght' 500; letter-spacing: 0.02em; margin-top: 12px;">In just a few steps, you'll be ready to use Omega.</p>
+                        </div>
+                    `;
+                    break;
+                case 2:
+                    headerContent = `
+                        <span class="material-symbols-rounded" style="font-size: 48px; font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;">language</span>
+                        <h1 style="font-variation-settings: 'wght' 200; letter-spacing: 0.8px;">Choose Your Language</h1>
+                    `;
+                    break;
+                case 3:
+                    headerContent = `
+                        <span class="material-symbols-rounded" style="font-size: 48px; font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;">accessibility_new</span>
+                        <h1 style="font-variation-settings: 'wght' 200; letter-spacing: 0.8px;">Accessibility</h1>
+                        <p style="font-size: 12px; font-variation-settings: 'wght' 500; letter-spacing: 0.02em; margin-top: 12px;">Accessibility features adapt Omega to your individual needs. You can turn them on now to help you finish setting up, and further customize them later in System Settings.</p>
+                    `;
+                    break;
+                case 4:
+                    headerContent = `
+                        <span class="material-symbols-rounded" style="font-size: 48px; font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;">account_circle</span>
+                        <h1 style="font-variation-settings: 'wght' 200; letter-spacing: 0.8px;">Create Your Account</h1>
+                    `;
+                    break;
+                case 5:
+                    headerContent = `
+                        <span class="material-symbols-rounded" style="font-size: 48px; font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;">schedule</span>
+                        <h1 style="font-variation-settings: 'wght' 200; letter-spacing: 0.8px;">Date & Time</h1>
+                    `;
+                    break;
+                case 6:
+                    headerContent = `
+                        <span class="material-symbols-rounded" style="font-size: 48px; font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;">hard_drive_2</span>
+                        <h1 style="font-variation-settings: 'wght' 200; letter-spacing: 0.8px;">Storage Location</h1>
+                    `;
+                    break;
+                case 7:
+                    headerContent = `
+                        <span class="material-symbols-rounded" style="font-size: 48px; font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;">check_circle</span>
+                        <h1 style="font-variation-settings: 'wght' 200; letter-spacing: 0.8px;">Setup Complete</h1>
+                    `;
+                    break;
             }
+
+            header.innerHTML = headerContent;
         };
 
         // Initialize region and language dropdowns
@@ -965,6 +1504,10 @@ class AuthSystem {
             if (regions.find(r => r.code === detectedRegion)) {
                 regionSelect.value = detectedRegion;
                 console.log('Set region to:', detectedRegion);
+                // Scroll to the selected region immediately
+                setTimeout(() => {
+                    scrollToSelected(regionSelect);
+                }, 50);
             }
 
             // Try to find an exact match for the language-region combination
@@ -1019,26 +1562,41 @@ class AuthSystem {
             console.warn('Failed to auto-detect region/language:', error);
         }
 
-        // Handle language selection
-        const languageForm = document.getElementById('language-form');
-        languageForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            setupData.language = document.getElementById('language').value;
-            currentStep = 2;
-            showStep(2);
-        });
-
         // Handle region selection
         const regionForm = document.getElementById('region-form');
         regionForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             setupData.region = document.getElementById('region').value;
+            currentStep = 2;
+            showStep(2);
+        });
 
-            // Store settings in setupData
+        // Handle language selection
+        const languageForm = document.getElementById('language-form');
+        languageForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            setupData.language = document.getElementById('language').value;
+
+            // Initialize settings structure
             setupData.settings = {
+                appearance: {
+                    theme: "dark",
+                    accentColor: "#007AFF",
+                    fontSize: "14px"
+                },
+                wallpaper: {
+                    path: "/System/Wallpapers/milad-fakurian-iLHDO19h0ng-unsplash.jpg"
+                },
                 system: {
                     region: setupData.region,
-                    language: setupData.language
+                    language: setupData.language,
+                    notifications: true,
+                    animations: true,
+                    soundEffects: true
+                },
+                notifications: {
+                    order: "newest-first",
+                    browserNotifications: true
                 }
             };
 
@@ -1046,7 +1604,73 @@ class AuthSystem {
             showStep(3);
         });
 
-        // Handle account creation
+        // Handle accessibility options
+        const accessibilityOptions = new Set();
+        const accessibilityGrid = document.querySelector('.accessibility-grid');
+        
+        // Make each option focusable and add ARIA attributes
+        document.querySelectorAll('.accessibility-option').forEach((option, index) => {
+            option.setAttribute('tabindex', '0');
+            option.setAttribute('role', 'checkbox');
+            option.setAttribute('aria-checked', 'false');
+            
+            // Handle click and keyboard events
+            const toggleOption = () => {
+                option.classList.toggle('selected');
+                const feature = option.dataset.feature;
+                const isSelected = option.classList.contains('selected');
+                
+                option.setAttribute('aria-checked', isSelected.toString());
+                
+                if (isSelected) {
+                    accessibilityOptions.add(feature);
+                } else {
+                    accessibilityOptions.delete(feature);
+                }
+
+                // Update continue button text
+                const continueButton = document.getElementById('accessibility-continue');
+                continueButton.textContent = accessibilityOptions.size > 0 ? 'Continue' : 'Not Now';
+            };
+
+            // Click handler
+            option.addEventListener('click', toggleOption);
+            
+            // Keyboard handlers
+            option.addEventListener('keydown', (e) => {
+                switch (e.key) {
+                    case ' ':
+                    case 'Enter':
+                        e.preventDefault();
+                        toggleOption();
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        const nextOption = option.nextElementSibling;
+                        if (nextOption) nextOption.focus();
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        const prevOption = option.previousElementSibling;
+                        if (prevOption) prevOption.focus();
+                        break;
+                }
+            });
+        });
+
+        // Handle accessibility continue/skip
+        document.getElementById('accessibility-continue').addEventListener('click', async () => {
+            // Add accessibility settings at the root level
+            setupData.settings.accessibility = {
+                enabled: accessibilityOptions.size > 0,
+                features: Array.from(accessibilityOptions)
+            };
+            
+            currentStep = 4;
+            showStep(4);
+        });
+
+        // Update step numbers for remaining steps
         const accountForm = document.getElementById('account-form');
         accountForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1055,14 +1679,28 @@ class AuthSystem {
             const password = document.getElementById('password').value;
 
             try {
-                const success = await this.createAccount(username, password, displayName);
-                if (success) {
-                    setupData.username = username;
-                    setupData.displayName = displayName;
-                    currentStep = 4;
-                    showStep(4);
-                    initializeDateTimeStep();
+                // Validate username
+                if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+                    throw new Error('Username can only contain letters, numbers, underscores, and hyphens');
                 }
+
+                if (localStorage.getItem(`omega-user-${username}`)) {
+                    throw new Error('Username already exists');
+                }
+
+                // Store account details in setupData for later creation
+                setupData.accountDetails = {
+                    username,
+                    displayName,
+                    password
+                };
+                // Also store these at the root level for the summary screen
+                setupData.username = username;
+                setupData.displayName = displayName;
+
+                currentStep = 5;
+                showStep(5);
+                initializeDateTimeStep();
             } catch (error) {
                 alert(error.message);
             }
@@ -1149,7 +1787,7 @@ class AuthSystem {
                 e.preventDefault();
                 clearInterval(clockInterval);
 
-                // Store time settings
+                // Store time settings while preserving other settings
                 setupData.settings.system = {
                     ...setupData.settings.system,
                     timezone: timezoneSelect.value,
@@ -1158,14 +1796,13 @@ class AuthSystem {
                 };
 
                 if (!autoTimeCheckbox.checked) {
-                    // Create date in the selected timezone
                     const manualDate = new Date(`${manualDateInput.value}T${manualTimeInput.value}`);
                     const tzOffset = new Date().toLocaleString('en-US', { timeZone: timezoneSelect.value, timeZoneName: 'short' }).split(' ').pop();
                     setupData.settings.system.manualTime = `${manualDate.toISOString().split('.')[0]}${tzOffset}`;
                 }
 
-                currentStep = 5;
-                showStep(5);
+                currentStep = 6;
+                showStep(6);
             });
 
             // If we have an Internet connection, use the browser's timezone
@@ -1194,11 +1831,35 @@ class AuthSystem {
             try {
                 const hasAccess = await this.requestFileSystemAccess();
                 if (hasAccess) {
+                    // Create System/Preferences directory structure and save settings
+                    try {
+                        // Create System directory
+                        const systemHandle = await this.fileSystemHandle.getDirectoryHandle('System', { create: true });
+                        // Create Preferences directory inside System
+                        const preferencesHandle = await systemHandle.getDirectoryHandle('Preferences', { create: true });
+                        // Create settings.json inside Preferences
+                        const settingsHandle = await preferencesHandle.getFileHandle('settings.json', { create: true });
+                        
+                        // Write settings to the file
+                        const writable = await settingsHandle.createWritable();
+                        await writable.write(JSON.stringify(setupData.settings, null, 2));
+                        await writable.close();
+                    } catch (error) {
+                        console.error('Failed to save settings to settings.json:', error);
+                    }
+
                     // Update summary
                     const summary = document.getElementById('setup-summary');
                     const region = regions.find(r => r.code === setupData.region);
                     const language = languages.find(l => l.code === setupData.language);
                     const timezone = document.getElementById('timezone').value;
+                    
+                    // Format accessibility features for display
+                    const accessibilityText = setupData.settings.accessibility?.features?.length 
+                        ? setupData.settings.accessibility.features.map(feature => 
+                            feature.charAt(0).toUpperCase() + feature.slice(1)
+                          ).join(', ')
+                        : '';
                     
                     summary.innerHTML = `
                         <li><strong>Language:</strong> ${language?.nativeName || language?.name}</li>
@@ -1206,11 +1867,12 @@ class AuthSystem {
                         <li><strong>Display Name:</strong> ${setupData.displayName}</li>
                         <li><strong>Username:</strong> ${setupData.username}</li>
                         <li><strong>Time Zone:</strong> ${timezone}</li>
+                        ${accessibilityText ? `<li><strong>Accessibility:</strong> ${accessibilityText}</li>` : ''}
                         <li><strong>Storage Location:</strong> ${this.lastDirectoryPath}</li>
                     `;
                     
-                    currentStep = 6;
-                    showStep(6);
+                    currentStep = 7;
+                    showStep(7);
                 } else {
                     throw new Error('Failed to get file system access');
                 }
@@ -1223,9 +1885,42 @@ class AuthSystem {
         const startBtn = document.getElementById('start-omega');
         startBtn.addEventListener('click', async () => {
             try {
+                // Create the user account now
+                const { username, displayName, password } = setupData.accountDetails;
+                const success = await this.createAccount(username, password, displayName);
+                if (!success) {
+                    throw new Error('Failed to create account');
+                }
+
                 // Set setup as complete
                 localStorage.setItem('omega-setup-complete', 'true');
                 
+                // Save final settings to settings.json
+                try {
+                    const systemHandle = await this.fileSystemHandle.getDirectoryHandle('System', { create: true });
+                    const preferencesHandle = await systemHandle.getDirectoryHandle('Preferences', { create: true });
+                    const settingsHandle = await preferencesHandle.getFileHandle('settings.json', { create: true });
+                    
+                    // Log settings before saving to help debug
+                    console.log('Saving final settings:', JSON.stringify(setupData.settings, null, 2));
+                    
+                    const writable = await settingsHandle.createWritable();
+                    await writable.write(JSON.stringify(setupData.settings, null, 2));
+                    await writable.close();
+                } catch (error) {
+                    console.error('Failed to save final settings to settings.json:', error);
+                }
+                
+                // Set up session with complete settings
+                this.currentUser = {
+                    username: setupData.username,
+                    displayName: setupData.displayName,
+                    settings: setupData.settings,
+                    signedInAt: new Date().toISOString()
+                };
+                this.isAuthenticated = true;
+                this.saveSession();
+
                 // Show loading screen
                 document.body.innerHTML = `
                     <div class="loading-screen">
@@ -1233,7 +1928,7 @@ class AuthSystem {
                         <div class="loading-text">Loading Omega OS...</div>
                     </div>
                 `;
-
+                
                 // Add loading styles
                 const loadingStyle = document.createElement('style');
                 loadingStyle.textContent = `
@@ -1274,16 +1969,6 @@ class AuthSystem {
                 // Clear auth screen flag
                 this.isAuthScreenVisible = false;
                 
-                // Set up session directly without requesting filesystem access again
-                this.currentUser = {
-                    username: setupData.username,
-                    displayName: setupData.displayName,
-                    settings: setupData.settings, // Store settings in user object
-                    signedInAt: new Date().toISOString()
-                };
-                this.isAuthenticated = true;
-                this.saveSession();
-                
                 // Initialize OS
                 await window.omegaOS.init();
 
@@ -1293,6 +1978,16 @@ class AuthSystem {
                 }
             } catch (error) {
                 alert(error.message);
+            }
+        });
+
+        // Add back button functionality to all steps
+        document.querySelectorAll('.back-button').forEach(button => {
+            if (!button.disabled) {
+                button.addEventListener('click', () => {
+                    currentStep--;
+                    showStep(currentStep);
+                });
             }
         });
     }
