@@ -14,7 +14,7 @@
 - [ ] 🖼️ **Directly running the project locally via `index.html` or accessing it through GitHub Pages** may cause issues with asset loading (e.g., images, fonts) and other potential bugs.
 
 ### ⚙️ Support
-|    | Chrome  | Edge  | Firefox | Opera | Safari | Unknown Browsers |
+|    | ![Chrome](https://img.icons8.com/color/48/chrome--v1.png) | ![Edge](https://img.icons8.com/color/48/ms-edge-new.png)  | ![Firefox](https://img.icons8.com/color/48/firefox.png) | ![Opera](https://img.icons8.com/color/48/opera--v1.png) | ![Safari](https://img.icons8.com/color/48/safari--v1.png) | Unknown Browsers |
 |----|---------|-------|---------|-------|--------|------------------|
 | 🖥️ | `Yes`   | `Yes` | `No *`  | `Yes` | `No *` | `?`              |
 | 📱 | `Yes ~` | `? ~` | `No ~`  | `? ~` | `No ~` | `?`              |
