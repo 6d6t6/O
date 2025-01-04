@@ -16,6 +16,11 @@ class AuthSystem {
                 minVersion: '121',
                 support: 'full'
             },
+            'chrome-android': {
+                name: 'Chrome Android',
+                minVersion: '121',
+                support: 'partial'
+            },
             edge: {
                 name: 'Edge',
                 minVersion: '121',
@@ -26,8 +31,18 @@ class AuthSystem {
                 minVersion: '111',
                 support: 'partial'
             },
+            'firefox-android': {
+                name: 'Firefox for Android',
+                minVersion: '111',
+                support: 'partial'
+            },
             safari: {
                 name: 'Safari',
+                minVersion: '16.4',
+                support: 'partial'
+            },
+            'safari-ios': {
+                name: 'Safari on iOS',
                 minVersion: '16.4',
                 support: 'partial'
             },
@@ -35,6 +50,26 @@ class AuthSystem {
                 name: 'Opera',
                 minVersion: '107',
                 support: 'full'
+            },
+            'opera-android': {
+                name: 'Opera Android',
+                minVersion: '107',
+                support: 'partial'
+            },
+            'samsung': {
+                name: 'Samsung Internet',
+                minVersion: '23',
+                support: 'partial'
+            },
+            'webview-android': {
+                name: 'WebView Android',
+                minVersion: '121',
+                support: 'partial'
+            },
+            'webview-ios': {
+                name: 'WebView iOS',
+                minVersion: '16.4',
+                support: 'partial'
             },
             unknown: {
                 name: 'Unknown Browser',
@@ -66,15 +101,44 @@ class AuthSystem {
         const userAgent = navigator.userAgent.toLowerCase();
         let browser = 'unknown';
         let version = '0.0.0';
+        const isMobile = /android|iphone|ipad|ipod/i.test(userAgent);
+        const isAndroid = /android/i.test(userAgent);
+        const isIOS = /iphone|ipad|ipod/i.test(userAgent);
 
+        // WebView detection
+        if (isAndroid && userAgent.includes('wv')) {
+            browser = 'webview-android';
+            const match = userAgent.match(/chrome\/(\d+)\.(\d+)\.(\d+)/);
+            if (match) {
+                version = `${match[1]}.${match[2]}.${match[3]}`;
+                console.log('Detected Android WebView version:', version);
+            }
+        }
+        else if (isIOS && !userAgent.includes('safari')) {
+            browser = 'webview-ios';
+            const match = userAgent.match(/version\/(\d+)\.(\d+)\.?(\d+)?/);
+            if (match) {
+                version = `${match[1]}.${match[2]}.${match[3] || '0'}`;
+                console.log('Detected iOS WebView version:', version);
+            }
+        }
+        // Samsung Internet
+        else if (userAgent.includes('samsungbrowser')) {
+            browser = 'samsung';
+            const match = userAgent.match(/samsungbrowser\/(\d+)\.(\d+)/);
+            if (match) {
+                version = `${match[1]}.${match[2]}.0`;
+                console.log('Detected Samsung Internet version:', version);
+            }
+        }
         // Opera - check first because it includes 'chrome'
-        if (userAgent.includes('opr') || userAgent.includes('opera')) {
-            browser = 'opera';
+        else if (userAgent.includes('opr') || userAgent.includes('opera')) {
+            browser = isAndroid ? 'opera-android' : 'opera';
             console.log('Opera userAgent:', userAgent);
             const match = userAgent.match(/(?:opr|opera)\/(\d+)\.(\d+)\.(\d+)/);
             if (match) {
                 version = `${match[1]}.${match[2]}.${match[3]}`;
-                console.log('Detected Opera version:', version);
+                console.log(`Detected ${browser} version:`, version);
             }
         }
         // Edge (Chromium) - check before Chrome because it includes 'chrome'
@@ -89,36 +153,36 @@ class AuthSystem {
         }
         // Chrome - check after Opera and Edge
         else if (userAgent.includes('chrome')) {
-            browser = 'chrome';
+            browser = isAndroid ? 'chrome-android' : 'chrome';
             console.log('Chrome userAgent:', userAgent);
             const match = userAgent.match(/chrome\/(\d+)\.(\d+)\.(\d+)\.(\d+)/);
             if (match) {
                 version = `${match[1]}.${match[2]}.${match[3]}`;
-                console.log('Detected Chrome version:', version);
+                console.log(`Detected ${browser} version:`, version);
             }
         }
         // Firefox
         else if (userAgent.includes('firefox')) {
-            browser = 'firefox';
+            browser = isAndroid ? 'firefox-android' : 'firefox';
             console.log('Firefox userAgent:', userAgent);
             const match = userAgent.match(/firefox\/(\d+)\.(\d+)/);
             if (match) {
                 version = `${match[1]}.${match[2]}.0`;
             }
-            console.log('Detected Firefox version:', version);
+            console.log(`Detected ${browser} version:`, version);
         }
-        // Safari - must be last because Chrome also includes 'safari'
+        // Safari - must be last because Chrome includes 'safari'
         else if (userAgent.includes('safari')) {
-            browser = 'safari';
+            browser = isIOS ? 'safari-ios' : 'safari';
             console.log('Safari userAgent:', userAgent);
             const match = userAgent.match(/version\/(\d+)\.(\d+)\.?(\d+)?/);
             if (match) {
                 version = `${match[1]}.${match[2]}.${match[3] || '0'}`;
-                console.log('Detected Safari version:', version);
+                console.log(`Detected ${browser} version:`, version);
             }
         }
 
-        console.log('Final browser detection:', { browser, version });
+        console.log('Final browser detection:', { browser, version, isMobile, platform: isAndroid ? 'Android' : isIOS ? 'iOS' : 'Desktop' });
         return { browser, version };
     }
 
