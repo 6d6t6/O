@@ -7,9 +7,11 @@
 ## ⚠️ Known issues
 - [ ] 🔐 **Password protection for user accounts does not secure the storage location of the Omega File System.** Users are responsible for ensuring the safety of this folder, as it remains accessible to others with access to the device. To minimize risks, avoid storing sensitive data in the Omega File System, especially on shared and/or unlocked devices.
 - [ ] 🦾 **Accessibility limitations**, including incomplete keyboard navigation support and insufficient adherence to OS-level accessibility standards.
-- [ ] 🔄 **Running multiple terminals concurrently** may result in inconsistent or unstable behavior.
 - [ ] 🖼️ **Directly running the project locally via `index.html` or accessing it through GitHub Pages** may cause issues with asset loading (e.g., images, fonts) and other potential bugs.
 
+## ☑️ Fixed issues
+- [x] 🔄 **Running multiple terminals concurrently** may result in inconsistent or unstable behavior.
+  - Fixed as of (0.1.)7.1.3
 
 ## ⚙️ Compatibility
 <table>
@@ -44,9 +46,9 @@
 ###### `• ✅ Fully supported` `• ⚠️ Partially supported [Not supported]` `• ❔ Unknown`
 
 ## 🟢 Current version
-| Tree                                              |         | Version   |                                           | Notes                          |
-|---------------------------------------------------|---------|-----------|-------------------------------------------|--------------------------------|
-| [`O/7.1`](https://github.com/6d6t6/O/tree/main/7) | `Omega` | `0.1.7.1` | [`demo *`](https://o-0.pages.dev/)        | `BETA` `In Active Development` |
+| Tree                                              |         | Version     |                                           | Notes                          |
+|---------------------------------------------------|---------|-------------|-------------------------------------------|--------------------------------|
+| [`O/7.1`](https://github.com/6d6t6/O/tree/main/7) | `Omega` | `0.1.7.1.3` | [`demo *`](https://o-0.pages.dev/)        | `BETA` `In Active Development` |
 
 `*` By using Omega you agree to the terms outlined in the [License](#-license)
 
